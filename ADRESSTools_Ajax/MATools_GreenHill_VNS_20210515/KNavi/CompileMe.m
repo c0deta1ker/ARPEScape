@@ -1,1 +1,0 @@
-mcc -e KNavi.m
