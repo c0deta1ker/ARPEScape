@@ -1,0 +1,169 @@
+START --------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ARPESGUI MATLAB data structure format when saved as 'myData.mat'.
+- Any data saved with ARPES GUI can be loaded directly into MATLAB by: myData = load('myData.mat'); myData = myData.dataStruc;
+- By dot indexing, the below information/data can be extracted as the data is parsed through the analysis UI's.
+- When saving a data-file with ARPESGUI, it behaves cumulatively, overwriting the old analysis, but keeping all other data intact.
+--------------------------------------------------------------------------------
+1) DATA PROCESSING -------------------------------------------------------------
+	(myData.)
+     FileName: (char) filename that has been loaded without an extension.
+       H5file: (char) raw data filename that has been loaded with the '.h5' extension.
+         Type: (string) the type of data that has been loaded; "Eb(k)","Eb(kx,ky)" or "Eb(kx,kz)".
+         meta: (struct) structure containing all processing information.
+     raw_data: (2D/3D) matrix of intensity data.
+      raw_tht: (1D) vector of energies.
+       raw_eb: (1D) vector of angles.
+          deb: (scalar) value of binding energy uncertainty.
+           hv: (scalar/1D) vector of photon energies.
+          dhv: (scalar) value of photon energy uncertainty.
+         tltM: (scalar/1D) vector of tilt angles.
+         thtM: (scalar) manipulator primary rotation.
+         Temp: (scalar) temperature of thermocouple.
+           eb: (2D/3D) matrix of aligned energies.
+          tht: (2D/3D) matrix of aligned angles.
+         data: (2D/3D) matrix of intensity data.
+    surfNormX: (scalar) surface normal primary angle returned by SurfNormX.m.
+           kx: (2D/3D) matrix of kx determined from tht.
+           ky: (1D/2D/3D) matrix of ky determined from tltM.
+           kz: (1D/2D/3D) matrix of kz determined from hv
+--------------------------------------------------------------------------------
+2) KF PROCESSING ---------------------------------------------------------------
+	(myData.kf{n}.) 	- contains kf analysis over n scans.
+                xField: (char) used to track most recent analysis performed in Data Processing UI.
+                  Type: (string) the type of data that has been loaded; "Eb(k)","Eb(kx,ky)" or "Eb(kx,kz)".
+         kFmethod_args: (cell) 1D cell array containing kF method arguments.
+    kFconstraints_args: (cell) 1D cell array containing kF constraint arguments.
+                 XData: (2D) matrix of x-axis slice values.
+                 YData: (2D) matrix of y-axis slice values.
+                 DData: (2D) matrix of sliced intensity data.
+              XCut_raw: (1D) vector of raw x-axis MDC values.
+              DCut_raw: (1D) vector of raw intensity data of MDC.
+             DCut_smth: (1D) vector of smoothed intensity data of MDC.
+             XCut_diff: (1D) vector of differentiated x-axis MDC values.
+             DCut_diff: (1D) vector of differentiated intensity data of MDC.
+                   pks: (1D) [1x2] vector containing the kF peak heights.
+                  locs: (1D) [1x2] vector containing the kF peak locations.
+                  scan: (scalar) scan value of the kF determination.
+                    kf: (scalar) value of kF.
+                   dKf: (scalar) uncertainty in the value of kF.
+--------------------------------------------------------------------------------
+3) ISOE ANALYSIS ---------------------------------------------------------------
+	(myData.isoe{n}.) 	- contains IsoE slices from n files.
+    FileName: (string) filename/s of all data-files that have been loaded.
+        Type: (string) the type of data that has been loaded; "Eb(k)","Eb(kx,ky)" or "Eb(kx,kz)".
+    scanAxis: (scalar/1D) vector of the scan parameter.
+          kx: (3D) matrix of kx values.
+          eb: (3D) matrix of eb values.
+  ky (or kz): (3D) matrix of ky (or kz) values, depending on the type of data.
+        data: (3D) matrix of intensity data values.
+     WinLims: (1D) [1x2] vector containing energy window of the isoe slice.
+      XSlice: (2D) matrix of x-axis slice values.
+      YSlice: (2D) matrix of y-axis slice values.
+      DSlice: (2D) matrix of sliced intensity data.
+------------------------------------------------------
+	(myData.BZ.) 	- contains all Brillouin Zone information.
+          crystal: (char) crystal structure (example, 'FCC-Oh')
+    crystal_plane: (char) crystal plane slice ('(001)','(010)','(100)','(110)')
+             area: (scalar) area of the first Brillouin Zone.
+                X: (cell) cell array of x-axis values for Brillouin Zone overlay.
+                Y: (cell) cell array of y-axis values for Brillouin Zone overlay.
+               gX: (scalar) reciprocal lattice vector length along x.
+               gY: (scalar) reciprocal lattice vector length along y.
+------------------------------------------------------
+	(myData.LP{n}.) 	- contains n appended Line Profiles.
+    lp_args: (cell) vector that contains the line profile arguments.
+       XCut: (1D) vector of x-axis values of the line-profile cut.
+       DCut: (1D) vector of intensity values of the line-profile cut.
+------------------------------------------------------
+	(myData.IC{n}.) 	- contains n appended Iso Contours.
+    ic_args: (cell) vector that contains the iso-contour arguments.
+      XCont: (cell) cell array of x-axis values for all appended iso-contours.
+      YCont: (cell) cell array of y-axis values for all appended iso-contours.
+      ACont: (cell) cell vector that contains the area enclosed within the appended iso-contours.
+--------------------------------------------------------------------------------
+4) EB(K) STATE FITTING ---------------------------------------------------------
+	(myData.fits.)		- contains all fit data / information.
+     FileName: (char) filename that has been loaded without an extension.
+         meta: (struct) structure containing all pre-processing information.
+    scanIndex: (scalar) scan index of the scan to be fitted for 3D data.
+     roi_args: (cell) 1D cell array containing region of interest (ROI) arguments.
+        kx_bs: (2D) matrix of kx for background subtraction region.
+        eb_bs: (2D) matrix of eb for background subtraction region.
+      data_bs: (2D) matrix of intensity data for background subtraction region.
+       kx_roi: (2D) matrix of kx for region of interest (ROI).
+       eb_roi: (2D) matrix of eb for region of interest (ROI).
+     scan_roi: (scalar) scan value for the scan to be fitted.
+     data_roi: (2D) matrix of intensity data for region of interest (ROI).
+          edc: (struct) structure containing all EDC fit data / information.
+          mdc: (struct) structure containing all MDC fit data / information.
+          fdd: (struct) structure containing the Fermi-Dirac Distribution.
+         para: (struct) structure containing the parabolic trail data / information.
+------------------------------------------------------
+(myData.fits.fdd)		- contains all Fermi-Dirac Distribution data / information.
+				        args: {1x3 cell} containing FDD arguments.
+				       Fermi: @(xdat)1./(exp((xdat-fdd_args{2})/(8.617E-5*fdd_args{1}))+1)
+				       Gauss: @(xdat)exp(-1*log(2).*((xdat-fdd_args{2})./(1e-3*fdd_args{3}/2)).^2)
+				          eb: (1D) vector of eb values for the FDD x-domain.
+				     y_fermi: (1D) vector of FDD values y-range.
+				     y_gauss: (1D) vector of Gaussian to be convoluted to FDD.
+				      y_conv: (1D) vector of FDD convolved with Gaussian.
+				         FDD: [1×1 cfit]
+				     uitable: {1x3 cell} of input arguments as a UI table.
+------------------------------------------------------
+(myData.fits.para)		- contains the parabolic trail data / information.
+				        args: {4×5 cell}
+				        febk: @(k0,eb0,mstar,kx)(3.8180/mstar)*(kx-k0).^2+eb0
+				       ifebk: @(k0,eb0,mstar,eb)(mstar/3.8180).*sqrt(eb-eb0)+k0
+				          kx: {1x4 cell} of 1D vectors containing kx values of the n'th parabolic state.
+				          eb: {1x4 cell} of 1D vectors containing eb values of the n'th parabolic state.
+				         dkx: {1x4 cell} of scalars containing kx uncertainty.
+				         deb: {1x4 cell} of scalars containing eb uncertainty.
+				     uitable: {4×5 cell} of input arguments as a UI table.
+------------------------------------------------------
+(myData.fits.edc)		- contains all EDC fit data / information.
+				          uitable: {4×6 cell} of EDC input arguments as a UI table.
+				         fit_args: (cell) 1D vector of input fit arguments.
+				         edc_args: {4×6 cell} of EDC input arguments.
+				          nStates: (scalar) total number of states to be fitted.
+				            nCuts: (scalar) total number of EDC cuts to be fitted.
+				          cutVals: (1D) EDC cut values for each fit.
+				        fit_indxs: (1D) [1x2] vector containing the indexes of the ROI to be fit.
+				               f1: @(x,xdat)(Lorz(app,x(1),x(2),x(3),xdat)+x(4))
+				           fdd_f1: @(x,xdat)(fddLorentz(x(1),x(2),x(3),xdat)+x(4))
+				               fn: @(x,xdat)(fddLorentz(x(1),x(2),x(3),xdat)+x(4))
+				             beta: {1 x nCuts cell} of best fit parameters for fn.
+				               ci: {1 x nCuts cell} of best fit parameter confident intervals for fn.
+				          resnorm: {1 x nCuts cell} of resnorm values for EDC fits.
+				            resid: {1 x nCuts cell} of resid values for EDC fits.
+				           kx_pts: {1 × nStates cell} of best fit kx points.
+				           eb_pts: {1 × nStates cell} of best fit eb points.
+				            fpara: @(x,xdat)(3.8180./x(3))*(xdat-x(1)).^2+x(2)
+				        beta_para: {1 × nStates cell} of best fit parameters for fpara.
+				          ci_para: {1 × nStates cell} of best fit parameter confident intervals for fpara.
+				     resnorm_para: {1 × nStates cell} of resnorm values for fpara fits.
+				       resid_para: {1 × nStates cell} of resid values for fpara fits.
+------------------------------------------------------
+(myData.fits.mdc)		- contains all MDC fit data / information.
+				          uitable: {4×6 cell} of MDC input arguments as a UI table.
+				         fit_args: (cell) 1D vector of input fit arguments.
+				         mdc_args: {4×6 cell} of MDC input arguments.
+								  nStates: (scalar) total number of states to be fitted.
+									  nCuts: (scalar) total number of MDC cuts to be fitted.
+				          cutVals: (1D) MDC cut values for each fit.
+				        fit_indxs: (1D) [1x2] vector containing the indexes of the ROI to be fit.
+				               f1: @(x,xdat)(Voigt(app,x(1),x(2),x(3),xdat,voigtMix)+x(4))
+				               fn: @(x,xdat)(Voigt(app,x(1),x(3),x(4),xdat,voigtMix)+Voigt(app,x(2),x(3),x(5),xdat,voigtMix)+x(6))
+				             beta: {1 x nCuts cell} of best fit parameters for fn.
+				               ci: {1 x nCuts cell} of best fit parameter confident intervals for fn.
+				          resnorm: {1 x nCuts cell} of resnorm values for MDC fits.
+				            resid: {1 x nCuts cell} of resid values for MDC fits.
+				           kx_pts: {1 × nStates cell} of best fit kx points.
+				           eb_pts: {1 × nStates cell} of best fit eb points.
+				            fpara: @(x,xdat)(3.8180./x(3))*(xdat-x(1)).^2+x(2)
+						   	beta_para: {1 × nStates cell} of best fit parameters for fpara.
+						      ci_para: {1 × nStates cell} of best fit parameter confident intervals for fpara.
+						 resnorm_para: {1 × nStates cell} of resnorm values for fpara fits.
+						   resid_para: {1 × nStates cell} of resid values for fpara fits.
+--------------------------------------------------------------------------------
+END ----------------------------------------------------------------------------
