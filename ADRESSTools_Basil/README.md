@@ -1,4 +1,7 @@
 ## Log of updates to ADRESSTools
+**Basil - 21.02.2022:** 
+-> Multiple bug fixes and improvement of PES / XPS analysis and curve fitting tools.
+
 **Ajax - 24.11.2021:** Integration of PES / XPS analysis and curve fitting tools.
 
 **v2.1 - 17.07.2020:** Massive upgrade to all UI systems and added several new features for analysis.

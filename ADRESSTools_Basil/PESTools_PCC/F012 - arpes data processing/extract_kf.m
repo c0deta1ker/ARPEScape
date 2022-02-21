@@ -69,8 +69,8 @@ end
 kFlhs = XCut2(ilhs);
 kFrhs = XCut2(irhs);
 % Extracting a better estimate of kF
-[kFlhs, ~] = find_peak_loc(XCut2, abs(DCut2), kFlhs+[-0.02, 0.02], kfType, plot_results);
-[kFrhs, ~] = find_peak_loc(XCut2, abs(DCut2), kFrhs+[-0.02, 0.02], kfType, plot_results);
+[kFlhs, ~] = find_peak_loc(XCut2, abs(DCut2), kFlhs+mean(diff(XCut2(:))).*[-2, 2], kfType, plot_results);
+[kFrhs, ~] = find_peak_loc(XCut2, abs(DCut2), kFrhs+mean(diff(XCut2(:))).*[-2, 2], kfType, plot_results);
 
 %% - 4 - Plotting the result if required
 if plot_results == 1

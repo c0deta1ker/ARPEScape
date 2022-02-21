@@ -62,7 +62,7 @@ text(0.04, 0.90, "$$ \chi^2 = $$ " + string(CHISQ),...
 % - Formatting the figure
 gca_props(); grid on;
 ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
-axis([min(X(:)), max(X(:)), min(DB(:)), 1.10*max(DB(:))]);
+axis([min(X(:)), max(X(:)), 0.0, 1.10*max(DB(:))]);
 title("Best Fit Outcome", 'interpreter', 'none', 'fontsize', 9);
 %% - 4.3 - PLOTTING THE RESIDUALS FOR THE BEST FIT TO THE DATA
 subplot(4,1,4); hold on;

@@ -12,7 +12,7 @@ function dataStr = align_energy(dataStr, align_args, dataStr_ref, plot_result)
 %
 %   IN:
 %   -   dataStr:            data structure of the ARPES data.
-%   -   align_args:         1x6 cell of {Type (either "global", "ref", "ref (per channel)", "fit2ref", "fit2ref-50%", "fit2ref-75%", "fit2ref-5%", "global shift via scan", "scans"), 
+%   -   align_args:         1x6 cell of {Type (either "global", "ref", "ref (per channel)", "fit2ref", "fit2ref-50%", "fit2ref-75%", "fit2ref-5%", "fit2ref-25%", "global shift via scan", "scans"), 
 %                                               Scans (scan indices to be aligned), 
 %                                                   eWin, dEWin, dESmooth, feat}.
 %   -   dataStr_ref:     	reference data structure used for Eb alignment.
@@ -66,7 +66,7 @@ end
 
 %% - 2 - Executing binding energy alignment over all scans
 %% EXECUTING GLOBAL ENERGY ALIGNMENTS
-if alignType == "global" || alignType == "ref" || alignType == "ref (per channel)" || alignType == "fit2ref" || alignType == "fit2ref-50%" || alignType == "fit2ref-75%" || alignType == "fit2ref-5%"
+if alignType == "global" || alignType == "ref" || alignType == "ref (per channel)" || alignType == "fit2ref" || alignType == "fit2ref-50%" || alignType == "fit2ref-75%" || alignType == "fit2ref-5%" || alignType == "fit2ref-25%" || alignType == "fit2ref-10%"
     eb_shifts       = []; if ~isfield(dataStr, 'eb_shifts'); dataStr.eb_shifts = {}; end
     aligned_energy	= [];
     i_eWin          = [];
@@ -111,12 +111,14 @@ if alignType == "global" || alignType == "ref" || alignType == "ref (per channel
                 end
             end
         % -- (D) IF ALIGNING TO THE FERMI-EDGE AND FITTING TO IT DIRECTLY
-        elseif alignType == "fit2ref" || alignType == "fit2ref-50%" || alignType == "fit2ref-75%" || alignType == "fit2ref-5%"
+        elseif alignType == "fit2ref" || alignType == "fit2ref-50%" || alignType == "fit2ref-75%" || alignType == "fit2ref-5%" || alignType == "fit2ref-25%" || alignType == "fit2ref-10%"
             % --- Initialising variables
-            if alignType == "fit2ref";          angleWin = 0.25*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))];
+            if alignType == "fit2ref";          angleWin = 0.95*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))];
+            elseif alignType == "fit2ref-25%";  angleWin = 0.25*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))]; 
             elseif alignType == "fit2ref-50%";  angleWin = 0.50*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))]; 
             elseif alignType == "fit2ref-75%";  angleWin = 0.75*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))];
             elseif alignType == "fit2ref-5%";   angleWin = 0.05*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))];
+            elseif alignType == "fit2ref-10%";  angleWin = 0.10*[min(dataStr_ref.(xField_ref)(:)), max(dataStr_ref.(xField_ref)(:))];
             end
             % ---- Executing energy alignment by fitting to FDD
             if i > size(dataStr_ref.raw_data, 3)
