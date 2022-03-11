@@ -3,7 +3,7 @@ function [imfp, dimfp] = eimfp_optical(ke_dat, element)
 %   Function that determines the mean and uncertainty of the experimental values
 %   of the electron IMFP taken from optical / experimental data. The data
 %   used is from the NIST Electron Inelastic-Mean-Free-Path Database [1].
-%   Any NaN output values means no experimnetal data exists for the input
+%   Any NaN output values means no experimental data exists for the input
 %   kinetic energy, otherwise, the output is the mean and range of the
 %   experimental values.
 %
@@ -13,12 +13,12 @@ function [imfp, dimfp] = eimfp_optical(ke_dat, element)
 %   REQ. FUNCTIONS: none
 %
 %   IN:
-%   -   ke_dat:     N x 1 vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:     Nx1 vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
 %   -   element:	char/string of the element; e.g. "H", "He", "Si", "In"...
 %
 %   OUT:
-%   -   imfp:       N x 1 column vector of the IMFP values in Angstroms (Angstroms)
-%   -   dimfp:      N x 1 column vector of the IMFP uncertainties in Angstroms (Angstroms)
+%   -   imfp:       Nx1 column vector of the IMFP values in Angstroms (Angstroms)
+%   -   dimfp:      Nx1 column vector of the IMFP uncertainties in Angstroms (Angstroms)
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 2; element = []; end

@@ -22,14 +22,14 @@ function dataStr = bgrd_subtr_data(dataStr, bsub_args)
 if nargin < 2; bsub_args = {"angle/kx-int (fixed mean)", [-5, 5], 0.25, 50, "none"}; end
 if isempty(bsub_args); bsub_args = {"angle/kx-int (fixed mean)", [-5, 5], 0.25, 50, "none"}; end
 % - Extracting the fields to be used with most recent processing
-[~, yField, ~, dField] = find_data_fields(dataStr);
+[xField, yField, ~, dField] = find_data_fields(dataStr);
 % - Do not compound background subtraction, so force dField to be = 'raw_data'
 % dField = 'raw_data';
 
 %% - 1 - Initialising the normalisation parameters
 % - Extracting normalisation parameters
 bgrdType    = bsub_args{1};
-bgrdWin   	= bsub_args{2};
+bgrdWin   	= bsub_args{2}; if isempty(bgrdWin); bgrdWin = 0.9*[min(dataStr.(xField)(:)), max(dataStr.(xField)(:))]; end
 bgrdScale 	= bsub_args{3};
 bgrdSmooth 	= bsub_args{4};
 normType  	= bsub_args{5};
@@ -88,7 +88,6 @@ for i = 1:size(dataStr.(dField), 3)
         cutWin          = Win;          % Integration window of the cut to be made.
         isocut_args     = {i, cutType, cutWin};
         [cutStr, ~]     = extract_isoCut(dataStr, isocut_args, 0);
-        
         ISubtr          = cutStr.DCut;
         % - Finding the mean value of the EDC
         ISubtr        	= mean(ISubtr(:));
@@ -104,8 +103,25 @@ for i = 1:size(dataStr.(dField), 3)
             norm_data(:,jj,i)   = dataStr.(dField)(:,jj,i) - bgrdScale * ISubtr;
         end
         norm_data(norm_data < 0) = 0;
+    
+    % (E) - MATools IntAngle() function
+    elseif bgrdType == "IntAngle"
+        ISubtr = IntAngle(dataStr.(dField),dataStr.(xField),dataStr.(yField), Win);
+        % - HWHM adjusted to suppress uneven sensitivity of the CCD channels
+        ISubtr = Gaco2(ISubtr, 0, bgrdSmooth);
+        % - Subtracting background
+        norm_data(:,:,i) = dataStr.(dField)(:,:,i) - bgrdScale * ISubtr;
+    
+    % (F) - MATools IntAngle() function
+    elseif bgrdType == "IntAngle-clip"
+        ISubtr = IntAngle(dataStr.(dField),dataStr.(xField),dataStr.(yField), Win);
+        % - HWHM adjusted to suppress uneven sensitivity of the CCD channels
+        ISubtr = Gaco2(ISubtr, 0, bgrdSmooth);
+        % - Subtracting background
+        norm_data(:,:,i) = dataStr.(dField)(:,:,i) - bgrdScale * ISubtr;
+        norm_data(norm_data < 0) = 0;
         
-    % (E) - No background subtraction
+    % (G) - No background subtraction
     elseif bgrdType == "none"
         ISubtr = 0;
         norm_data(:,:,i) = dataStr.(dField)(:,:,i) - bgrdScale * ISubtr;

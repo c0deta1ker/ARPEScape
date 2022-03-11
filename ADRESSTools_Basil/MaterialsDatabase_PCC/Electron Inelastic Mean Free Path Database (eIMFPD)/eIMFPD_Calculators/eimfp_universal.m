@@ -11,7 +11,7 @@ function imfp = eimfp_universal(ke_dat)
 %   -   ke_dat:  	Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values in nanometers (Angstroms)
+%   -   imfp:       Nx1 column vector of the IMFP values in Angstroms
 
 %% - 1 - Determination of the IMFP using universal formula
 % If the kinetic energy is negative, assume it is zero

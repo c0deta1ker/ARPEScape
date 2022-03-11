@@ -36,13 +36,13 @@ FWHM    = iparams{1}(6+nSTATES:6+2*nSTATES-1);	 % scalar of the FWHM of the PE c
 
 %% - 1 - Extracting all background subtraction data and information
 % -- Extracting the background
-[X, D, B]  = PESBackground(arpesStr.xdat, arpesStr.int,...
+[X, D, B]  = PESBackground(arpesStr.xdat, arpesStr.ydat,...
     bTYPE, ibgrnd{1}(1), ibgrnd{1}(2), ibgrnd{1}(3), ibgrnd{1}(4), ibgrnd{1}(5), ibgrnd{1}(6));
 
 %% - 2 - Extracting all model data and information
 % -- Extracting the original XPS data
 xdat   	= arpesStr.xdat;
-int 	= arpesStr.int;
+ydat 	= arpesStr.ydat;
 % -- Initialising the vectors to contain XPS data
 DB    = D - B;                  % Data after being background subtracted
 M     = zeros(size(X));      	% XPS model data
@@ -71,14 +71,14 @@ h = patch(...
     [ibgrnd{1}(1), ibgrnd{1}(1), ibgrnd{1}(2), ibgrnd{1}(2), ibgrnd{1}(1)],...
     [-1, 1, 1, -1, -1].*1e4, [0.8 0.9 0.8], 'facealpha', 0.5, 'edgecolor', [0 0 0]);
 h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-plot(xdat, int, 'b-', 'linewidth', 0.5*pp.lwidth);
+plot(xdat, ydat, 'b-', 'linewidth', 0.5*pp.lwidth);
 plot(X, D, 'b-', 'linewidth', pp.llwidth);
 plot(X, B, 'r-', 'linewidth', pp.llwidth);
 plot(X, DB, 'k-', 'linewidth', pp.llwidth);
 gca_props(); grid on;
 xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 ylabel('$$ \bf  Intensity $$', 'Interpreter', 'latex');
-axis([min(xdat(:)), max(xdat(:)),0, 1.25*max(int(:))]);
+axis([min(xdat(:)), max(xdat(:)),0, 1.25*max(ydat(:))]);
 legend({'Initial Data', 'ROI: Data', 'ROI: Background', 'ROI: Final'}, 'location', 'best', 'fontsize', 9);
 title("Background Subtraction", 'interpreter', 'none', 'fontsize', 9);
 %% - 4.2 - PLOTTING THE BEST FIT CURVE COMPONENTS AND FINAL MODEL FIT

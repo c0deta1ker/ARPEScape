@@ -60,7 +60,8 @@ We define function that allows the user simulate the photoelectron intensity con
 
 
 ## Materials Database Tools
-**(1) Electron Inelastic Mean Free Path Database (eIMFPD)**: This is a local MATLAB database that compiles the optical data from the NIST Electron Inelastic-Mean-Free-Path Database (http://dx.doi.org/10.18434/T48C78) so that the results can be easily called and accessed within MATLAB. Furthermore, eIMFP calculators are also available using the TPP2M or Universal formalism. Accessible in MATLAB via 'get_eimfpd_props()'.
+**(1) Electron Inelastic Mean Free Path Database (eIMFPD)**: This is a local MATLAB database that compiles the optical data from the NIST Electron Inelastic-Mean-Free-Path Database (http://dx.doi.org/10.18434/T48C78) so that the results can be easily called and accessed within MATLAB. This is accessible in MATLAB via 'get_eimfpd_props()'. Furthermore, predictive eIMFP formulas's are also available using the (1) Universal, (2) TPP-2M and (3) S1 & S2 formalisms. A comparison of all the formalisms is shown below:
+![030_eIMFP_calculators](ADRESSTools_Basil/PESTools_PCC/0_ReadMeImages/030_eIMFP_calculators.png)
 
 
 **(2) Material Properties Database (MPD)**: This is a local MATLAB database that compiles the most useful physical, electronic, optical and magnetic material properties of elements / compounds. The data is taken from a range of sources, where the 'average' values are used for parameters that had more than 1 unique value. Accessible in MATLAB via 'get_mpd_props()'.

@@ -113,10 +113,17 @@ if string(FileName(end-2:end)) == ".h5"
                 if ~isnan(hv); break; end
             end
         end
-        % -- If there is a a missing space
+        % -- If there is a missing space
         for i = 0:1:3
             hv = str2double(Note(tmpPos+10:tmpPos+14-i));
             if ~isnan(hv); break; end
+        end
+        % -- If there is a *ones(1) postfix to the hv value
+        if isnan(hv)
+            for i = 0:1:3
+                hv = str2double(Note(tmpPos+19:tmpPos+23-i));
+                if ~isnan(hv); break; end
+            end
         end
         if isnan(hv); error('hv in load_data not assigned.'); end
         % -- Assigning the tilt angle (Tilt)
@@ -159,6 +166,13 @@ if string(FileName(end-2:end)) == ".h5"
         for i = 0:1:3
             hv = str2double(Note(tmpPos+10:tmpPos+14-i));
             if ~isnan(hv); break; end
+        end
+        % -- If there is a *ones(1) postfix to the hv value
+        if isnan(hv)
+            for i = 0:1:3
+                hv = str2double(Note(tmpPos+19:tmpPos+23-i));
+                if ~isnan(hv); break; end
+            end
         end
         if isnan(hv); error('hv in load_data not assigned.'); end
         % -- Assigning the tilt angle (Tilt) as the scan parameter

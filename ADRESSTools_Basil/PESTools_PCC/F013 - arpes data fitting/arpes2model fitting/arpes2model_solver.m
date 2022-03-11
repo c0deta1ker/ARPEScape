@@ -104,8 +104,7 @@ if solve_type == "fminunc"
         'FunctionTolerance', FuncTol,...
         'StepTolerance', StepTol,...
         'OptimalityTolerance', OptTol,...
-        'MaxIterations', MaxIter,...
-        'Display', 'iter-detailed');
+        'MaxIterations', MaxIter);
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
     [params,fval,exitflag,output,grad,hessian] = fminunc(@(x) minimize_function(x,ARPESObj), x0, options); 
 %% - 3.2 - LOCAL SOLVER: FIND MINIMUM OF BOUNDED MULTIVARIATE FUNCTION
@@ -119,8 +118,7 @@ elseif solve_type == "fmincon"
         'MaxIterations', MaxIter,...
         'ConstraintTolerance', ConTol,...
         'FinDiffRelStep', FinDiffRelStep,...
-        'FinDiffType', 'central',...
-        'Display', 'iter-detailed');
+        'FinDiffType', 'central');
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
     [params,fval,exitflag,output,lambda,grad,hessian] = fmincon(@(x) minimize_function(x,ARPESObj), x0, [], [], [], [], lb, ub, [], options);  
 %% - 3.3 - LOCAL SOLVER: BOUNDED LEAST SQUARES FITTING METHOD FOR NON-LINEAR LEAST SQUARES PROBLEMS
@@ -169,8 +167,7 @@ elseif solve_type == "fmincon-std2"
         'MaxIterations', MaxIter,...
         'ConstraintTolerance', ConTol,...
         'FinDiffRelStep', FinDiffRelStep,...
-        'FinDiffType', 'central',...
-       	'Display', 'iter-detailed');
+        'FinDiffType', 'central');
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
     [params,fval,exitflag,output,lambda,grad,hessian] = fmincon(@(x) minimize_function_std2(x,ARPESObj), x0, [], [], [], [], lb, ub, [], options); 
 %% - 3.6 - LOCAL SOLVER: UNBOUNDED MULTIVARIATE FUNCTION TO MINIMISE STANDARD DEVIATION
@@ -316,6 +313,10 @@ function M = fit_model(x, MODEL)
     % -- Gaussian smoothing
     model_data   	= Gaco2(model_data, kxFWHM, ebFWHM);
     % 4 - Intensity scaling
+%     for i = 1:size(model_data,2)
+%         model_data(:,i) = model_data(:,i) - min(model_data(:,i));
+%         model_data(:,i) = model_data(:,i) ./ max(model_data(:,i));
+%     end
     model_data      = INT .* model_data;
     % Assigning the final model
     M               = model_data;

@@ -48,9 +48,9 @@ if isfield(dataStr, 'kx')
     dataStr.(dField)        = []; dataStr.(dField) = DataXC;
     % - Squeezing the variable arrays
     dataStr.(xField)        = squeeze(dataStr.(xField)(:,:,scan_indxs(1)));
-    dataStr.tht             = squeeze(dataStr.tht(:,:,scan_indxs(1)));
+    if isfield(dataStr, 'tht'); dataStr.tht = squeeze(dataStr.tht(:,:,scan_indxs(1))); end
     dataStr.(yField)        = squeeze(dataStr.(yField)(:,:,scan_indxs(1)));
-    dataStr.(zField)        = squeeze(dataStr.(zField)(eb_indx,tht_indx,scan_indxs(1)));
+    if string(zField) ~= "index"; dataStr.(zField) = squeeze(dataStr.(zField)(eb_indx,tht_indx,scan_indxs(1))); end
     % - Converting the wave-vector into a single field
     dataStr.ky              = mean(dataStr.ky(:));
     dataStr.kz              = mean(dataStr.kz(:));

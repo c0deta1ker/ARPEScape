@@ -88,14 +88,14 @@ for i = 1:length(val); if val(i) ~= lb(i); DoF = DoF + 1; end; end
 
 %% - 2 - DEFINING THE EDC DATA AND FITTING ARGUMENTS
 % -- Extracting the data to be fitted
-[roi_xdat, roi_int, roi_bgrnd] = PESBackground(arpesStr.xdat, arpesStr.int, bTYPE, x0(end-5), x0(end-4), x0(end-3), x0(end-2), x0(end-1), x0(end));
+[roi_xdat, roi_ydat, roi_bgrnd] = PESBackground(arpesStr.xdat, arpesStr.ydat, bTYPE, x0(end-5), x0(end-4), x0(end-3), x0(end-2), x0(end-1), x0(end));
 % -- Defining a structure that stores all relevant model and data variables
 ARPESObj                = arpesStr;
 ARPESObj.nSTATES        = nSTATES;
 ARPESObj.roi_xdat       = roi_xdat;
-ARPESObj.roi_int        = roi_int;
+ARPESObj.roi_ydat       = roi_ydat;
 ARPESObj.roi_bgrnd      = roi_bgrnd;
-ARPESObj.roi_int_sbtr	= ARPESObj.roi_int - ARPESObj.roi_bgrnd;
+ARPESObj.roi_ydat_sbtr	= ARPESObj.roi_ydat - ARPESObj.roi_bgrnd;
 % -- Appending the input arguments to the global variable
 ARPESObj.fit_args.solve_type    = solve_type;
 ARPESObj.fit_args.FUNC          = FUNC;
@@ -126,7 +126,7 @@ if solve_type == "lsqcurvefit"
         'OptimalityTolerance', OptTol,...
         'MaxIterations', MaxIter);
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
-    [params,rnorm,resid,exitflag,output,lambda,jacobian]  = lsqcurvefit(@(x,roi_xdat) full_pes_function(x,roi_xdat,ARPESObj), x0, roi_xdat, roi_int, lb, ub, options);  
+    [params,rnorm,resid,exitflag,output,lambda,jacobian]  = lsqcurvefit(@(x,roi_xdat) full_pes_function(x,roi_xdat,ARPESObj), x0, roi_xdat, roi_ydat, lb, ub, options);  
 %% - 3.2 - LOCAL SOLVER: UNBOUNDED LEAST SQUARES NONLINEAR REGRESSION FIT
 elseif solve_type == "nlinfit"
     % -- Defining the optimisation options for the simulated annealing method
@@ -135,7 +135,7 @@ elseif solve_type == "nlinfit"
         'MaxIter', MaxIter,...
         'TolFun', FuncTol);
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
-    [params,R,J,CovB,MSE,ErrorModelInfo] = nlinfit(roi_xdat, roi_int, @(x,roi_xdat) full_pes_function(x,roi_xdat,ARPESObj), x0, options);
+    [params,R,J,CovB,MSE,ErrorModelInfo] = nlinfit(roi_xdat, roi_ydat, @(x,roi_xdat) full_pes_function(x,roi_xdat,ARPESObj), x0, options);
 %% - 3.3 - LOCAL SOLVER: FIND MINIMUM OF UNBOUNDED MULTIVARIATE FUNCTION
 elseif solve_type == "fminunc"
     % -- Defining the optimisation options for the simulated annealing method
@@ -208,7 +208,7 @@ fitStr.ibgrnd       = ibgrnd;
 %% 4.2 - Storing the XPS data, background, model and minimisation variables
 % -- Extracting the original data 
 fitStr.xdat         = arpesStr.xdat;
-fitStr.int          = arpesStr.int;
+fitStr.ydat          = arpesStr.ydat;
 % -- Extracting the X-DOMAIN and DATA
 [fitStr.X, fitStr.D] = fit_data(params, ARPESObj);
 % -- Extracting the MODEL
@@ -279,14 +279,14 @@ end
 
 %% DEFINING THE FUNCTION THAT EXTRACTS THE XPS DATA TO BE FITTED
 function [X, D] = fit_data(x, ARPESObj)
-    [X, D, ~] = PESBackground(ARPESObj.xdat, ARPESObj.int, ARPESObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
+    [X, D, ~] = PESBackground(ARPESObj.xdat, ARPESObj.ydat, ARPESObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
     D(isnan(D)) = 0;
     if size(D, 2) > 1; D = D'; end
 end
 
 %% DEFINING THE FUNCTION THAT DETERMINES THE TOTAL PES BACKGROUND
 function B = fit_background(x, ARPESObj)
-    [~, ~, B] = PESBackground(ARPESObj.xdat, ARPESObj.int, ARPESObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
+    [~, ~, B] = PESBackground(ARPESObj.xdat, ARPESObj.ydat, ARPESObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
     B(isnan(B)) = 0;
     if size(B, 2) > 1; B = B'; end
 end
@@ -338,7 +338,7 @@ function MB = full_pes_function(x, xdat, ARPESObj)
     M(isnan(M)) = 0;
     if size(M, 2) > 1; M = M'; end
     % - 3 - Determine the background to be used
-    [~, ~, B] = PESBackground(xdat, ARPESObj.roi_int, ARPESObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
+    [~, ~, B] = PESBackground(xdat, ARPESObj.roi_ydat, ARPESObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
     % - 4 - Final output is the sum of the model and background
     MB = M + B;
 end

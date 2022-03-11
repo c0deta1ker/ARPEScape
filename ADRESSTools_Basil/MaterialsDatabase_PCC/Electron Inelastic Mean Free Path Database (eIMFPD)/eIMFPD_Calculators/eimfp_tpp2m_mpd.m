@@ -26,9 +26,11 @@ if nargin < 2; material = "Si";  end
 if isempty(material); material = "Si"; end
 
 %% - 1 - Extracting the material parameters from the materials database
+% - Ensure the input is a string
+material = string(material);
 % - Extracting the material properties
 material_props = get_mpd_props(material);
-% - Extracting the properties required in this function
+% - Extracting the material properties required to determine the TPP-2M IMFP
 rho     = material_props.DENSITY;
 Nv      = material_props.ELECT_VALENCY;
 M       = material_props.ATOM_MASS;

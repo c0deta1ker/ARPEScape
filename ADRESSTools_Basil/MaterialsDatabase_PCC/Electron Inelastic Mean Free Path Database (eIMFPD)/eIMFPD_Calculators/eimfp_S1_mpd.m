@@ -28,15 +28,15 @@ if isempty(material); material = "Si"; end
 %% - 1 - Extracting the material parameters from the materials database
 % - Extracting the material properties
 material_props = get_mpd_props(material);
-% - Extracting the properties required in this function
+% - Extracting the material properties required for the S1 formalism
 rho     = material_props.DENSITY;
 Nv      = material_props.ELECT_VALENCY;
 M       = material_props.ATOM_MASS;
 Egap    = material_props.ELE_BGAP;
 Z       = material_props.ATOM_ZNUM;
 
-%% - 2 - Determination of the IMFP via S2 formalism
-imfp = eimfp_S1(ke_dat, rho, M, Egap, Z);   % extracts imfp in Angstroms
+%% - 2 - Determination of the IMFP via S1 formalism
+imfp = eimfp_S1(ke_dat, rho, M, Egap, Z);   % extract imfp in Angstroms
 
 %% Ensuring the imfp is a column vector
 if size(imfp, 2) >1; imfp = imfp'; end

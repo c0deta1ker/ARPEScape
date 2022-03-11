@@ -4,7 +4,7 @@ function imfp = eimfp_tpp2m_avg(ke_dat)
 %   that is based on the average trend line of photoelectron kinetic
 %   energies for multiple material systems. This method is considered
 %   better than the universal method, but less precise than the TPP-2M
-%   calculations.
+%   calculations, where the specific material parameters are used.
 %
 %   REQ. FUNCTIONS: none
 %
