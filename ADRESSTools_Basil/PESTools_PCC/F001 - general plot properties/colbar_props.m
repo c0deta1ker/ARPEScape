@@ -9,7 +9,7 @@ function colbar_props(cbar_pos, cbar_tickside)
 %   REQ. FUNCTIONS: none
 %
 %   IN:
-%   -   cbar_pos:           1x4 vector of colorbar position in normalised units [left, bottom, width, height]
+%   -   cbar_pos:           1 x 4 vector of colorbar position in normalised units [left, bottom, width, height]
 %   -   cbar_tickside:   	char of either 'left' or 'right' for the y-axis ticks
 %
 %   OUT: (none)
@@ -19,7 +19,6 @@ if nargin < 1; cbar_pos = [0.925 0.125 0.025 0.175]; cbar_tickside='right'; end
 if nargin < 2; cbar_tickside = 'right'; end
 if isempty(cbar_pos); cbar_pos = [0.925 0.125 0.025 0.175]; end
 if isempty(cbar_tickside); cbar_tickside='right'; end
-
 %% 1 - Defining the colorbar
 cb = colorbar;
 % Colorbar font properties

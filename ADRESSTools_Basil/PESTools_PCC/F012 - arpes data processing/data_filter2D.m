@@ -52,6 +52,4 @@ for i = 1:size(data, 3)
 end
 %% 3 - Setting NaN values to zero
 new_data(isnan(new_data)) = 0;
-%% Close wait-bar
-% close(wbar);
 end

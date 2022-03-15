@@ -1,11 +1,9 @@
 function fig = arpes2boff2D_view_init(arpesStr, cTYPE, FUNC, iparams, ibgrnd)
 % fig = arpes2boff2D_view_init(arpesStr, cTYPE, iparams, ibgrnd)
-%   This function is used to plot the initial guess of the ARPES curve fitting
-%   performed by 'arpes2boff2D_solver()'. The plot consists of 3 subplots; (1) The
-%   initial model data to be fitted based on the initial parmaeters; (2) A 
-%   plot showing all of the experimental ARPES data to be fitted; (3) A 
-%   plot summarising the residuals, showing the quality of the experimental
-%   and model fit.
+%   This function is used to plot the initial curve fitting model prior to
+%   using the 'arpes2boff2D_solver()' algorithm. This is used as an informative 
+%   plot that allows you to view and create a better initial guess of the
+%   model prior to running the fitting algorithm.
 %
 %   REQ. FUNCTIONS: none
 %
@@ -191,6 +189,7 @@ function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, FUNC)
     KX    = linspace(kx_lims(1), kx_lims(2), size(arpesStr.kx,2));
     EB    = linspace(eb_lims(1), eb_lims(2), size(arpesStr.eb,1))';
     MODEL_DATA    = ARPESCurve_FDDGpL(KX, EB, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO);
+%     MODEL_DATA    = ARPESCurveNorm_FDDGpL(KX, EB, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO);
     ARPES_DATA    = arpesStr.data;
     % - Removing any NaN values
     MODEL_DATA(isnan(MODEL_DATA)) = 0;

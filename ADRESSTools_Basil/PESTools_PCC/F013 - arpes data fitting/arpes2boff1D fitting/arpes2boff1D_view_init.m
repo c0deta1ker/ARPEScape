@@ -1,12 +1,8 @@
 function fig = arpes2boff1D_view_init(arpesStr, cTYPE, FUNC, iparams, bTYPE, ibgrnd)
 % fig = arpes2boff1D_view_init(arpesStr, cTYPE, FUNC, iparams, bTYPE, ibgrnd)
-%   This function is used to plot the initial, model curves PRIOR to
-%   curve fitting with 'arpes2boff1D_solver()'. The plot consists of 3 subplots; (1) The
-%   background that is determined from the fit; (2) A plot showing all of
-%   the fitted curve components, as well as the final model fit and
-%   experimental data; (3) A plot of the residuals, showing the quality of
-%   the experimental and model fit. This is used as an informative plot
-%   that allows you to view and create a better initial guess of the XPS
+%   This function is used to plot the initial curve fitting model prior to
+%   using the 'arpes2boff1D_solver()' algorithm. This is used as an informative 
+%   plot that allows you to view and create a better initial guess of the
 %   model prior to running the fitting algorithm.
 %
 %   REQ. FUNCTIONS: (none)

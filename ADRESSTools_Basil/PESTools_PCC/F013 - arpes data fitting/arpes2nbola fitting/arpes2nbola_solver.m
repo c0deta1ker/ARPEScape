@@ -6,8 +6,6 @@ function fitStr = arpes2nbola_solver(arpesStr, cTYPE, iparams, ibgrnd, solve_typ
 %   also used with a linear background, for states that are close to the
 %   Fermi edge.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
 %   -   arpesStr:       MATLAB data-structure that contains the initial ARPES data.
 %   -   cTYPE:          1xN vector of the type of curve to use for fitting. Default: "G2DA" ("G2D", "L2D")

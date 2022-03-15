@@ -1,19 +1,10 @@
 function fitStr = curvefit1D_solver(xdat, ydat, curve_type, init_params, bgrnd_type, init_bgrnd, solve_type)
 % fitStr = curvefit1D_solver(xdat, ydat, curve_type, init_params, bgrnd_type, init_bgrnd, solve_type)
-%   Function that runs a a Global Optimisation Algorithm based on Simulated
-%   Annealing to determine the best curve fit to the input XPS data and
-%   model (initial conditions and bounds). The temperature of the Simulated
-%   Annealing is set to walk a large span of the parameter space to ensure
-%   the global minimum is obtained. The minimisation function is based on
-%   minimising the standard deviation of the squared residuals. Although
-%   the "simulannealbnd()" algorithm is the best due to its global
-%   convergence, the option is here to also use "lsqcurvefit()" and
-%   "lsqnonlin()" for fast convergence to the XPS curve fits. Use this
-%   function to run the convergence algorithm only one. 
-%   NOTE: use 'xps_solver_n_runs()' to run the algorithm N times, allowing
-%   for quantification of fit parameter uncertainties.
-%   
-%   REQ. FUNCTIONS: none
+%   Function that runs an Optimisation Algorithm to determine the best fit
+%   for N-curves of a 1D data set defined by 'xdat' (domain) and 'ydat'
+%   (range). If 'curve_type' is empty, an asymmetric pseudo-Voigt curve is
+%   used. 'init_params' is the cell array that defines the initial guess
+%   and lower-, upper-bound constraints of the fit parameters.
 %   
 %   IN:
 %   -   xdat:           [nX x 1] array of the x-axis data

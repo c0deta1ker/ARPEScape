@@ -6,8 +6,6 @@ function fitStr = arpes2boff1D_solver(arpesStr, cTYPE, FUNC, iparams, bTYPE, ibg
 %   to be determined by extracting the best fit to the subbands,
 %   constraining their energies to what is found in a theoretical model.
 %   
-%   REQ. FUNCTIONS: none
-%   
 %   IN:
 %   -   arpesStr:       MATLAB data-structure that contains the initial ARPES data.
 %   -   cTYPE:          1xN vector of the type of curve to use for fitting. Default: "sGLA" ("pGLA", "DS")

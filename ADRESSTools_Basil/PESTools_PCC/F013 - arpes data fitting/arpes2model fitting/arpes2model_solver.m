@@ -7,8 +7,6 @@ function fitStr = arpes2model_solver(arpesStr, modelStr, iparams, ibgrnd, solve_
 %   the global minimum is obtained. The minimisation function is based on
 %   minimising the value of chi-squared.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
 %   -   arpesStr:       MATLAB data-structure that contains the initial ARPES data.
 %   -   modelStr:       MATLAB data-structure that contains the initial model data.

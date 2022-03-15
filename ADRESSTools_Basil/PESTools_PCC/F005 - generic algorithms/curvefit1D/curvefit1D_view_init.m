@@ -111,8 +111,8 @@ plot(X, D, 'b-', 'linewidth', pp.llwidth);
 plot(X, B, 'r-', 'linewidth', pp.llwidth);
 plot(X, DB, 'k-', 'linewidth', pp.llwidth);
 gca_props(); grid on;
-xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
-ylabel('$$ \bf  Intensity $$', 'Interpreter', 'latex');
+xlabel('$$ \bf  X $$', 'Interpreter', 'latex');
+ylabel('$$ \bf  Y $$', 'Interpreter', 'latex');
 axis([min(xdat(:)), max(xdat(:)), ylims]);
 legend({'Initial Data', 'ROI: Data', 'ROI: Background', 'ROI: Final'}, 'location', 'best', 'fontsize', 9);
 title("Background Subtraction", 'interpreter', 'none', 'fontsize', 9);
@@ -137,7 +137,7 @@ text(0.04, 0.90, "$$ \chi^2 = $$ " + string(CHISQ),...
     'interpreter', 'latex', 'fontsize', 14, 'color', 'k', 'Units','normalized');
 % - Formatting the figure
 gca_props(); grid on;
-ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
+ylabel('$$ \bf  Y$$', 'Interpreter', 'latex');
 axis([min(X(:)), max(X(:)), ylims]);
 title("Initial Model", 'interpreter', 'none', 'fontsize', 9);
 % -- Plotting the uncertainties to allow for easier optimisation
@@ -161,6 +161,6 @@ subplot(4,2,8); hold on;
 bar(X, R, 'facecolor', [0 0 0]);
 gca_props(); grid on;
 ylabel('$$ \bf  Resid. $$', 'Interpreter', 'latex');
-xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
+xlabel('$$ \bf  X $$', 'Interpreter', 'latex');
 
 end

@@ -1,11 +1,9 @@
 function fig = arpes2model_view_init(arpesStr, modelStr, iparams, ibgrnd, kx_lims, eb_lims)
 % fig = arpes2model_view_init(arpesStr, modelStr, iparams, ibgrnd, kx_lims, eb_lims)
-%   This function is used to plot the initial guess of the ARPES curve fitting
-%   performed by 'arpes2model_solver()'. The plot consists of 3 subplots; (1) The
-%   initial model data to be fitted based on the initial parmaeters; (2) A 
-%   plot showing all of the experimental ARPES data to be fitted; (3) A 
-%   plot summarising the residuals, showing the quality of the experimental
-%   and model fit.
+%   This function is used to plot the initial curve fitting model prior to
+%   using the 'arpes2model_solver()' algorithm. This is used as an informative 
+%   plot that allows you to view and create a better initial guess of the
+%   model prior to running the fitting algorithm.
 %
 %   REQ. FUNCTIONS: (none)
 %

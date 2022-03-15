@@ -11,17 +11,15 @@ function imfp = eimfp_S1(ke_dat, rho, M, Egap, Z)
 %       Surf. Interface Anal., vol. 44, no. 4, pp. 497–503, 2012, 
 %       doi: 10.1002/sia.4816.
 %   
-%   REQ. FUNCTIONS: none
-%
 %   IN:
-%   -   ke_dat:     Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:     N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %   -   rho:        scalar of the density of the material (g/cc)
 %   -   M:          scalar of the atomic or molecular weight (in amu == g/mol)
 %   -   Egap:       scalar of the band gap energy (eV)
 %   -   Z:          scalar of the atomic mass number of the element (or average for compound) (Z) 
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values (Angstroms)
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 5; Z = 14; end

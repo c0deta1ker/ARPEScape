@@ -150,6 +150,8 @@ dataStr.data(isnan(dataStr.data)) = 0;
 for i = 1:size(dataStr.(dField), 3)
     dataStr.data(:,:,i) = SetContrast(dataStr.data(:,:,i),0.05, 1.);
 end
-%% Close wait-bar
-% close(wbar);
+
+
+
+
 end

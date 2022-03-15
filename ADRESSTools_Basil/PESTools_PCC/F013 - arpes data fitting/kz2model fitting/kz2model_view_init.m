@@ -1,12 +1,9 @@
 function fig = kz2model_view_init(xdat, ydat, cTYPE, iparams)
 % fig = kz2model_view_init(xdat, ydat, cTYPE, iparams)
-%   This function is used to plot the initial, kz line profile model PRIOR to
-%   curve fitting with 'kz2model_solver()'. The plot consists of 2 subplots;
-%   (1) A plot showing all of the fitted curve components, as well as the 
-%   final model fit and experimental data; (2) A plot of the residuals, 
-%   showing the quality of the experimental and model fit. This is used as an 
-%   informative plot that allows you to view and create a better initial 
-%   guess of the model prior to running the fitting algorithm.
+%   This function is used to plot the initial curve fitting model prior to
+%   using the 'kz2model_solver()' algorithm. This is used as an informative 
+%   plot that allows you to view and create a better initial guess of the
+%   model prior to running the fitting algorithm.
 %
 %   REQ. FUNCTIONS: (none)
 %

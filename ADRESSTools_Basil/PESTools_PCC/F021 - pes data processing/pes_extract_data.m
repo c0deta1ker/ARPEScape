@@ -1,5 +1,5 @@
-function [pesStr0, fig] = pes_extract_data(arpesStr, xps_args, plot_results)
-% [pesStr0, fig] = pes_extract_data(arpesStr, xps_args, plot_results)
+function [pesStr, fig] = pes_extract_data(arpesStr, pes_args, plot_results)
+% [pesStr, fig] = pes_extract_data(arpesStr, pes_args, plot_results)
 %   This function extracts an EDC cut through XPS data, allowing the
 %   angle-integrated XPS spectrum to be acquired. This is then used for all
 %   subsequent XPS analysis. The user can choose to make N cuts within a
@@ -13,28 +13,25 @@ function [pesStr0, fig] = pes_extract_data(arpesStr, xps_args, plot_results)
 %
 %   IN:
 %   -   arpesStr:      	data structure of the ARPES data.
-%   -   xps_args:       1x2 cell of {cutWin, cutN}; the integration window of the cut and total number of cuts.
+%   -   pes_args:       1x2 cell of {cutWin, cutN}; the integration window of the cut and total number of cuts.
 %   -   plot_results:  	if 1, will plot figure of the results, otherwise it wont.
 %
 %   OUT:
-%   -   arpesStr0:        new MATLAB data-structure for XPS data, can be used with all 'xps analysis' functions.
+%   -   pesStr:         new MATLAB data-structure for PES data, can be used with all 'pes analysis' functions.
 %   -   fig:            figure output.
 
 %% Default parameters
 if nargin < 3; plot_results = 1; end
-if nargin < 2; xps_args = cell(1,2); end
-if isempty(xps_args) || length(xps_args) ~= 2; xps_args = cell(1,2); end 
+if nargin < 2; pes_args = cell(1,2); end
+if isempty(pes_args) || length(pes_args) ~= 2; pes_args = cell(1,2); end 
 if isempty(plot_results); plot_results = 1; end
-% - Initialising the plot properties
-pp  = plot_props();
-fig = [];
 % - Extracting the fields to be used with most recent processing
 [xField, yField, ~, dField] = find_data_fields(arpesStr);
 
 %% - 1 - Initialising input parameters
 % - Extracting the input parameters
-angleWin	= xps_args{1}; if isempty(angleWin); angleWin = 0.95*[min(arpesStr.(xField)(:)), max(arpesStr.(xField)(:))]; end     % Integration window of the cut to be made.
-xpsN     	= xps_args{2}; if isempty(xpsN);     xpsN = 1; end        	% single, constant value that determines the total number of line profiles to extract
+angleWin	= pes_args{1}; if isempty(angleWin); angleWin = 0.95*[min(arpesStr.(xField)(:)), max(arpesStr.(xField)(:))]; end     % Integration window of the cut to be made.
+xpsN     	= pes_args{2}; if isempty(xpsN);     xpsN = 1; end        	% single, constant value that determines the total number of line profiles to extract
 % - Verifying the min/max values of the limits
 Win         = sort(angleWin);
 step_size   = 0.05;
@@ -57,27 +54,29 @@ end
 
 %% 3 - Appending data to MATLAB data structure
 if xpsN == 1
-    pesStr0             = arpesStr;
-    pesStr0.IsoType    	= "XPS";
-    pesStr0.xps_args   	= {angleWin, xpsN};
-    pesStr0.cutWin   	= cutWin(1,:);
-    pesStr0.cutN     	= 1;
-    pesStr0.xdat        = XCut{1};
-    pesStr0.ydat      	= DCut{1};
+    pesStr             = arpesStr;
+    pesStr.IsoType    	= "XPS";
+    pesStr.pes_args   	= {angleWin, xpsN};
+    pesStr.cutWin   	= cutWin(1,:);
+    pesStr.cutN     	= 1;
+    pesStr.xdat        = XCut{1};
+    pesStr.ydat      	= DCut{1};
 else
     for i = 1:xpsN
-        pesStr0{i}              = arpesStr;
-        pesStr0{i}.IsoType    	= "XPS";
-        pesStr0{i}.xps_args   	= {angleWin, xpsN};
-        pesStr0{i}.cutWin   	= cutWin(i,:);
-        pesStr0{i}.cutN         = i;
-        pesStr0{i}.xdat         = XCut{i};
-        pesStr0{i}.ydat      	= DCut{i};
+        pesStr{i}              = arpesStr;
+        pesStr{i}.IsoType    	= "XPS";
+        pesStr{i}.pes_args   	= {angleWin, xpsN};
+        pesStr{i}.cutWin   	= cutWin(i,:);
+        pesStr{i}.cutN         = i;
+        pesStr{i}.xdat         = XCut{i};
+        pesStr{i}.ydat      	= DCut{i};
     end
 end
 
 %% 4.0 - Plotting the figure if required
 if plot_results == 1
+    % - Initialising the plot properties
+    pp  = plot_props();
     fig = figure(); 
     fig.Position(3) = 1.5*pp.fig5x4(1); 
     fig.Position(4) = pp.fig5x4(2);

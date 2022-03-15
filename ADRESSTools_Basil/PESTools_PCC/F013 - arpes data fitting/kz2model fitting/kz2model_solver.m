@@ -13,8 +13,6 @@ function fitStr = kz2model_solver(xdat, ydat, cTYPE, iparams, solve_type)
 %   NOTE: use 'xps_solver_n_runs()' to run the algorithm N times, allowing
 %   for quantification of fit parameter uncertainties.
 %   
-%   REQ. FUNCTIONS: none
-%   
 %   IN:
 %   -   xdat:           1xN vector that contains the domain of the line profile.
 %   -   ydat:           1xN vector that contains the intensity data of the line profile.

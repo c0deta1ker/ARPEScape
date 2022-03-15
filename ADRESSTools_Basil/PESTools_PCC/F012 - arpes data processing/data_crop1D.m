@@ -1,36 +1,29 @@
-function [xDat_crop, yDat_crop] = data_crop1D(xDat, yDat, xDat_lims)
-% [xDat_crop, yDat_crop] = data_crop1D(xDat, yDat, xDat_lims)
-%   This function crops the ARPES x-, y- and z-independent variables over
-%   a given range. The function crops the most recently processed data and
-%   ensures consistency across both the independent variables and data
-%   matrix.
-%
-%   REQ. FUNCTIONS:
-%   -   [xField, yField, zField, dField] = find_data_fields(dataStr);
+function [xdat_crop, ydat_crop] = data_crop1D(xdat, ydat, xdat_lims)
+% [xdat_crop, ydat_crop] = data_crop1D(xdat, ydat, xdat_lims)
+%   This function crops 1D data along the x-axis (domain) and y-axis
+%   (range). The user defines the limits along the x-axis. 
 %
 %   IN:
-%   -   xDat:           [N x 1] array of the x-axis (theta/kx)
-%   -   yDat:           [N x 1] array of the y-axis (eb)
-% 	-   xDat_lims:      [1 x 2] row vector of x-axis limits
+%   -   xdat:           [N x 1] array of the x-axis
+%   -   ydat:           [N x 1] array of the y-axis
+% 	-   xdat_lims:      [1 x 2] row vector of x-axis limits
 %
 %   OUT:
-%   -   xDat_crop:  	[A x B] array of the cropped x-axis (theta/kx)
-%   -   yDat_crop:   	[A x B] array of the cropped y-axis (eb)
+%   -   xdat_crop:  	[A x B] array of the cropped x-axis
+%   -   ydat_crop:   	[A x B] array of the cropped y-axis
 
 %% Default parameters
-maxLim = 1e4;
-if nargin < 3; xDat_lims=[-1 1]*maxLim; yDat_lims=[-1 1]*maxLim; end
-if isempty(xDat_lims); xDat_lims=[-1 1]*maxLim;  end
+if nargin < 3; xdat_lims=[min(xdat(:)), max(xdat(:))]; end
+if isempty(xdat_lims); xdat_lims=[min(xdat(:)), max(xdat(:))];  end
 % - Sorting the cropping limits in ascending order
-xDat_lims = sort(xDat_lims);
-
+xdat_lims       = sort(xdat_lims);
 %% 1 - Cropping the data
 % - x-axis indices
-[~, xIndxL]     = min(abs(xDat(:) - xDat_lims(1)));
-[~, xIndxU]     = min(abs(xDat(:) - xDat_lims(2)));
+[~, xIndxL]     = min(abs(xdat(:) - xdat_lims(1)));
+[~, xIndxU]     = min(abs(xdat(:) - xdat_lims(2)));
 x_indx          = [xIndxL xIndxU];
 % - cropping x-axis
-xDat_crop = xDat(x_indx(1):x_indx(2));
-yDat_crop = yDat(x_indx(1):x_indx(2));
+xdat_crop       = xdat(x_indx(1):x_indx(2));
+ydat_crop       = ydat(x_indx(1):x_indx(2));
 
 end

@@ -17,17 +17,15 @@ function imfp = eimfp_tpp2m(ke_dat, rho, Nv, M, Egap)
 %       algorithm. Surf Interface Anal. 2018;51(4):427-457. 
 %       doi:10.1002/sia.6598
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
-%   -   ke_dat:     Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:     N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %   -   rho:        scalar of the density of the material (g/cc)
 %   -   Nv:         scalar of the number of valence electrons per atom (for an element)
 %   -   M:          scalar of the atomic or molecular weight (in amu == g/mol)
 %   -   Egap:       scalar of the band gap energy (eV)
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values (Angstroms)
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 5; Egap = 1.12000; end
@@ -38,7 +36,6 @@ if isempty(Egap);   Egap = 1.12000; end     % eV
 if isempty(M);      M = 28.085000; end      % amu == g/mol
 if isempty(Nv);     Nv = 4; end             % integer
 if isempty(rho); 	rho = 2.3300000; end    % g/cc
-
 %% - 1 - Determination of the IMFP TPP-2M
 % If the kinetic energy is negative, assume it is zero
 ke_dat(ke_dat<0) = 0;

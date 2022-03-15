@@ -5,13 +5,11 @@ function imfp = eimfp_universal(ke_dat)
 %   good, first order approximation of the IMFP values, with the only
 %   required input being the electron kinetic energy.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
-%   -   ke_dat:  	Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:  	N x 1 column vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values in Angstroms
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
 
 %% - 1 - Determination of the IMFP using universal formula
 % If the kinetic energy is negative, assume it is zero

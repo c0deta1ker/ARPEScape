@@ -6,13 +6,11 @@ function imfp = eimfp_tpp2m_avg(ke_dat)
 %   better than the universal method, but less precise than the TPP-2M
 %   calculations, where the specific material parameters are used.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
-%   -   ke_dat:  	Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:  	N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values (Angstroms)
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
 
 %% - 1 - Determination of the IMFP using universal formula
 % If the kinetic energy is negative, assume it is zero

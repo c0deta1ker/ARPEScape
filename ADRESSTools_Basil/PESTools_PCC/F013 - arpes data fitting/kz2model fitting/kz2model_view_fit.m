@@ -1,23 +1,15 @@
 function fig = kz2model_view_fit(fitStr)
 % fig = kz2model_view_fit(fitStr)
-%   This function is used to plot the initial, kz line profile model PRIOR to
-%   curve fitting with 'kz2model_solver()'. The plot consists of 2 subplots;
-%   (1) A plot showing all of the fitted curve components, as well as the 
-%   final model fit and experimental data; (2) A plot of the residuals, 
-%   showing the quality of the experimental and model fit. This is used as an 
-%   informative plot that allows you to view and create a better initial 
-%   guess of the model prior to running the fitting algorithm.
+%   This function is used to plot the results of the curve fitting
+%   performed by 'fitStr = kz2model_solver(...)'. 
 %
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   xdat:           1xN vector that contains the domain of the line profile.
-%   -   ydat:           1xN vector that contains the intensity data of the line profile.
-%   -   cTYPE:          string of the type of curves to use; "sGLA" ("pGLA", "sGL", "pGL", "G", "L", "DS").
-%   -   iparams:        3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [KZ0,INT,MFP,DZ,MR,SKZ0,SINT,ASY,BGR]
+%   -   fitStr:  	MATLAB data-structure that contains all fit parameters / variables / information
 %
 %   OUT:
-%   -   fig:  	MATLAB figure object with the ARPES data plotted.
+%   -   fig:    	figure output
 
 %% - 1 - Extracting all model data and information
 X   = fitStr.xdat;     	% Original domain

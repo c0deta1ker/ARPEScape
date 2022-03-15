@@ -1,23 +1,15 @@
 function fig = curvefit1D_view_fit(fitStr)
-% fig = pes2ncurve_view_fit(fitStr, show_bgrnd)
-%   This function is used to plot the results of the XPS curve fitting
-%   performed by 'xps_solver()'. The plot consists of 3 subplots; (1) The
-%   background that is determined from the fit; (2) A plot showing all of
-%   the fitted curve components, as well as the final model fit and
-%   experimental data; (3) A plot of the residuals, showing the quality of
-%   the experimental and model fit. If you only want to save the fitted XPS
-%   spectrum and the residuals (without the background subtraction
-%   discussed in (1), you can set the 'show_bgrnd' variable to 0; its
-%   default value is 1.
+% fig = curvefit1D_view_fit(fitStr)
+%   This function is used to plot the results of the curve fitting
+%   performed by 'fitStr = curvefit1D_solver(...)'. 
 %
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   fitStr:	data    structure of the XPS data after fitting.
-%   -   show_bgrnd:     either 1 or 0; 1 to show background and XPS fits, 0 to only show XPS fits.
+%   -   fitStr:     MATLAB data-structure that contains all fit parameters / variables / information
 %
 %   OUT:
-%   -   fig:            MATLAB figure object with the ARPES data plotted.
+%   -   fig:    	MATLAB figure object showing the final best fit
 
 %% Initialising the plot parameters
 pp  = plot_props();
@@ -40,8 +32,8 @@ plot(fitStr.X, fitStr.D, 'b-', 'linewidth', pp.llwidth);
 plot(fitStr.X, fitStr.B, 'r-', 'linewidth', pp.llwidth);
 plot(fitStr.X, fitStr.DB, 'k-', 'linewidth', pp.llwidth);
 gca_props(); grid on;
-xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
-ylabel('$$ \bf  Intensity $$', 'Interpreter', 'latex');
+xlabel('$$ \bf  X $$', 'Interpreter', 'latex');
+ylabel('$$ \bf  Y $$', 'Interpreter', 'latex');
 axis([min(fitStr.xdat(:)), max(fitStr.xdat(:)), ylims]);
 legend({'Initial Data', 'ROI: Data', 'ROI: Background', 'ROI: Final'}, 'location', 'best', 'fontsize', 9);
 title("Background Subtraction", 'interpreter', 'none', 'fontsize', 9);
@@ -66,7 +58,7 @@ text(0.04, 0.90, "$$ \chi^2 = $$ " + string(fitStr.CHISQ),...
     'interpreter', 'latex', 'fontsize', 14, 'color', 'k', 'Units','normalized');
 % - Formatting the figure
 gca_props(); grid on;
-ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
+ylabel('$$ \bf  Y$$', 'Interpreter', 'latex');
 axis([min(fitStr.X(:)), max(fitStr.X(:)), ylims]);
 title("Final Fit", 'interpreter', 'none', 'fontsize', 9);
 
@@ -75,4 +67,4 @@ subplot(4,2,8); hold on;
 bar(fitStr.X, fitStr.R, 'facecolor', [0 0 0]);
 gca_props(); grid on;
 ylabel('$$ \bf  Resid. $$', 'Interpreter', 'latex');
-xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
+xlabel('$$ \bf  X $$', 'Interpreter', 'latex');

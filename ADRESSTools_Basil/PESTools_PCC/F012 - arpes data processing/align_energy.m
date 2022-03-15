@@ -1,10 +1,9 @@
 function dataStr = align_energy(dataStr, align_args, dataStr_ref, plot_result)
-% dataStr = align_energy(dataStr, align_args, dataStr_ref)
-%   This is a function that will align the dataStr ARPES data 
-%   to the Fermi-level, VBM or a CB state. It operates using the
+% dataStr = align_energy(dataStr, align_args, dataStr_ref, plot_result)
+%   This is a function that will align the 'dataStr' ARPES data-structure 
+%   to the Fermi-level, VBM or a CBM state. It operates using the
 %   AlignEF() function conditions, but can also load in a reference data file
-%   that it willalso allows a reference data set to be
-%   used for the alignment if required.
+%   'dataStr_ref' that it will use as the energy reference.
 %
 %   REQ. FUNCTIONS:
 %   -   [xField, yField, zField, dField] = find_data_fields(dataStr);

@@ -1,4 +1,3 @@
-% --- Function to delete a scan - *Eb(kx,ky) or Eb(kx,kz) scans only*
 function dataStr = delete_scans(dataStr, scancorr_args)
 % dataStr = delete_scans(dataStr, scancorr_args)
 %   This function deletes a single or linear range of scans that contain

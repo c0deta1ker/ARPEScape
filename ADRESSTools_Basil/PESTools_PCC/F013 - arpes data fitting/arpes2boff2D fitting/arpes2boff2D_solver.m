@@ -7,8 +7,6 @@ function fitStr = arpes2boff2D_solver(arpesStr, cTYPE, FUNC, iparams, ibgrnd, so
 %   Fermi edge. Constrained so that the subband energies are given by a
 %   functional form FUNC.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
 %   -   arpesStr:       MATLAB data-structure that contains the initial ARPES data.
 %   -   cTYPE:          1xN vector of the type of curve to use for fitting. Default: "G2DA" ("G2D", "L2D")
@@ -234,6 +232,7 @@ function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, FUNC)
     KX    = linspace(kx_lims(1), kx_lims(2), size(arpesStr.kx,2));
     EB    = linspace(eb_lims(1), eb_lims(2), size(arpesStr.eb,1))';
     MODEL_DATA    = ARPESCurve_FDDGpL(KX, EB, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO);
+%     MODEL_DATA    = ARPESCurveNorm_FDDGpL(KX, EB, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO);
     ARPES_DATA    = arpesStr.data;
     % - Removing any NaN values
     MODEL_DATA(isnan(MODEL_DATA)) = 0;

@@ -7,8 +7,6 @@ function fitStr = vb2le_solver(kx, eb, data, bgrnd_type, iparams, plot_results)
 %   determines the VBM position based on the Leading Edge (LE) method
 %   discussed in literature.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
 %   -   kx:             vector / array of the wave vector (x-domain) of the ARPES data.
 %   -   eb:             vector / array of the binding energy (y-domain) of the ARPES data.

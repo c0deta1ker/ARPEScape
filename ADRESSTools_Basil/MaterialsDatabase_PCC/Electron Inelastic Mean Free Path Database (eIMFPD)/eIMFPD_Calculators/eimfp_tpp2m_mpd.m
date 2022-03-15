@@ -15,16 +15,15 @@ function imfp = eimfp_tpp2m_mpd(ke_dat, material)
 %       L849–L857. https://doi.org/10.1016/0167-2584(87)90829-2
 %
 %   IN:
-%   -   ke_dat:     Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:     N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %   -   material:  	string of the material whose imfp is to be determined; e.g. "Si", "SiO2", "Al2O3"...
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values in nanometers (Angstroms)
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 2; material = "Si";  end
 if isempty(material); material = "Si"; end
-
 %% - 1 - Extracting the material parameters from the materials database
 % - Ensure the input is a string
 material = string(material);
@@ -35,10 +34,8 @@ rho     = material_props.DENSITY;
 Nv      = material_props.ELECT_VALENCY;
 M       = material_props.ATOM_MASS;
 Egap    = material_props.ELE_BGAP;
-
 %% - 2 - Determination of the IMFP TPP-2M
 imfp = eimfp_tpp2m(ke_dat, rho, Nv, M, Egap);
-
 %% Ensuring the imfp is a column vector
 if size(imfp, 2) >1; imfp = imfp'; end
 end

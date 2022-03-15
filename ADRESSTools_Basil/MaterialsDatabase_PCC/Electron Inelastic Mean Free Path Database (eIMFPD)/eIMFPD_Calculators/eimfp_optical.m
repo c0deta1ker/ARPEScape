@@ -10,23 +10,19 @@ function [imfp, dimfp] = eimfp_optical(ke_dat, element)
 %   REFERENCE:
 %   [1] NIST Electron Inelastic-Mean-Free-Path Database: http://dx.doi.org/10.18434/T48C78.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
-%   -   ke_dat:     Nx1 vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:     N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %   -   element:	char/string of the element; e.g. "H", "He", "Si", "In"...
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values in Angstroms (Angstroms)
-%   -   dimfp:      Nx1 column vector of the IMFP uncertainties in Angstroms (Angstroms)
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
+%   -   dimfp:      N x 1 column vector of the IMFP uncertainties [Angstroms]
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 2; element = []; end
 if isempty(element); element = []; end
-
 %% - 1 - Extracting the IMFP from the optical IMFP database
 [ek0, imfp0] = get_eimfpd_props(element);
-
 %% - 2 - Calculate the average and variance of the IMFP values for all datasets
 imfp = []; dimfp = [];
 % - Filing through all the kinetic energies to be determined
@@ -47,9 +43,7 @@ for i = 1:length(ke_dat)
         dimfp(i)    = 0.5*range(imfp_i);
     end
 end
-
 %% Ensuring the imfp is a column vector
 if size(imfp, 2) >1; imfp = imfp'; end
 if size(dimfp, 2) >1; dimfp = dimfp'; end
-
 end

@@ -1,19 +1,12 @@
 function fig = arpes2boff1D_view_fit(fitStr, show_bgrnd)
 % fig = arpes2boff1D_view_fit(fitStr, show_bgrnd)
-%   This function is used to plot the results of the XPS curve fitting
-%   performed by 'arpes2boff1D_solver()'. The plot consists of 3 subplots; (1) The
-%   background that is determined from the fit; (2) A plot showing all of
-%   the fitted curve components, as well as the final model fit and
-%   experimental data; (3) A plot of the residuals, showing the quality of
-%   the experimental and model fit. If you only want to save the fitted XPS
-%   spectrum and the residuals (without the background subtraction
-%   discussed in (1), you can set the 'show_bgrnd' variable to 0; its
-%   default value is 1.
+%   This function is used to plot the results of the curve fitting
+%   performed by 'fitStr = arpes2boff1D_solver(...)'. 
 %
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   fitStr:         MATLAB data-structure that contains all the fit parameters / variables / information
+%   -   fitStr:         MATLAB data-structure that contains all fit parameters / variables / information
 %   -   show_bgrnd:     either 1 or 0; 1 to show background and XPS fits, 0 to only show XPS fits.
 %
 %   OUT:

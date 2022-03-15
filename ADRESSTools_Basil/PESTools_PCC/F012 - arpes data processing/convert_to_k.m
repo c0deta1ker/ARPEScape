@@ -44,7 +44,6 @@ if dataStr.Type == "Eb(k)" || dataStr.Type == "Eb(k,i)"
     % Finding the mean value of ky and kz
     dataStr.ky = mean(dataStr.ky(:));
     dataStr.kz = mean(dataStr.kz(:));
-
 % - 2.2 Wave-vector conversions for Eb(kx,ky)
 elseif dataStr.Type == "Eb(kx,ky)"
     if length(thtA_ref) == 2; thtA_ref = linspace(thtA_ref(1), thtA_ref(2), size(dataStr.tltM, 2));
@@ -56,7 +55,6 @@ elseif dataStr.Type == "Eb(kx,ky)"
         dataStr.ky(:,:,i) = Kyy(dataStr.hv, dataStr.eb(:,:,i), dataStr.tht(:,:,i), dataStr.thtM, dataStr.tltM(i), dataStr.surfNormX(i));
         dataStr.kz(:,:,i) = Kzz(dataStr.hv, dataStr.eb(:,:,i), dataStr.thtM, dataStr.tht(:,:,i), dataStr.tltM(i), v000, dataStr.surfNormX(i));
     end
-
 % - 2.3 Wave-vector conversions for Eb(kx,kz)
 elseif dataStr.Type == "Eb(kx,kz)"
     if length(thtA_ref) == 2; thtA_ref = linspace(thtA_ref(1), thtA_ref(2), size(dataStr.hv, 2)); 
@@ -69,4 +67,6 @@ elseif dataStr.Type == "Eb(kx,kz)"
         dataStr.kz(:,:,i) = Kzz(dataStr.hv(i), dataStr.eb(:,:,i), dataStr.thtM, dataStr.tht(:,:,i), dataStr.tltM, v000, dataStr.surfNormX(i));
     end
 end
+
+
 end

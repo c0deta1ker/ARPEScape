@@ -1,74 +1,67 @@
-function [xDat_crop, yDat_crop, dDat_crop] = data_crop2D(xDat, yDat, dDat, xDat_lims, yDat_lims)
-% [xDat_crop, yDat_crop, dDat_crop] = data_crop2D(xDat, yDat, dDat, xDat_lims, yDat_lims)
-%   This function crops the ARPES x-, y- and z-independent variables over
-%   a given range. The function crops the most recently processed data and
-%   ensures consistency across both the independent variables and data
-%   matrix.
+function [xdat_crop, ydat_crop, ddat_crop] = data_crop2D(xdat, ydat, ddat, xdat_lims, ydat_lims)
+% [xdat_crop, ydat_crop, ddat_crop] = data_crop2D(xdat, ydat, ddat, xdat_lims, ydat_lims)
+%   This function crops 2D data along the x- and y-axis. The user can
+%   define the limits along the x- and y-axis to be cropped.
 %
 %   REQ. FUNCTIONS:
 %   -   [xField, yField, zField, dField] = find_data_fields(dataStr);
 %
 %   IN:
-%   -   xDat:           [N x M] array of the x-axis (theta/kx)
-%   -   yDat:           [N x M] array of the y-axis (eb)
-%   -   dDat:           [N x M] array of the ARPES data (intensity)
-% 	-   xDat_lims:      [1 x 2] row vector of x-axis limits
-% 	-   yDat_lims:      [1 x 2] row vector of y-axis limits
+%   -   xdat:           [1 x nX] or [nY x nX] array of the x-axis data
+%   -   ydat:           [nY x 1] or [nY x nX] array of the y-axis data
+%   -   ddat:           [nY x nX] array of the intensity data
+% 	-   xdat_lims:      [1 x 2] row vector of x-axis limits
+% 	-   ydat_lims:      [1 x 2] row vector of y-axis limits
 %
 %   OUT:
-%   -   xDat_crop:  	[A x B] array of the cropped x-axis (theta/kx)
-%   -   yDat_crop:   	[A x B] array of the cropped y-axis (eb)
-%   -   dDat_crop:  	[A x B] array of the cropped ARPES data (intensity)
+%   -   xdat_crop:  	[A x B] array of the cropped x-axis
+%   -   ydat_crop:   	[A x B] array of the cropped y-axis
+%   -   ddat_crop:  	[A x B] array of the cropped intensity data
 
 %% Default parameters
 maxLim = 1e4;
-if nargin < 4; xDat_lims=[-1 1]*maxLim; yDat_lims=[-1 1]*maxLim; end
-if nargin < 5; yDat_lims=[-1 1]*maxLim; end
-if isempty(xDat_lims); xDat_lims=[-1 1]*maxLim;  end
-if isempty(yDat_lims); yDat_lims=[-1 1]*maxLim;  end
+if nargin < 4; xdat_lims=[min(xdat(:)), max(xdat(:))]; ydat_lims=[min(ydat(:)), max(ydat(:))]; end
+if nargin < 5; ydat_lims=[min(ydat(:)), max(ydat(:))]; end
+if isempty(xdat_lims); xdat_lims=[min(xdat(:)), max(xdat(:))];  end
+if isempty(ydat_lims); ydat_lims=[-1 1]*maxLim;  end
 % - Sorting the cropping limits in ascending order
-xDat_lims = sort(xDat_lims);
-yDat_lims = sort(yDat_lims);
+xdat_lims = sort(xdat_lims);
+ydat_lims = sort(ydat_lims);
 % - Initialising variables
-xDat_crop = [];
-yDat_crop = [];
-dDat_crop = [];
+xdat_crop = [];
+ydat_crop = [];
+ddat_crop = [];
 
 %% 1 - Cropping the data
 % - x-axis indices
-if ~isempty(xDat)
-    [~, xIndxL]     = min(abs(xDat(1,:) - xDat_lims(1)));
-    [~, xIndxU]     = min(abs(xDat(1,:) - xDat_lims(2)));
+if ~isempty(xdat)
+    [~, xIndxL]     = min(abs(xdat(1,:) - xdat_lims(1)));
+    [~, xIndxU]     = min(abs(xdat(1,:) - xdat_lims(2)));
     x_indx          = [xIndxL xIndxU];
 end
-
 % - y-axis indices
-if ~isempty(yDat)
-    [~, yIndxL]     = min(abs(yDat(:,1) - yDat_lims(1)));
-    [~, yIndxU]     = min(abs(yDat(:,1) - yDat_lims(2)));
+if ~isempty(ydat)
+    [~, yIndxL]     = min(abs(ydat(:,1) - ydat_lims(1)));
+    [~, yIndxU]     = min(abs(ydat(:,1) - ydat_lims(2)));
     y_indx          = [yIndxL yIndxU];
 end
-
 % - cropping x-axis
-if ~isempty(xDat)
-    if size(xDat, 1) > 1 && isempty(yDat); 	xDat_crop = xDat(:, x_indx(1):x_indx(2));
-    elseif size(xDat, 1) > 1;               xDat_crop = xDat(y_indx(1):y_indx(2), x_indx(1):x_indx(2));
-    else;                                   xDat_crop = xDat(1,x_indx(1):x_indx(2));
+if ~isempty(xdat)
+    if size(xdat, 1) > 1 && isempty(ydat); 	xdat_crop = xdat(:, x_indx(1):x_indx(2));
+    elseif size(xdat, 1) > 1;               xdat_crop = xdat(y_indx(1):y_indx(2), x_indx(1):x_indx(2));
+    else;                                   xdat_crop = xdat(1,x_indx(1):x_indx(2));
     end
 end
 % - cropping y-axis
-if ~isempty(yDat)
-    if size(yDat, 2) > 1 && isempty(xDat); 	yDat_crop = yDat(y_indx(1):y_indx(2), :);
-    elseif size(yDat, 2) > 1;               yDat_crop = yDat(y_indx(1):y_indx(2), x_indx(1):x_indx(2));
-    else;                                   yDat_crop = yDat(y_indx(1):y_indx(2),1);
+if ~isempty(ydat)
+    if size(ydat, 2) > 1 && isempty(xdat); 	ydat_crop = ydat(y_indx(1):y_indx(2), :);
+    elseif size(ydat, 2) > 1;               ydat_crop = ydat(y_indx(1):y_indx(2), x_indx(1):x_indx(2));
+    else;                                   ydat_crop = ydat(y_indx(1):y_indx(2),1);
     end
 end
 % - cropping the data
-if isempty(yDat)
-    dDat_crop = dDat(:,x_indx(1):x_indx(2));
-elseif isempty(xDat)
-    dDat_crop = dDat(y_indx(1):y_indx(2),:);
-else
-    dDat_crop = dDat(y_indx(1):y_indx(2), x_indx(1):x_indx(2));
+if isempty(ydat);       ddat_crop = ddat(:,x_indx(1):x_indx(2));
+elseif isempty(xdat);   ddat_crop = ddat(y_indx(1):y_indx(2),:);
+else;                   ddat_crop = ddat(y_indx(1):y_indx(2), x_indx(1):x_indx(2));
 end
 end

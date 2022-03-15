@@ -1,16 +1,12 @@
 function fig = arpes2boff2D_view_fit(fitStr)
 % fig = arpes2boff2D_view_fit(fitStr)
-%   This function is used to plot the results of the ARPES curve fitting
-%   performed by 'arpes2nbola_solver()'. The plot consists of 3 subplots; (1) The
-%   initial model data to be fitted based on the initial parmaeters; (2) A 
-%   plot showing all of the experimental ARPES data to be fitted; (3) A 
-%   plot summarising the residuals, showing the quality of the experimental
-%   and model fit.
+%   This function is used to plot the results of the curve fitting
+%   performed by 'fitStr = arpes2boff2D_solver(...)'. 
 %
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   fitStr:  	MATLAB data-structure that is output from 'arpes2nbola_solver()'.
+%   -   fitStr:  	MATLAB data-structure that contains all fit parameters / variables / information
 %
 %   OUT:
 %   -   fig:    	figure output

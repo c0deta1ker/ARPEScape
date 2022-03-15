@@ -23,7 +23,6 @@ if nargin < 3; plot_axes_lines = 1; end
 if isempty(colmap); colmap = 'hot'; end
 if isempty(type);   type = "kx"; end
 if isempty(plot_axes_lines);   plot_axes_lines = 1; end
-
 %% 1 - Defining the axes properties
 ax = gca;
 % Font properties

@@ -13,7 +13,6 @@ function gca_props(plot_axes_lines)
 %% Default parameters
 if nargin < 1; plot_axes_lines = 1; end
 if isempty(plot_axes_lines); plot_axes_lines = 1; end
-
 %% 1 - Defining the axes properties
 ax = gca;
 % Font properties

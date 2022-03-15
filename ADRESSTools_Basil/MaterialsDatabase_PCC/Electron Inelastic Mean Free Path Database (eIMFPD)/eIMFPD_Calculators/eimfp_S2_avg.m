@@ -10,14 +10,12 @@ function imfp = eimfp_S2_avg(ke_dat, Z)
 %       Surf. Interface Anal., vol. 44, no. 4, pp. 497–503, 2012, 
 %       doi: 10.1002/sia.4816.
 %
-%   REQ. FUNCTIONS: none
-%
 %   IN:
-%   -   ke_dat:     Nx1 column vector of the input electron kinetic energy in eV (for PES; KE = BE - PHI)
+%   -   ke_dat:     N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %   -   Z:          scalar of the atomic mass number (Z) (or average for compounds)
 %
 %   OUT:
-%   -   imfp:       Nx1 column vector of the IMFP values (Angstroms)
+%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 2;  Z = 14; end

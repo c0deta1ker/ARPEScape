@@ -1,4 +1,4 @@
-function JobFileGenerator_CLvsHV_20210922()
+function JobFileGenerator_CLvsHV()
 %% (A) Defining the consistent parameters
 % (A1) Set the output file name to be saved as
 sample_name = "Brugg";
