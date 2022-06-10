@@ -27,19 +27,27 @@ function [fitStr0, statStr] = pes2ncurve_solver_n_runs(pesStr, cTYPE, iparams, b
 %% Default parameters
 % - Default input parameters to use
 if nargin < 7; n_runs = 10; end
-if nargin < 6; solve_type = "fmincon"; end
+if nargin < 6; solve_type = "lsqcurvefit"; end
 if nargin < 5
-    ibgrnd{1} = [min(pesStr.xdat(:))+0.2, max(pesStr.xdat(:))-0.2, 1, 0.5, 0, 0];
-    ibgrnd{2} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) - 0.05;
-    ibgrnd{3} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) + 0.05;
+    ibgrnd{1} = [...
+        mean(pesStr.xdat(:)) - abs(0.25*range(pesStr.xdat(:))),...
+        mean(pesStr.xdat(:)) + abs(0.25*range(pesStr.xdat(:))),...
+        0];
+    ibgrnd{2} = [0, 0, -abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{3} = [0, 0, +abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{4} = {1};
 end
 if nargin < 4; bTYPE = "Poly"; end
 if isempty(n_runs); n_runs = 10; end
-if isempty(solve_type); solve_type = "fmincon"; end
+if isempty(solve_type); solve_type = "lsqcurvefit"; end
 if isempty(ibgrnd)
-    ibgrnd{1} = [min(pesStr.xdat(:))+0.2, max(pesStr.xdat(:))-0.2, 1, 0.5, 0, 0];
-    ibgrnd{2} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) - 0.05;
-    ibgrnd{3} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) + 0.05;
+    ibgrnd{1} = [...
+        mean(pesStr.xdat(:)) - abs(0.25*range(pesStr.xdat(:))),...
+        mean(pesStr.xdat(:)) + abs(0.25*range(pesStr.xdat(:))),...
+        0];
+    ibgrnd{2} = [0, 0, -abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{3} = [0, 0, +abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{4} = {1};
 end
 if isempty(bTYPE); bTYPE = "Poly"; end
 % - Total number of states to be fitted
@@ -49,7 +57,7 @@ n_states = length(cTYPE);
 statStr         = struct();
 statStr.n_runs	= 1:n_runs;
 fit     = cell(n_runs,1);
-params	= cell(10,1);
+params	= cell(11,1);
 CHISQ 	= zeros(n_runs,1);
 % - 1 - Running the fitting algorithm for N independent times for analysis
 for i = statStr.n_runs

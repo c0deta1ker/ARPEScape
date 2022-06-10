@@ -9,7 +9,7 @@ function [EAlign,EF,Fail]=AlignEF(Data,ECorr,eWin,dEWin,dESmooth,feat)
 % values.  The output EF is the determined EF positions in the input energy scale. Fail returns the indices 
 % of the scans where the alignment failed and EF was set to eWin.
 % - Ver. 7 Mar 2020 (added vectorization of eWin)
-disp('- EF alignment')
+% disp('- EF alignment')
 
 % parameters
 % - dimensions

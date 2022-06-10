@@ -30,15 +30,15 @@ wbar = waitbar(0, 'Extracting BZ overlay...', 'Name', 'extract_bz_overlay');
 
 %% Initialising the input variables
 crystal = reciStr.crystal;
-G1 =  reciStr.G1;
-G2 =  reciStr.G2;
-G3 =  reciStr.G3;
-Gbz = reciStr.Gbz;
+G1      =  reciStr.G1;
+G2      =  reciStr.G2;
+G3      =  reciStr.G3;
+Gbz     = reciStr.Gbz;
 %% 1 - Extracting the First Brilluoin Zone boundary
 % - Extracting the point cloud for the First Brilluoin Zone
-x_pts = cell2mat(Gbz(:,1));
-y_pts = cell2mat(Gbz(:,2));
-z_pts = cell2mat(Gbz(:,3));
+x_pts   = cell2mat(Gbz(:,1));
+y_pts   = cell2mat(Gbz(:,2));
+z_pts   = cell2mat(Gbz(:,3));
 cloud_pts = [x_pts, y_pts, z_pts];
 % - Projecting the point cloud onto the desired planar slice
 % --- For the (100) plane

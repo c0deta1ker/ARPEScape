@@ -20,49 +20,52 @@ function fig = pes2boff_view_init(pesStr, modelStr, cTYPE, iparams, bTYPE, ibgrn
 %   OUT:
 %   -   fig:  	MATLAB figure object with the ARPES data plotted.
 
-%% Extracting the original data and interpolating it to a finer grid size
-xdat	= linspace(min(pesStr.xdat(:)), max(pesStr.xdat(:)), 1e3);
-ydat	= interp1(pesStr.xdat, pesStr.ydat, xdat);
+%% - 1 - Extracting all background subtraction data and information
+% -- Extracting the background
+[X, D, B]  = PESBackground(pesStr.xdat, pesStr.ydat,...
+    bTYPE, ibgrnd{1}(1), ibgrnd{1}(2), ibgrnd{1}(3), ibgrnd{4});
 
-%% - 1 - Extracting all of the input parameters
+%% - 2 - Extracting all of the input parameters
+% -- Extracting the original XPS data
+% xdat	= linspace(min(pesStr.xdat(:)), max(pesStr.xdat(:)), 1e3);
+% ydat	= interp1(pesStr.xdat, pesStr.ydat, xdat);
+xdat   	= pesStr.xdat;
+ydat 	= pesStr.ydat;
 % -- Extracting the total number of states to be fitted
 nSTATES = length(cTYPE);
 % -- Extracting all of the fit parameters
+% -- Singular variables
+MFP     = iparams{1}(1);
+BOFF	= iparams{1}(2);
+lbMFP  	= iparams{2}(1);  ubMFP     = iparams{3}(1);
+lbBOFF	= iparams{2}(2);  ubBOFF    = iparams{3}(2);
+% -- Curve parameter variables
 for i = 1:nSTATES
     % --- Storing each curve parameter
-    MFP(i)      = iparams{1}(i,1);
-    BOFF(i)     = iparams{1}(i,2);
-    DCL(i)      = iparams{1}(i,3);
-    INT(i)      = iparams{1}(i,4);
-    FWHM(i)     = iparams{1}(i,5);
-    MR(i)       = iparams{1}(i,6);
-    LSE(i)      = iparams{1}(i,7);
-    LSI(i)      = iparams{1}(i,8);
-    LSW(i)      = iparams{1}(i,9);
-    ASY(i)      = iparams{1}(i,10);
+    DCL(i)      = iparams{1}(i+2+0*nSTATES);
+    INT(i)      = iparams{1}(i+2+1*nSTATES);
+    FWHM(i)     = iparams{1}(i+2+2*nSTATES);
+    MR(i)       = iparams{1}(i+2+3*nSTATES);
+    LSE(i)      = iparams{1}(i+2+4*nSTATES);
+    LSI(i)      = iparams{1}(i+2+5*nSTATES);
+    LSW(i)      = iparams{1}(i+2+6*nSTATES);
+    ASY(i)      = iparams{1}(i+2+7*nSTATES);
     % --- Storing the constraints of each curve parameter
-    lbMFP  	= iparams{2}(i,1);  ubMFP       = iparams{3}(i,1);
-    lbBOFF	= iparams{2}(i,2);  ubBOFF      = iparams{3}(i,2);
-    lbDCL  	= iparams{2}(i,3);  ubDCL       = iparams{3}(i,3);
-    lbINT  	= iparams{2}(i,4);  ubINT       = iparams{3}(i,4);
-    lbFWHM	= iparams{2}(i,5);  ubFWHM      = iparams{3}(i,5);
-    lbMR  	= iparams{2}(i,6);  ubMR        = iparams{3}(i,6);
-    lbLSE  	= iparams{2}(i,7);  ubLSE       = iparams{3}(i,7);
-    lbLSI  	= iparams{2}(i,8);  ubLSI       = iparams{3}(i,8);
-    lbLSW  	= iparams{2}(i,9);  ubLSW       = iparams{3}(i,9);
-    lbASY  	= iparams{2}(i,10); ubASY       = iparams{3}(i,10);
+    lbDCL(i)  	= iparams{2}(i+2+0*nSTATES);  ubDCL(i)       = iparams{3}(i+2+0*nSTATES);
+    lbINT(i)  	= iparams{2}(i+2+1*nSTATES);  ubINT(i)       = iparams{3}(i+2+1*nSTATES);
+    lbFWHM(i)	= iparams{2}(i+2+2*nSTATES);  ubFWHM(i)      = iparams{3}(i+2+2*nSTATES);
+    lbMR(i)  	= iparams{2}(i+2+3*nSTATES);  ubMR(i)        = iparams{3}(i+2+3*nSTATES);
+    lbLSE(i)  	= iparams{2}(i+2+4*nSTATES);  ubLSE(i)       = iparams{3}(i+2+4*nSTATES);
+    lbLSI(i)  	= iparams{2}(i+2+5*nSTATES);  ubLSI(i)       = iparams{3}(i+2+5*nSTATES);
+    lbLSW(i)  	= iparams{2}(i+2+6*nSTATES);  ubLSW(i)       = iparams{3}(i+2+6*nSTATES);
+    lbASY(i)  	= iparams{2}(i+2+7*nSTATES);  ubASY(i)       = iparams{3}(i+2+7*nSTATES);
     % --- Storing additional parameters
-    BE_Z0(i)	= DCL(i) - BOFF(i);
+    BE_Z0(i)	= DCL(i) - BOFF;
 end
 % -- Extracting the model potential well based on the model and BOFF
 imodelStr     	= mstheory_interp(modelStr, BOFF, MFP);
 ZPOT            = linspace(min(imodelStr.ZPOT(:)), max(imodelStr.ZPOT(:)), 1e3);
 EPOT            = interp1(imodelStr.ZPOT, imodelStr.EPOT, ZPOT);
-
-%% - 2 - Extracting all background subtraction data and information
-% -- Extracting the background
-[X, D, B]  = PESBackground(xdat, ydat,...
-    bTYPE, ibgrnd{1}(1), ibgrnd{1}(2), ibgrnd{1}(3), ibgrnd{1}(4), ibgrnd{1}(5), ibgrnd{1}(6));
 
 %% - 3 - Extracting all model data and information
 % -- Initialising the vectors to contain XPS data
@@ -88,7 +91,7 @@ end
 
 %% - 3 - Determination of the residuals and chi-squared
 R           = M - (D - B);                  % Residuals
-CHISQ       = sum(R.^2 ./ abs(M));          % Chi-squared
+CHISQ       = sum(R.^2 ./ abs(M + B));      % Chi-squared
 
 %% - 4 - Plotting the model to be used for fitting
 % -- Initialising the plot properties
@@ -102,20 +105,33 @@ fig.Position(4) = 2.5*pp.fig5x4(2);
 
 %% - 4.1 - PLOTTING THE RAW DATA AND BEST FIT BACKGROUND
 subplot(221); hold on;
-h = patch(...
-    [ibgrnd{1}(1), ibgrnd{1}(1), ibgrnd{1}(2), ibgrnd{1}(2), ibgrnd{1}(1)],...
-    [-1, 1, 1, -1, -1].*1e4, [0.8 0.9 0.8], 'facealpha', 0.5, 'edgecolor', [0 0 0]);
-h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-plot(xdat, ydat, 'b-', 'linewidth', 0.5*pp.lwidth);
-plot(X, D, 'b-', 'linewidth', pp.llwidth);
-plot(X, B, 'r-', 'linewidth', pp.llwidth);
-plot(X, DB, 'k-', 'linewidth', pp.llwidth);
-gca_props(); grid on;
+% -- Plotting the ROI, LHS and RHS analysis windows
+ROI     = [X(1), X(end)]; 
+LHS     = ROI(1) + 0.05.*[-1,1].*range(xdat(:));
+RHS     = ROI(2) + 0.05.*[-1,1].*range(xdat(:));
+hLHS    = patch([LHS(1), LHS(1), LHS(2), LHS(2), LHS(1)], [-1, 1, 1, -1, -1].*1e6, [0.6 0.6 0.2], 'facealpha', 0.4, 'edgecolor', 'none');
+hLHS.Annotation.LegendInformation.IconDisplayStyle = 'off';
+hRHS    = patch([RHS(1), RHS(1), RHS(2), RHS(2), RHS(1)], [-1, 1, 1, -1, -1].*1e6, [0.6 0.6 0.2], 'facealpha', 0.4, 'edgecolor', 'none');
+hRHS.Annotation.LegendInformation.IconDisplayStyle = 'off';
+hMID    = patch([ROI(1), ROI(1), ROI(2), ROI(2), ROI(1)], [-1, 1, 1, -1, -1].*1e6, [0.8 0.9 0.8], 'facealpha', 0.5, 'edgecolor', 'none');
+hMID.Annotation.LegendInformation.IconDisplayStyle = 'off';
+% -- Plotting a vertical line to show the ROI
+a = line([ROI(1) ROI(1)], [-1e5, 1e5], 'Color', [0 0 0], 'LineWidth', 1, 'Linestyle', '-');
+a.Annotation.LegendInformation.IconDisplayStyle = 'off';
+b = line([ROI(2) ROI(2)], [-1e5, 1e5], 'Color', [0 0 0], 'LineWidth', 1, 'Linestyle', '-');
+b.Annotation.LegendInformation.IconDisplayStyle = 'off';
+% -- Plotting the 1D data
+plot(xdat, ydat, 'b-', 'linewidth', 0.5);
+plot(X, D, 'b-', 'linewidth', 2);
+plot(X, B, 'r-', 'linewidth', 2);
+plot(X, DB, 'k-', 'linewidth', 2);
+gca_props(); title('Background Subtraction', 'interpreter', 'none', 'fontsize', 9); 
 xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
-ylabel('$$ \bf  Intensity $$', 'Interpreter', 'latex');
-axis([min(xdat(:)), max(xdat(:)),0, 1.25*max(ydat(:))]);
+ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
 legend({'Initial Data', 'ROI: Data', 'ROI: Background', 'ROI: Final'}, 'location', 'best', 'fontsize', 9);
-title("Background Subtraction", 'interpreter', 'none', 'fontsize', 9);
+% -- Determining the best limits for the plot
+axLim_y = [ydat; DB];
+axis([min(xdat(:)), max(xdat(:)), min(axLim_y(:)), 1.1*max(axLim_y(:))]);
 
 %% - 4.2 - PLOTTING THE BEST FIT CURVE COMPONENTS AND FINAL MODEL FIT
 subplot(8,2,[2,4,6]); hold on;
@@ -155,14 +171,14 @@ xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 subplot(8,2,[2,4,6]); hold on;
 for i = 1:nSTATES
     %% - 5.1 - Plotting the primary peak uncertainties
-    x_vals = [lbDCL, lbDCL, ubDCL, ubDCL, lbDCL];
-    y_vals = [lbINT, ubINT, ubINT, lbINT, lbINT];
+    x_vals = [lbDCL(i), lbDCL(i), ubDCL(i), ubDCL(i), lbDCL(i)];
+    y_vals = [lbINT(i), ubINT(i), ubINT(i), lbINT(i), lbINT(i)];
     patch(x_vals, y_vals, pp.col.fit{i}, 'FaceAlpha', 0.65, 'EdgeAlpha', 0);
     %% - 5.2 - Adding text to identify each peak index
     text(max(x_vals), max(y_vals), string(i), 'interpreter', 'latex', 'fontsize', 14, 'color', 'k');
     %% - 5.3 - Plotting the spin-orbit split (SOS) peak uncertainties
-    x_vals  = DCL(i) + [lbLSE, lbLSE, ubLSE, ubLSE, lbLSE];
-    y_vals  = [lbINT*lbLSI, ubINT*ubLSI, ubINT*ubLSI, lbINT*lbLSI, lbINT*lbLSI];
+    x_vals  = DCL(i) + [lbLSE(i), lbLSE(i), ubLSE(i), ubLSE(i), lbLSE(i)];
+    y_vals  = [lbINT(i)*lbLSI(i), ubINT(i)*ubLSI(i), ubINT(i)*ubLSI(i), lbINT(i)*lbLSI(i), lbINT(i)*lbLSI(i)];
     patch(x_vals, y_vals, pp.col.fit{i}, 'FaceAlpha', 0.65, 'EdgeAlpha', 0);
 end
 

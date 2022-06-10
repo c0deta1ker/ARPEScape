@@ -28,18 +28,26 @@ function fitStr = pes2boff_solver(pesStr, modelStr, cTYPE, iparams, bTYPE, ibgrn
 
 %% Default parameters
 % - Default input parameters to use
-if nargin < 6; solve_type = "fmincon"; end
+if nargin < 6; solve_type = "lsqcurvefit"; end
 if nargin < 5
-    ibgrnd{1} = [min(pesStr.xdat(:))+0.2, max(pesStr.xdat(:))-0.2, 1, 0.5, 0, 0];
-    ibgrnd{2} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) - 0.05;
-    ibgrnd{3} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) + 0.05;
+    ibgrnd{1} = [...
+        mean(pesStr.xdat(:)) - abs(0.25*range(pesStr.xdat(:))),...
+        mean(pesStr.xdat(:)) + abs(0.25*range(pesStr.xdat(:))),...
+        0];
+    ibgrnd{2} = [0, 0, -abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{3} = [0, 0, +abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{4} = {1};
 end
 if nargin < 4; bTYPE = "Poly"; end
-if isempty(solve_type); solve_type = "fmincon"; end
+if isempty(solve_type); solve_type = "lsqcurvefit"; end
 if isempty(ibgrnd)
-    ibgrnd{1} = [min(pesStr.xdat(:))+0.2, max(pesStr.xdat(:))-0.2, 1, 0.5, 0, 0];
-    ibgrnd{2} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) - 0.05;
-    ibgrnd{3} = abs(0.0.*ibgrnd{1}); ibgrnd{2}(:,6) = ibgrnd{1}(:,6) + 0.05;
+    ibgrnd{1} = [...
+        mean(pesStr.xdat(:)) - abs(0.25*range(pesStr.xdat(:))),...
+        mean(pesStr.xdat(:)) + abs(0.25*range(pesStr.xdat(:))),...
+        0];
+    ibgrnd{2} = [0, 0, -abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{3} = [0, 0, +abs(0.05*range(pesStr.ydat(:)))];
+    ibgrnd{4} = {1};
 end
 if isempty(bTYPE); bTYPE = "Poly"; end
 
@@ -52,7 +60,7 @@ lb = [iparams{2}(:); ibgrnd{2}(:)];
 ub = [iparams{3}(:); ibgrnd{3}(:)];
 % -- Defining the initial conditions and limits of the optimisation method
 for i = 1:nSTATES
-    indx = (2+i):nSTATES:(length(x0)-6); % +2 to account for MFP and BOFF                    
+    indx = (2+i):nSTATES:(length(x0)-3); % +2 to account for MFP and BOFF                    
     X0 = x0(indx); LB = lb(indx); UB = ub(indx);
     % --- parameters
     if X0(2) < 0; x0(indx(2)) = 0; end    % if INT < 0, then make it 0
@@ -78,17 +86,9 @@ for i = 1:nSTATES
     if UB(6) < 0; ub(indx(6)) = 0; end    % if LSI < 0, then make it 0
     if UB(7) < 0; ub(indx(7)) = 0; end    % if LSW < 0, then make it 0
     if UB(8) < 0; ub(indx(8)) = 0; end    % if ASY < 0, then make it 0
-    % --- forcing the background polynomial order to be an integer
-    x0(end-3) = round(ceil(x0(end-3)));
-    lb(end-3) = round(ceil(lb(end-3)));
-    ub(end-3) = round(ceil(ub(end-3)));
-    % --- forcing the lambda parameters between 0->1 (linear vs shirley mixing ratio)
-    if x0(end-2) < 0; x0(end-2) = 0; end	% if LAM < 0, then make it 0
-    if lb(end-2) < 0; lb(end-2) = 0; end	% if LAM < 0, then make it 0
-    if ub(end-2) < 0; ub(end-2) = 0; end	% if LAM < 0, then make it 0
-    if x0(end-2) > 1; x0(end-2) = 1; end	% if LAM > 1, then make it 1
-    if lb(end-2) > 1; lb(end-2) = 1; end	% if LAM > 1, then make it 1
-    if ub(end-2) > 1; ub(end-2) = 1; end	% if LAM > 1, then make it 1    
+    % --- ensuring the fit window is within the domain
+    if x0(end-2) < min(pesStr.xdat(:)); x0(end-2) = min(pesStr.xdat(:)); end
+    if x0(end-1) > max(pesStr.xdat(:)); x0(end-1) = max(pesStr.xdat(:)); end 
 end
 % -- Determining the degrees of freedom for the fitting model
 val	= lb + (ub-lb); DoF = 0;
@@ -96,13 +96,13 @@ for i = 1:length(val); if val(i) ~= lb(i); DoF = DoF + 1; end; end
 
 %% - 2 - DEFINING THE XPS DATA AND FITTING ARGUMENTS
 % -- Extracting the data to be fitted
-[roi_xdat, roi_ydat, roi_bgrnd] = PESBackground(pesStr.xdat, pesStr.ydat, bTYPE, x0(end-5), x0(end-4), x0(end-3), x0(end-2), x0(end-1), x0(end));
+[roi_xdat, roi_ydat, roi_bgrnd] = PESBackground(pesStr.xdat, pesStr.ydat, bTYPE, x0(end-2), x0(end-1), x0(end));
 % -- Defining a structure that stores all relevant model and data variables
 XPSObj              = pesStr;
 XPSObj.roi_xdat     = roi_xdat;
 XPSObj.roi_ydat     = roi_ydat;
 XPSObj.roi_bgrnd	= roi_bgrnd;
-XPSObj.roi_int_sbtr	= XPSObj.roi_ydat - XPSObj.roi_bgrnd;
+XPSObj.roi_ydat_sbtr	= XPSObj.roi_ydat - XPSObj.roi_bgrnd;
 % -- Appending the input arguments to the global variable
 XPSObj.fit_args.solve_type  = solve_type;
 XPSObj.fit_args.nSTATES   	= length(cTYPE);
@@ -120,6 +120,7 @@ FuncTol     = 1e-7; % 1e-7;
 StepTol     = 1e-7; % 1e-7;
 OptTol      = 1e-7; % 1e-7;
 ConTol      = 1e-7; % 1e-7;
+FinDiffRelStep = 1e-5; % 1e-5;
 % -- Simulated annealing properties
 TempFcn     = 'temperaturefast';
 InitTemp    = 1e2;
@@ -132,7 +133,9 @@ if solve_type == "lsqcurvefit"
         'FunctionTolerance', FuncTol,...
         'StepTolerance', StepTol,...
         'OptimalityTolerance', OptTol,...
-        'MaxIterations', MaxIter);
+        'MaxIterations', MaxIter,...
+        'FinDiffRelStep', FinDiffRelStep,...
+        'FinDiffType', 'central');
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
     [params,rnorm,resid,exitflag,output,lambda,jacobian]  = lsqcurvefit(@(x,roi_xdat) full_pes_function(x,roi_xdat,XPSObj), x0, roi_xdat, roi_ydat, lb, ub, options);  
 %% - 3.2 - LOCAL SOLVER: UNBOUNDED LEAST SQUARES NONLINEAR REGRESSION FIT
@@ -152,7 +155,9 @@ elseif solve_type == "fminunc"
         'FunctionTolerance', FuncTol,...
         'StepTolerance', StepTol,...
         'OptimalityTolerance', OptTol,...
-        'MaxIterations', MaxIter);
+        'MaxIterations', MaxIter,...
+        'FinDiffRelStep', FinDiffRelStep,...
+        'FinDiffType', 'central');
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
     [params,fval,exitflag,output,grad,hessian] = fminunc(@(x) minimize_function(x,XPSObj), x0, options); 
 %% - 3.4 - LOCAL SOLVER: FIND MINIMUM OF BOUNDED MULTIVARIATE FUNCTION
@@ -164,7 +169,9 @@ elseif solve_type == "fmincon"
         'StepTolerance', StepTol,...
         'OptimalityTolerance', OptTol,...
         'MaxIterations', MaxIter,...
-        'ConstraintTolerance', ConTol);
+        'ConstraintTolerance', ConTol,...
+        'FinDiffRelStep', FinDiffRelStep,...
+        'FinDiffType', 'central');
     % -- Defining the optimisation options for the hybrid minimisation that takes place after convergence
     [params,fval,exitflag,output,lambda,grad,hessian] = fmincon(@(x) minimize_function(x,XPSObj), x0, [], [], [], [], lb, ub, [], options);  
 %% - 3.5 - LOCAL SOLVER: BOUNDED LEAST SQUARES FITTING METHOD FOR NON-LINEAR LEAST SQUARES PROBLEMS
@@ -234,13 +241,10 @@ fitStr.MINFUN   = minimize_function(params, XPSObj);
 % -- Append the degrees of freedom
 fitStr.DoF   	= DoF;
 %% 4.3 - Storing the final fit variables for the PES background
-fitStr.bPARAMS	= params(end-5:end);
+fitStr.bPARAMS	= params(end-2:end);
 fitStr.LHS      = fitStr.bPARAMS(1);
 fitStr.RHS      = fitStr.bPARAMS(2);
-fitStr.ORD      = fitStr.bPARAMS(3);
-fitStr.LAM      = fitStr.bPARAMS(4);
-fitStr.DEL      = fitStr.bPARAMS(5);
-fitStr.BGR      = fitStr.bPARAMS(6);
+fitStr.BGR      = fitStr.bPARAMS(3);
 %% 4.4 - Storing the final fit variables of each PES curve component
 fitStr.MFP  	= params(1);
 fitStr.BOFF 	= params(2);
@@ -252,7 +256,7 @@ fitStr.ZPOT 	= linspace(min(imodelStr.ZPOT(:)), max(imodelStr.ZPOT(:)), 1e3);
 fitStr.EPOT     = interp1(imodelStr.ZPOT, imodelStr.EPOT, fitStr.ZPOT);
 for i = 1:fitStr.nSTATES
     % --- Best fit components on new domain
-    fitStr.cPARAMS(i,:) = params((2+i):fitStr.nSTATES:(end-6));
+    fitStr.cPARAMS(i,:) = params((2+i):fitStr.nSTATES:(end-3));
    	[fitStr.cYY(:,i), fitStr.potYY(:,:,i)] = PESCurve_POT(fitStr.XX, fitStr.cTYPE(i),...
         fitStr.cPARAMS(i,1), fitStr.cPARAMS(i,2), fitStr.cPARAMS(i,3),...
         fitStr.cPARAMS(i,4), fitStr.cPARAMS(i,5), fitStr.cPARAMS(i,6),...
@@ -269,7 +273,7 @@ for i = 1:fitStr.nSTATES
     fitStr.LSW(i)   = fitStr.cPARAMS(i,7);
     fitStr.ASY(i)   = fitStr.cPARAMS(i,8);
     % --- Storing energy information 
-    fitStr.BE_Z0(i)	= fitStr.DCL(i) - fitStr.BOFF(i);
+    fitStr.BE_Z0(i)	= fitStr.DCL(i) - fitStr.BOFF;
     [~,I] = max(fitStr.cYY(:,i)); fitStr.BE_MAX(i)= fitStr.XX(I);
     % --- Storing the curve area information
     fitStr.AREA(i)	= trapz(fitStr.XX, fitStr.cYY(:,i));
@@ -296,19 +300,19 @@ function MINFUN = minimize_function(x, XPSObj)
     % - 4 - Extracting the RESIDUALS (residuals = data - (model + background))
     R   = D - (M + B);
     % - 5 - Extracting the CHI-SQUARED value to be minimised
-    MINFUN = sum(R.^2 ./ (M + B));
+    MINFUN = sum(R.^2 ./ abs(M + B));
 end
 
 %% DEFINING THE FUNCTION THAT EXTRACTS THE XPS DATA TO BE FITTED
 function [X, D] = fit_data(x, XPSObj)
-    [X, D, ~] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
+    [X, D, ~] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end));
     D(isnan(D)) = 0;
     if size(D, 2) > 1; D = D'; end
 end
 
 %% DEFINING THE FUNCTION THAT DETERMINES THE TOTAL PES BACKGROUND
 function B = fit_background(x, XPSObj)
-    [~, ~, B] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
+    [~, ~, B] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end));
     B(isnan(B)) = 0;
     if size(B, 2) > 1; B = B'; end
 end
@@ -323,12 +327,13 @@ function M = fit_model(x, XPSObj)
     comp_int = {};
     for i = 1:XPSObj.fit_args.nSTATES
         % -- Extracting the arguments for the component curve
-        pes_args    = x((2+i):XPSObj.fit_args.nSTATES:(end-6));
+        pes_args    = x((2+i):XPSObj.fit_args.nSTATES:(end-3));
         % -- Extracting the component intensities
         comp_int{i} = PESCurve_POT(XPSObj.roi_xdat, XPSObj.fit_args.cTYPE(i),...
             pes_args(1), pes_args(2), pes_args(3),...
             pes_args(4), pes_args(5), pes_args(6),...
-            pes_args(7), pes_args(8), x(1), ZPOT, EPOT);
+            pes_args(7), pes_args(8),...
+            x(1), ZPOT, EPOT);
     end
     % - 3 - Sum up all of the curve components to get the final model PES curve
     pes_int = zeros(size(XPSObj.roi_xdat));
@@ -350,21 +355,24 @@ function MB = full_pes_function(x, xdat, XPSObj)
     comp_int = {};
     for i = 1:XPSObj.fit_args.nSTATES
         % -- Extracting the arguments for the component curve
-        pes_args    = x((2+i):XPSObj.fit_args.nSTATES:(end-6));
+        pes_args    = x((2+i):XPSObj.fit_args.nSTATES:(end-3));
         % -- Extracting the component intensities
         comp_int{i} = PESCurve_POT(xdat, XPSObj.fit_args.cTYPE(i),...
             pes_args(1), pes_args(2), pes_args(3),...
             pes_args(4), pes_args(5), pes_args(6),...
-            pes_args(7), pes_args(8), x(1), ZPOT, EPOT);
+            pes_args(7), pes_args(8),...
+            x(1), ZPOT, EPOT);
     end
-    % - 2 - Sum up all of the curve components to get the final model PES curve
+    % - 3 - Sum up all of the curve components to get the final model PES curve
     pes_int = zeros(size(xdat));
     for i = 1:XPSObj.fit_args.nSTATES
         pes_int = pes_int + comp_int{i};
     end
     M = pes_int;
-    % - 3 - Determine the background to be used
-    [~, ~, B] = PESBackground(xdat, XPSObj.roi_ydat, XPSObj.fit_args.bTYPE, x(end-5), x(end-4), x(end-3), x(end-2), x(end-1), x(end));
-    % - 4 - Final output is the sum of the model and background
+    % - 4 - Determine the background to be used
+    [B_xdat, ~, B] = PESBackground(xdat, XPSObj.roi_ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end));
+    B = interp1(B_xdat, B, xdat);
+    % - 5 - Final output is the sum of the model and background
     MB = M + B;
+    MB(isnan(MB)) = 0; if size(MB, 2) > 1; MB = MB'; end
 end

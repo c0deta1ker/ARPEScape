@@ -37,7 +37,9 @@ Indx                = [lbIndx, ubIndx];
 % -- Finding the maximum peak value within this range
 [maxVal, maxInd]	= max(ydat_norm(Indx(1):Indx(2)));
 peak_index          = lbIndx + maxInd - 1;
-sprintf(("xval = %.2f eV, yval = %.2f"), xdat(peak_index), ydat_norm(peak_index))
+if plot_results == 1 
+    sprintf(("xval = %.2f eV, yval = %.2f"), xdat(peak_index), ydat_norm(peak_index)) 
+end
 % -- Normalising the XPS data
 ydat_norm           = ydat_norm ./ maxVal;
 

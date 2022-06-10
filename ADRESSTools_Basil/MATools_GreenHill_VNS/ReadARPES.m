@@ -39,3 +39,6 @@ else
    pos=strfind(Note,'Epass   =');
    ep=str2double(Note(pos+9:pos+12));
 end
+
+
+

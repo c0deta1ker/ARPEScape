@@ -13,9 +13,9 @@ function [hv, xsect, asymmetry] = get_pixsad_props(element, corelevel, hvi)
 %   -   hvi:            photon energy value (or range [min, max]) over which the cross-section and asymmetries will be determined.
 %
 %   OUT:
-%   -   hv:             1xN vector (or table) of the interpolated / nearest photon energies to the input based on the data.
-%   -   xsect:          1xN vector (or table) of the photoionisation cross-sections.
-%   -   asymmetry:      1xN vector (or table) of the asymmetries.
+%   -   hv:             1×N vector (or table) of the interpolated / nearest photon energies to the input based on the data.
+%   -   xsect:          1×N vector (or table) of the photoionisation cross-sections.
+%   -   asymmetry:      1×N vector (or table) of the asymmetries.
 %   NOTE: if any of the outputs are NaN, this means you are outside of the
 %   range of photon energies for the defined data.
 

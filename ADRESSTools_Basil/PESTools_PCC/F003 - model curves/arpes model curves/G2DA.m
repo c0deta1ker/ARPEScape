@@ -7,16 +7,16 @@ function int = G2DA(xdat, ydat, peak, x0, y0, xfwhm, yfwhm)
 %   REQ. FUNCTIONS: none
 %
 %   IN:
-%   -   xdat:       Nx1 row vector of the x-axis input domain (kx for ARPES)
-%   -   ydat:       1xM column vector of the y-axis input domain (Eb for ARPES)
+%   -   xdat:       [1×M] row vector of the x-axis input domain (kx for ARPES)
+%   -   ydat:       [N×1] column vector of the y-axis input domain (Eb for ARPES)
 %   -   peak:       scalar of the maximum peak height of the Gaussian.
 %   -   x0:         scalar of the peak position along the x-axis of the Gaussian.
 %   -   y0:         scalar of the peak position along the y-axis of the Gaussian.
-%   -   xfwhm:     	scalar of the full-width at half-maximum (FWHM) of the Gaussian along the x-axis.
-%   -   yfwhm:     	scalar of the full-width at half-maximum (FWHM) of the Gaussian along the y-axis.
+%   -   xfwhm:      scalar of the full-width at half-maximum (FWHM) of the Gaussian along the x-axis.
+%   -   yfwhm:      scalar of the full-width at half-maximum (FWHM) of the Gaussian along the y-axis.
 %
 %   OUT:
-%   -   int:        NxM column vector of the output Gaussian curve profile
+%   -   int:        [N×M] array of the output Asymetrical Gaussian spot profile
 
 %% Default parameters
 if nargin < 7; yfwhm = 1;  end

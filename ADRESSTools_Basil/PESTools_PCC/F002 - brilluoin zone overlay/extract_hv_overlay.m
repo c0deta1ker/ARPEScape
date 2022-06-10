@@ -129,6 +129,6 @@ hvOverlay.imfp          = imfp;
 hvOverlay.dkz           = dkz;
 hvOverlay.kx            = kx;
 hvOverlay.kz            = kz;
-hvOverlay.kx_lower      = kx_lower;
-hvOverlay.kx_upper      = kx_upper;
+% hvOverlay.kx_lower      = kx_lower;
+% hvOverlay.kx_upper      = kx_upper;
 end

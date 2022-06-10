@@ -7,15 +7,15 @@ function int = G2D(xdat, ydat, peak, x0, y0, fwhm)
 %   REQ. FUNCTIONS: none
 %
 %   IN:
-%   -   xdat:       Nx1 row vector of the x-axis input domain (kx for ARPES)
-%   -   ydat:       1xM column vector of the y-axis input domain (Eb for ARPES)
+%   -   xdat:       [1×M] row vector of the x-axis input domain (kx for ARPES)
+%   -   ydat:       [N×1] column vector of the y-axis input domain (Eb for ARPES)
 %   -   peak:       scalar of the maximum peak height of the Gaussian.
 %   -   x0:         scalar of the peak position along the x-axis of the Gaussian.
 %   -   y0:         scalar of the peak position along the y-axis of the Gaussian.
-%   -   fwhm:     	scalar of the full-width at half-maximum (FWHM) of the Gaussian along both x- and y-axes.
+%   -   fwhm:       scalar of the full-width at half-maximum (FWHM) of the Gaussian along both x- and y-axes.
 %
 %   OUT:
-%   -   int:        NxM column vector of the output Gaussian curve profile
+%   -   int:        [N×M] array of the output Gaussian spot profile
 
 %% Default parameters
 if nargin < 6; fwhm = 1;  end
@@ -45,4 +45,5 @@ int 	= int ./ max(int(:));
 int 	= peak .* int;
 % If isnan, return zero
 int(isnan(int)) = 0;
+
 end

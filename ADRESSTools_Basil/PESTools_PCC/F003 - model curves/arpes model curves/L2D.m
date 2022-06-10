@@ -7,15 +7,15 @@ function int = L2D(xdat, ydat, peak, x0, y0, fwhm)
 %   REQ. FUNCTIONS: none
 %
 %   IN:
-%   -   xdat:       Nx1 row vector of the x-axis input domain (kx for ARPES)
-%   -   ydat:       1xM column vector of the y-axis input domain (Eb for ARPES)
+%   -   xdat:       [1×M] row vector of the x-axis input domain (kx for ARPES)
+%   -   ydat:       [N×1] column vector of the y-axis input domain (Eb for ARPES)
 %   -   peak:       scalar of the maximum peak height of the Lorentzian.
 %   -   x0:         scalar of the peak position along the x-axis of the Lorentzian.
 %   -   y0:         scalar of the peak position along the y-axis of the Lorentzian.
-%   -   fwhm:     	scalar of the full-width at half-maximum (FWHM) of the Lorentzian along both x- and y-axes.
+%   -   fwhm:       scalar of the full-width at half-maximum (FWHM) of the Lorentzian along both x- and y-axes.
 %
 %   OUT:
-%   -   int:        NxM column vector of the output Lorentzian curve profile
+%   -   int:        [N×M] array of the output Lorentzian spot profile
 
 %% Default parameters
 if nargin < 6; fwhm = 1;  end

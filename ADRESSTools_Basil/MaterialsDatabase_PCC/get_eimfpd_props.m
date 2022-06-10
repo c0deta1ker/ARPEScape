@@ -10,8 +10,8 @@ function [ke_dat, imfp] = get_eimfpd_props(element)
 %   -   element:	char/string of the element; e.g. "H", "He", "Si", "In"...
 %
 %   OUT:
-%   -   ke_dat:     N x M array of the N'th electron kinetic energies taken from M'th file.
-%   -   imfp:   	N x M array of the N'th imfp taken from M'th file.
+%   -   ke_dat:     N×M array of the N'th electron kinetic energies taken from M'th file.
+%   -   imfp:   	N×M array of the N'th imfp taken from M'th file.
 
 %% Default parameters
 if nargin < 1; element = []; end

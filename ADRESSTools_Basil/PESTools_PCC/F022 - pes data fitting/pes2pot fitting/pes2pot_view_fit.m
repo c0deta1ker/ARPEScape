@@ -33,20 +33,33 @@ fig.Position(4) = 2.5*pp.fig5x4(2);
 
 %% - 2.1 - PLOTTING THE RAW DATA AND BEST FIT BACKGROUND
 subplot(221); hold on;
-h = patch(...
-    [fitStr.ibgrnd{1}(1), fitStr.ibgrnd{1}(1), fitStr.ibgrnd{1}(2), fitStr.ibgrnd{1}(2), fitStr.ibgrnd{1}(1)],...
-    [-1, 1, 1, -1, -1].*1e4, [0.8 0.9 0.8], 'facealpha', 0.5, 'edgecolor', [0 0 0]);
-h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-plot(fitStr.xdat, fitStr.ydat, 'b-', 'linewidth', 0.5*pp.lwidth);
-plot(fitStr.X, fitStr.D, 'b-', 'linewidth', pp.llwidth);
-plot(fitStr.X, fitStr.B, 'r-', 'linewidth', pp.llwidth);
-plot(fitStr.X, fitStr.DB, 'k-', 'linewidth', pp.llwidth);
-gca_props(); grid on;
+% -- Plotting the ROI, LHS and RHS analysis windows
+ROI     = [fitStr.X(1), fitStr.X(end)]; 
+LHS     = ROI(1) + 0.05.*[-1,1].*range(fitStr.xdat(:));
+RHS     = ROI(2) + 0.05.*[-1,1].*range(fitStr.xdat(:));
+hLHS    = patch([LHS(1), LHS(1), LHS(2), LHS(2), LHS(1)], [-1, 1, 1, -1, -1].*1e6, [0.6 0.6 0.2], 'facealpha', 0.4, 'edgecolor', 'none');
+hLHS.Annotation.LegendInformation.IconDisplayStyle = 'off';
+hRHS    = patch([RHS(1), RHS(1), RHS(2), RHS(2), RHS(1)], [-1, 1, 1, -1, -1].*1e6, [0.6 0.6 0.2], 'facealpha', 0.4, 'edgecolor', 'none');
+hRHS.Annotation.LegendInformation.IconDisplayStyle = 'off';
+hMID    = patch([ROI(1), ROI(1), ROI(2), ROI(2), ROI(1)], [-1, 1, 1, -1, -1].*1e6, [0.8 0.9 0.8], 'facealpha', 0.5, 'edgecolor', 'none');
+hMID.Annotation.LegendInformation.IconDisplayStyle = 'off';
+% -- Plotting a vertical line to show the ROI
+a = line([ROI(1) ROI(1)], [-1e5, 1e5], 'Color', [0 0 0], 'LineWidth', 1, 'Linestyle', '-');
+a.Annotation.LegendInformation.IconDisplayStyle = 'off';
+b = line([ROI(2) ROI(2)], [-1e5, 1e5], 'Color', [0 0 0], 'LineWidth', 1, 'Linestyle', '-');
+b.Annotation.LegendInformation.IconDisplayStyle = 'off';
+% -- Plotting the 1D data
+plot(fitStr.xdat, fitStr.ydat, 'b-', 'linewidth', 0.5);
+plot(fitStr.X, fitStr.D, 'b-', 'linewidth', 2);
+plot(fitStr.X, fitStr.B, 'r-', 'linewidth', 2);
+plot(fitStr.X, fitStr.DB, 'k-', 'linewidth', 2);
+gca_props(); title('Background Subtraction', 'interpreter', 'none', 'fontsize', 9); 
 xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
-ylabel('$$ \bf  Intensity $$', 'Interpreter', 'latex');
-axis([min(fitStr.xdat(:)), max(fitStr.xdat(:)),0, 1.25*max(fitStr.ydat(:))]);
+ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
 legend({'Initial Data', 'ROI: Data', 'ROI: Background', 'ROI: Final'}, 'location', 'best', 'fontsize', 9);
-title("Background Subtraction", 'interpreter', 'none', 'fontsize', 9);
+% -- Determining the best limits for the plot
+axLim_y = [fitStr.ydat; fitStr.DB];
+axis([min(fitStr.xdat(:)), max(fitStr.xdat(:)), min(axLim_y(:)), 1.1*max(axLim_y(:))]);
 
 %% - 2.2 - PLOTTING THE BEST FIT CURVE COMPONENTS AND FINAL MODEL FIT
 subplot(8,2,[2,4,6]); hold on;

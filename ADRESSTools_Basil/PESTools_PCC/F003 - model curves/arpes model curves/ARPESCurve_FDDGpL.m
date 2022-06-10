@@ -1,5 +1,5 @@
-function zdat = ARPESCurve_FDDGpL(xdat, ydat, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO)
-% zdat = ARPESCurve_FDD(xdat, ydat, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW)
+function zdat = ARPESCurve_FDDGpL(xdat, ydat, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO, plot_result)
+% zdat = ARPESCurve_FDDGpL(xdat, ydat, cTYPE, INT, XLOC, YLOC, XFWHM, YFWHM, MSTAR, FDEF, FDT, FDW, BGR, BIN, BCO, plot_result)
 %   Function that evaluates a generic angle-resolved photoelectron 
 %   spectroscopy (ARPES) curve in 2D. This can be used to model an ARPES
 %   spectrum, that is built up by a sum of individual Gaussians.
@@ -7,8 +7,8 @@ function zdat = ARPESCurve_FDDGpL(xdat, ydat, cTYPE, INT, XLOC, YLOC, XFWHM, YFW
 %   REQ. FUNCTIONS: none
 %
 %   IN:
-%   -   xdat:    	1xM row vector of the x-axis domain
-%   -   ydat:    	Nx1 column vector of the y-axis domain
+%   -   xdat:       [1×M] row vector of the x-axis input domain (kx for ARPES)
+%   -   ydat:       [N×1] column vector of the y-axis input domain (Eb for ARPES)
 %   -   cTYPE:      type of curve to use for fitting. Default: "G2DA" ("G2D", "L2D")
 %   -   INT:    	scalar of the peak intensity of 2D PE curve.
 %   -   XLOC:      	scalar of the x-location of the min/max of the 2D parabolic ARPES dispersion [Ang^-1].
@@ -22,12 +22,14 @@ function zdat = ARPESCurve_FDDGpL(xdat, ydat, cTYPE, INT, XLOC, YLOC, XFWHM, YFW
 %   -   BGR:        scalar of the gradient of the linear background.
 %   -   BIN:        scalar of the y-intercept of the linear background.
 %   -   BCO:        scalar of the constant background y-offset value.
+%   -   plot_result:    if 1, will plot figure summary, otherwise it wont.
 %
 %   OUT:
-%   -   zdat:     	N x M matrix of the output 2D parabolic ARPES dispersion.
+%   -   zdat:     	[N×M] matrix of the output 2D parabolic ARPES dispersion.
 
 %% Default parameters
 % Default based on inputs
+if nargin < 16; plot_result = 0;  end
 if nargin < 15; BCO  = 0.00;  end
 if nargin < 14; BIN  = 1.00;  end
 if nargin < 13; BGR  = 0.00;  end
@@ -55,6 +57,7 @@ if isempty(FDEF);   FDEF    = 0; end
 if isempty(BGR);    BGR     = 0; end
 if isempty(BIN);    BIN     = 1; end
 if isempty(BCO);    BCO     = 0; end
+if isempty(plot_result);  plot_result   = 0; end
 
 %% - 1 - Determination of the angle-resolved photoemission spectrum
 % Ensuring xdat is a row vector
@@ -70,5 +73,18 @@ zdat        = (ARPES_curve + BGR.*ydat+BIN) .* FDD_curve + BCO;
 % int         = INT .* (int / max(int));
 % If isnan, return zero
 zdat(isnan(zdat)) = 0;
+
+%% -- For Debugging
+if plot_result == 1
+    pp = plot_props();
+    fig = figure(); 
+    fig.Position(3) = pp.fig4x4(1); fig.Position(4) = pp.fig4x4(2);
+    hold on;
+    ImData(xdat, ydat, zdat); 
+    img_props(); title('ARPESCurve_FDDGpL()', 'Interpreter', 'none');
+    xlabel('$$ \bf  X $$', 'Interpreter', 'latex');
+    ylabel('$$ \bf  Y $$', 'Interpreter', 'latex');
+    axis([min(xdat(:)), max(xdat(:)), min(ydat(:)), max(ydat(:))]);
+end
 
 end

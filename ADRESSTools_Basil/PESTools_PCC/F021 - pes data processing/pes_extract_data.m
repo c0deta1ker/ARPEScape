@@ -59,7 +59,7 @@ if xpsN == 1
     pesStr.pes_args   	= {angleWin, xpsN};
     pesStr.cutWin   	= cutWin(1,:);
     pesStr.cutN     	= 1;
-    pesStr.xdat        = XCut{1};
+    pesStr.xdat         = XCut{1};
     pesStr.ydat      	= DCut{1};
 else
     for i = 1:xpsN
@@ -74,6 +74,7 @@ else
 end
 
 %% 4.0 - Plotting the figure if required
+fig = [];
 if plot_results == 1
     % - Initialising the plot properties
     pp  = plot_props();

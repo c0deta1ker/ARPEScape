@@ -11,12 +11,12 @@ function [imfp, dimfp] = eimfp_optical(ke_dat, element)
 %   [1] NIST Electron Inelastic-Mean-Free-Path Database: http://dx.doi.org/10.18434/T48C78.
 %
 %   IN:
-%   -   ke_dat:     N x 1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
+%   -   ke_dat:     N×1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]
 %   -   element:	char/string of the element; e.g. "H", "He", "Si", "In"...
 %
 %   OUT:
-%   -   imfp:       N x 1 column vector of the electron IMFP values [Angstroms]
-%   -   dimfp:      N x 1 column vector of the IMFP uncertainties [Angstroms]
+%   -   imfp:       N×1 column vector of the electron IMFP values [Angstroms]
+%   -   dimfp:      N×1 column vector of the IMFP uncertainties [Angstroms]
 
 %% Default parameters (Parameters for Silicon)
 if nargin < 2; element = []; end
