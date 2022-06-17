@@ -96,7 +96,7 @@ for i = 1:length(val); if val(i) ~= lb(i); DoF = DoF + 1; end; end
 
 %% - 2 - DEFINING THE XPS DATA AND FITTING ARGUMENTS
 % -- Extracting the data to be fitted
-[roi_xdat, roi_ydat, roi_bgrnd] = PESBackground(pesStr.xdat, pesStr.ydat, bTYPE, x0(end-2), x0(end-1), x0(end));
+[roi_xdat, roi_ydat, roi_bgrnd] = PESBackground(pesStr.xdat, pesStr.ydat, bTYPE, x0(end-2), x0(end-1), x0(end), ibgrnd{4});
 % -- Defining a structure that stores all relevant model and data variables
 XPSObj              = pesStr;
 XPSObj.roi_xdat     = roi_xdat;
@@ -291,14 +291,14 @@ end
 
 %% DEFINING THE FUNCTION THAT EXTRACTS THE XPS DATA TO BE FITTED
 function [X, D] = fit_data(x, XPSObj)
-    [X, D, ~] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end));
+    [X, D, ~] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end), XPSObj.fit_args.ibgrnd{4});
     D(isnan(D)) = 0;
     if size(D, 2) > 1; D = D'; end
 end
 
 %% DEFINING THE FUNCTION THAT DETERMINES THE TOTAL PES BACKGROUND
 function B = fit_background(x, XPSObj)
-    [~, ~, B] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end));
+    [~, ~, B] = PESBackground(XPSObj.xdat, XPSObj.ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end), XPSObj.fit_args.ibgrnd{4});
     B(isnan(B)) = 0;
     if size(B, 2) > 1; B = B'; end
 end
@@ -346,7 +346,7 @@ function MB = full_pes_function(x, xdat, XPSObj)
     end
     M = pes_int;
     % - 3 - Determine the background to be used
-    [B_xdat, ~, B] = PESBackground(xdat, XPSObj.roi_ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end));
+    [B_xdat, ~, B] = PESBackground(xdat, XPSObj.roi_ydat, XPSObj.fit_args.bTYPE, x(end-2), x(end-1), x(end), XPSObj.fit_args.ibgrnd{4});
     B = interp1(B_xdat, B, xdat);
     % - 4 - Final output is the sum of the model and background
     MB = M + B;
