@@ -1,21 +1,23 @@
 function fig = pes2boff_view_init(pesStr, modelStr, cTYPE, iparams, bTYPE, ibgrnd)
-% fig = pes2pot_view_init(pesStr, cTYPE, iparams, bTYPE, ibgrnd, MFP, ZPOT, EPOT)
+% fig = pes2boff_view_init(pesStr, modelStr, cTYPE, iparams, bTYPE, ibgrnd)
 %   This function is used to plot the initial, model XPS curve PRIOR to
-%   curve fitting with 'xps_solver()'. The plot consists of 3 subplots; (1) The
+%   curve fitting with 'pes2boff_solver()'. The plot consists of 3 subplots; (1) The
 %   background that is determined from the fit; (2) A plot showing all of
 %   the fitted curve components, as well as the final model fit and
 %   experimental data; (3) A plot of the residuals, showing the quality of
 %   the experimental and model fit. This is used as an informative plot
 %   that allows you to view and create a better initial guess of the XPS
 %   model prior to running the fitting algorithm.
+%
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   pesStr:         MATLAB data-structure that contains the XPS data.
+%   -   pesStr:         data structure that contains the PES data.
+%   -   modelStr:       data structure that contains the model data.
 %   -   cTYPE:          1xN vector of the type of curve to use for the nth state.
-%   -   iPESCurves:   	3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
-%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Shir", "LinShir")
-%   -   iPESBgrnd:      3 cells {x0}{lb}{ub} with 1x5 vectors: the background parameters: [LHS,RHS,ORD,LAM,DEL,BGR]
+%   -   iparams:   	    3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
+%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Poly", "Shir", "LinShir", "StepFDDGpL", "StepFDDGsL")
+%   -   ibgrnd:         4 cells {x0}{lb}{ub}{args} with 1x3 vectors of the background parameters: x0=lb=ub=[LHS,RHS,BGR], or argument of the background type args = []
 %
 %   OUT:
 %   -   fig:  	MATLAB figure object with the ARPES data plotted.
@@ -63,7 +65,7 @@ for i = 1:nSTATES
     BE_Z0(i)	= DCL(i) - BOFF;
 end
 % -- Extracting the model potential well based on the model and BOFF
-imodelStr     	= mstheory_interp(modelStr, BOFF, MFP);
+imodelStr     	= mstheory_interp_spectra(modelStr, BOFF, MFP);
 ZPOT            = linspace(min(imodelStr.ZPOT(:)), max(imodelStr.ZPOT(:)), 1e3);
 EPOT            = interp1(imodelStr.ZPOT, imodelStr.EPOT, ZPOT);
 
@@ -97,7 +99,7 @@ CHISQ       = sum(R.^2 ./ abs(M + B));      % Chi-squared
 % -- Initialising the plot properties
 pp  = plot_props();
 % -- Initialising the figure
-fig = figure(); set(fig, 'Name', 'XPS Curve Fitting');
+fig = figure(); set(fig, 'Name', 'PES Curve Fitting');
 fig.Position(1) = 100;
 fig.Position(2) = 100;
 fig.Position(3) = 2.5*pp.fig5x4(1); 
@@ -183,7 +185,7 @@ for i = 1:nSTATES
 end
 
 %% - 6 - PLOTTING THE POTENTIAL WELL, MODULATED BY THE MFP
-subplot(223); hold on;
+subplot(8,2,[9,11,13,15]); hold on;
 % --- Image of the curve series shifted by potential and scaled by MFP
 ImData(ZPOT, X, potYY_tot);
 % -- Plotting the curve component energy locations
@@ -197,7 +199,9 @@ end
 % --- Plotting the potential energy curves
 plot(ZPOT, EPOT+DCL(1), 'r-', 'linewidth', 2);
 % --- Formatting the figure
-img_props(); colormap jet; title('Model Potential : V(z)', 'Interpreter','none');
+img_props(); 
+subplot(8,2,[9,11,13,15]); hold on;
+colormap jet; title('Model Potential : V(z)', 'Interpreter','none');
 axis square;
 xlabel('$$ \bf  z (nm) $$', 'Interpreter', 'latex');
 ylabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
@@ -207,7 +211,7 @@ BOFF        = round(BOFF, 3);
 text(0.04, 0.92, "$$ \phi_{z=0} = $$ " + string(BOFF) + " eV", 'interpreter', 'latex', 'fontsize', 14, 'color', 'w', 'Units','normalized');
 
 %% - 7 - PLOTTING ALL THE INDIVIDUAL CURVES, SHIFTED BY THE POTENTIAL FOR N=1
-subplot(224); hold on;
+subplot(2,2,4); hold on;
 % --- Plotting individual curves
 cols = flipud(jet(length(ZPOT)+2));
 for i = 1:length(ZPOT)

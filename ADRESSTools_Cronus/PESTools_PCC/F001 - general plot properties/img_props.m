@@ -53,9 +53,9 @@ elseif type == "kx"
 end
 ylabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 %% 2 - Defining the figure properties
-fig                 = gcf; 
-fig.Color           = [1 1 1]; 
-fig.InvertHardcopy  = 'off';
+% fig                 = gcf; 
+% fig.Color           = [1 1 1]; 
+% fig.InvertHardcopy  = 'off';
 %% 3 - Colorbar properties
 colormap(colmap);
 %% 4 - Plotting the x- and y-axes

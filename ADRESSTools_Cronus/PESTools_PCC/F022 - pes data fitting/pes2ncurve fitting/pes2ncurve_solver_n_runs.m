@@ -15,7 +15,7 @@ function [fitStr0, statStr] = pes2ncurve_solver_n_runs(pesStr, cTYPE, iparams, b
 %   -   pesStr:         MATLAB data-structure that contains the XPS data.
 %   -   cTYPE:          1×N vector of the type of curve to use for the nth state.
 %   -   iPESCurves:   	3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
-%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Shir", "LinShir")
+%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Poly", "Shir", "LinShir", "StepFDDGpL", "StepFDDGsL")
 %   -   iPESBgrnd:      3 cells {x0}{lb}{ub} with 1x5 vectors: the background parameters: [LHS,RHS,ORD,LAM,DEL,BGR]
 %   -   solve_type:     string of the optimisation algorithm to use; "lsqcurvefit" (very fast, good), "lsqnonlin" (fast, not good), "simulannealbnd" (slow, best). 
 %   -   n_runs:         scalar value for the total number of independent runs

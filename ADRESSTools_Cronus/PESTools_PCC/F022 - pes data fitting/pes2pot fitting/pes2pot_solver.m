@@ -1,27 +1,21 @@
 function fitStr = pes2pot_solver(pesStr, cTYPE, iparams, bTYPE, ibgrnd, solve_type, MFP, ZPOT, EPOT)
-% fitStr = xps_solver(xpsStr, cTYPE, iPESCurves, bTYPE, iPESBgrnd, solve_type)
-%   Function that runs a a Global Optimisation Algorithm based on Simulated
-%   Annealing to determine the best curve fit to the input XPS data and
-%   model (initial conditions and bounds). The temperature of the Simulated
-%   Annealing is set to walk a large span of the parameter space to ensure
-%   the global minimum is obtained. The minimisation function is based on
-%   minimising the standard deviation of the squared residuals. Although
-%   the "simulannealbnd()" algorithm is the best due to its global
-%   convergence, the option is here to also use "lsqcurvefit()" and
-%   "lsqnonlin()" for fast convergence to the XPS curve fits. Use this
-%   function to run the convergence algorithm only one. 
-%   NOTE: use 'xps_solver_n_runs()' to run the algorithm N times, allowing
-%   for quantification of fit parameter uncertainties.
+% fitStr = pes2pot_solver(pesStr, cTYPE, iparams, bTYPE, ibgrnd, solve_type, MFP, ZPOT, EPOT)
+%   Function that runs an optimisation algorithm to solve for the best fit
+%   to the PES data using N curves that are integrated over a predefined
+%   potential profile, modulated by the mean free path.
 %   
 %   REQ. FUNCTIONS: none
 %   
 %   IN:
-%   -   xpsStr:         MATLAB data-structure that contains the XPS data.
+%   -   pesStr:         data structure that contains the PES data.
 %   -   cTYPE:          1xN vector of the type of curve to use for the nth state.
-%   -   iPESCurves:   	3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
-%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Shir", "LinShir")
-%   -   iPESBgrnd:      3 cells {x0}{lb}{ub} with 1x5 vectors: the background parameters: [LHS,RHS,ORD,LAM,DEL,BGR]
+%   -   iparams:   	    3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
+%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Poly", "Shir", "LinShir", "StepFDDGpL", "StepFDDGsL")
+%   -   ibgrnd:         4 cells {x0}{lb}{ub}{args} with 1x3 vectors of the background parameters: x0=lb=ub=[LHS,RHS,BGR], or argument of the background type args = []
 %   -   solve_type:     string of the optimisation algorithm to use; "lsqcurvefit" (very fast, good), "lsqnonlin" (fast, not good), "simulannealbnd" (slow, best). 
+%   -   MFP:            mean free path that will modulate the potential (nm).
+%   -   ZPOT:           1xN vector of the z-axis of the potential (depth).
+%   -   EPOT:   	    1xN vector of the energy-axis of the potential.
 %
 %   OUT:
 %   -   fitStr:         MATLAB data-structure that contains all the fit parameters / variables / information

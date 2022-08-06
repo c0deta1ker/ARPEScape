@@ -116,7 +116,7 @@ sPosition1(kk).x=x_samp;sPosition1(kk).y=y_samp;sPosition1(kk).z=z_samp;
 hh=1;
 sPosition2(hh).name='Survey';sPosition2(hh).mode=mode_samp;sPosition2(hh).Ep=Ep_samp;
 sPosition2(hh).pol=pol_samp;sPosition2(hh).slit=slitXPS_samp;sPosition2(hh).dT='0.1';
-sPosition2(hh).Eb='-555:0.05:5';
+sPosition2(hh).Eb='-555:0.2:5';
 sPosition2(hh).tilt=tilt_samp;sPosition2(hh).theta=theta_samp;sPosition2(hh).phi=phi_samp;
 sPosition2(hh).x=x_samp;sPosition2(hh).y=y_samp;sPosition2(hh).z=z_samp;
 

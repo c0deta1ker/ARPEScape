@@ -1,26 +1,18 @@
 function fitStr = pes2ncurve_solver(pesStr, cTYPE, iparams, bTYPE, ibgrnd, solve_type)
 % fitStr = pes2ncurve_solver(pesStr, cTYPE, iparams, bTYPE, ibgrnd, solve_type)
-%   Function that runs a a Global Optimisation Algorithm based on Simulated
-%   Annealing to determine the best curve fit to the input XPS data and
-%   model (initial conditions and bounds). The temperature of the Simulated
-%   Annealing is set to walk a large span of the parameter space to ensure
-%   the global minimum is obtained. The minimisation function is based on
-%   minimising the standard deviation of the squared residuals. Although
-%   the "simulannealbnd()" algorithm is the best due to its global
-%   convergence, the option is here to also use "lsqcurvefit()" and
-%   "lsqnonlin()" for fast convergence to the XPS curve fits. Use this
-%   function to run the convergence algorithm only one. 
-%   NOTE: use 'xps_solver_n_runs()' to run the algorithm N times, allowing
+%   Function that runs an optimisation algorithm to solve for the best fit
+%   to the PES data using N curves.
+%   NOTE: use 'pes2ncurve_solver_n_runs()' to run the algorithm N times, allowing
 %   for quantification of fit parameter uncertainties.
 %   
 %   REQ. FUNCTIONS: none
 %   
 %   IN:
-%   -   pesStr:         MATLAB data-structure that contains the XPS data.
+%   -   pesStr:         data structure that contains the PES data.
 %   -   cTYPE:          1×N vector of the type of curve to use for the nth state.
 %   -   iparams:        3 cells {x0}{lb}{ub} with N×8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
-%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Shir", "LinShir")
-%   -   ibgrnd:         3 cells {x0}{lb}{ub} with 1×5 vectors: the background parameters: [LHS,RHS,ORD,LAM,DEL,BGR]
+%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Poly", "Shir", "LinShir", "StepFDDGpL", "StepFDDGsL")
+%   -   ibgrnd:         4 cells {x0}{lb}{ub}{args} with 1x3 vectors of the background parameters: x0=lb=ub=[LHS,RHS,BGR], or argument of the background type args = []
 %   -   solve_type:     string of the optimisation algorithm to use; "lsqcurvefit" (very fast, good), "lsqnonlin" (fast, not good), "simulannealbnd" (slow, best). 
 %
 %   OUT:
@@ -254,7 +246,7 @@ fitStr.ibgrnd       = ibgrnd;
 fitStr.nSTATES      = length(cTYPE);
 %% 4.2 - Storing the XPS data, background, model and minimisation variables
 % -- Extracting the original data 
-fitStr.xdat	= pesStr.xdat;
+fitStr.xdat     = pesStr.xdat;
 fitStr.ydat 	= pesStr.ydat;
 % -- Extracting the X-DOMAIN and DATA
 [fitStr.X, fitStr.D] = fit_data(params, XPSObj);

@@ -10,6 +10,10 @@ function material_props = get_mpd_props(material)
 %   OUT:
 %   -   material_props:     MATLAB table which contains all of the material parameters.
 
+%% Default parameters
+if nargin < 1; material = []; end
+if isempty(material); material = []; end
+
 %% - 1 - Extracting the material parameters from the materials properties database
 % -- Loading in the materials database
 MPD_PCC         = load('MPD_PCC.mat'); MPD_PCC = MPD_PCC.MPD_PCC;
@@ -17,7 +21,11 @@ MPD_PCC         = load('MPD_PCC.mat'); MPD_PCC = MPD_PCC.MPD_PCC;
 material        = char(material); 
 % -- Find the row-number / index for the material of choice
 atom_symbols    = MPD_PCC.ATOM_SYMB;
-idx             = find(strcmp(atom_symbols(:), material));
+idx             = find(strcmpi(atom_symbols(:), material));
 % -- Extract the properties of the desired material
-material_props  = MPD_PCC(idx,:);
+if ~isempty(idx); material_props  = MPD_PCC(idx,:);
+% -- If no material is identified, return an error
+else; msg = 'Material could not be identified or does not exist in database.'; error(msg)
+end
+
 end

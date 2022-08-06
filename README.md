@@ -77,7 +77,7 @@ This is a local MATLAB database that compiles the photoionisation energy and flu
 
 ## MATLAB Version control  
 MATLAB version:   2020a  
-MATLAB add-ons (recommended):   Global Optimization Toolbox, Curve Fitting Toolbox, Parallel Processing Toolbox.
+MATLAB add-ons (recommended):   Image Processing Toolbox, Global Optimization Toolbox, Optimization Toolbox, Curve Fitting Toolbox, Parallel Processing Toolbox, Statistics and Machine Learning Toolbox, Signal Processing Toolbox.
 
 ## Authors
 MaterialsDatabase & PESTools Scripts:  

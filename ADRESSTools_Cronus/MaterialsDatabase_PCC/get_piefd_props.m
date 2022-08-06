@@ -12,16 +12,23 @@ function piefd_props = get_piefd_props(element)
 %   OUT:
 %   -   piefd_props:        MATLAB table which contains all of the PIEFD parameters.
 
+%% Default parameters
+if nargin < 1; element = []; end
+if isempty(element); element = []; end
+
 %% - 1 - Extracting the material parameters from the materials properties database
 % -- Loading in the materials database
-PIEFD_PCC         = load('PIEFD_PCC.mat'); PIEFD_PCC = PIEFD_PCC.PIEFD_PCC;
+PIEFD_PCC       = load('PIEFD_PCC.mat'); PIEFD_PCC = PIEFD_PCC.PIEFD_PCC;
 % -- Making the input material be in a 'char' format
-element        = char(element); 
+element         = char(element); 
 % -- Find the row-number / index for the material of choice
 atom_symbols    = PIEFD_PCC.ATOM_SYMB;
-idx             = find(strcmp(atom_symbols(:), element));
+idx             = find(strcmpi(atom_symbols(:), element));
 % -- Extract the properties of the desired material
-piefd_props  = PIEFD_PCC(idx,:);
+if ~isempty(idx); piefd_props     = PIEFD_PCC(idx,:);
+% -- If no material is identified, return an error
+else; msg = 'Material could not be identified or does not exist in database.'; error(msg)
+end
 % -- Printing output text
 % fprintf("LOADED DATA: ID: %i, Name: %s, Symbol: %s", piefd_props.ID, piefd_props.ATOM_NAME{1}, piefd_props.ATOM_SYMB{1});
 end

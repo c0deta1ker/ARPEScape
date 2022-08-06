@@ -1,7 +1,7 @@
 function fig = pes2pot_view_init(pesStr, cTYPE, iparams, bTYPE, ibgrnd, MFP, ZPOT, EPOT)
 % fig = pes2pot_view_init(pesStr, cTYPE, iparams, bTYPE, ibgrnd, MFP, ZPOT, EPOT)
 %   This function is used to plot the initial, model XPS curve PRIOR to
-%   curve fitting with 'xps_solver()'. The plot consists of 3 subplots; (1) The
+%   curve fitting with 'pes2pot_solver()'. The plot consists of 3 subplots; (1) The
 %   background that is determined from the fit; (2) A plot showing all of
 %   the fitted curve components, as well as the final model fit and
 %   experimental data; (3) A plot of the residuals, showing the quality of
@@ -12,11 +12,14 @@ function fig = pes2pot_view_init(pesStr, cTYPE, iparams, bTYPE, ibgrnd, MFP, ZPO
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   pesStr:         MATLAB data-structure that contains the XPS data.
+%   -   pesStr:         data structure that contains the PES data.
 %   -   cTYPE:          1xN vector of the type of curve to use for the nth state.
-%   -   iPESCurves:   	3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
-%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Shir", "LinShir")
-%   -   iPESBgrnd:      3 cells {x0}{lb}{ub} with 1x5 vectors: the background parameters: [LHS,RHS,ORD,LAM,DEL,BGR]
+%   -   iparams:   	    3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
+%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Poly", "Shir", "LinShir", "StepFDDGpL", "StepFDDGsL")
+%   -   ibgrnd:         4 cells {x0}{lb}{ub}{args} with 1x3 vectors of the background parameters: x0=lb=ub=[LHS,RHS,BGR], or argument of the background type args = []
+%   -   MFP:            mean free path that will modulate the potential (nm).
+%   -   ZPOT:           1xN vector of the z-axis of the potential (depth).
+%   -   EPOT:   	    1xN vector of the energy-axis of the potential.
 %
 %   OUT:
 %   -   fig:  	MATLAB figure object with the ARPES data plotted.

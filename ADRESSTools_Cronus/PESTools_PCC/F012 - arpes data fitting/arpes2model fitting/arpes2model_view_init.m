@@ -207,7 +207,7 @@ function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, modelStr, kx_lims
     kx_length   = size(xDat_crop,2);
     eb_length   = size(yDat_crop,1);
     % 3 - Extracting the interpolated MODEL data
-    imodelStr	= mstheory_interp(modelStr, BOFF, MFP);
+    imodelStr	= mstheory_interp_spectra(modelStr, BOFF, MFP);
     % 4 - Making the ARPES and MODEL data have a consistent domain
     KX          = linspace(kx_lims(1), kx_lims(2), kx_length);
     EB          = linspace(eb_lims(1), eb_lims(2), eb_length)';

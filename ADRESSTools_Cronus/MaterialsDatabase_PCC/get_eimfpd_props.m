@@ -1,7 +1,7 @@
 function [ke_dat, imfp] = get_eimfpd_props(element)
 % [ke_dat, imfp] = get_eimfpd_props(element)
 %   This is a function that extracts all of the experimental IMFPs from the
-%   Electron Inelastic Mean Free Path Database (eIMFPD) for the  element 
+%   Electron Inelastic Mean Free Path Database (eIMFPD) for the element 
 %   defined here by the user. This database contains all the experimental
 %   IMFP values for elements 1 - 92, for kinetic energies in the approximate
 %   range of 10 - 10,000 eV.

@@ -14,11 +14,12 @@ function ydat_fil = data_filter1D(ydat, filType, filVal)
 %   -   ydat_fil:       [N×1] column vector of the filtered data.
 
 %% Default parameters
-if nargin < 3; filType = "savitzky-golay"; end
-if nargin < 4; filVal = 5; end
+if nargin < 2; filType = "savitzky-golay"; end
+if nargin < 3; filVal = 5; end
 if isempty(filType); filType = "savitzky-golay"; end
 if isempty(filVal);  filVal = 5; end
 %% Validity checks on the input parameters
+filType = string(filType);
 if filVal < 0; filVal = 0; end
 
 %% 1 - Filtering the data

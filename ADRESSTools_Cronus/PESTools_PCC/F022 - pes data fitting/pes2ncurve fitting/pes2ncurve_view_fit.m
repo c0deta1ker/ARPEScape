@@ -1,23 +1,15 @@
 function fig = pes2ncurve_view_fit(fitStr)
-% fig = pes2ncurve_view_fit(fitStr, show_bgrnd)
-%   This function is used to plot the results of the XPS curve fitting
-%   performed by 'xps_solver()'. The plot consists of 3 subplots; (1) The
-%   background that is determined from the fit; (2) A plot showing all of
-%   the fitted curve components, as well as the final model fit and
-%   experimental data; (3) A plot of the residuals, showing the quality of
-%   the experimental and model fit. If you only want to save the fitted XPS
-%   spectrum and the residuals (without the background subtraction
-%   discussed in (1), you can set the 'show_bgrnd' variable to 0; its
-%   default value is 1.
+% fig = pes2ncurve_view_fit(fitStr)
+%   This function is used to plot the final PES curve model AFTER  curve 
+%   fitting with the 'pes2ncurve_solver()'.
 %
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   fitStr:	data    structure of the XPS data after fitting.
-%   -   show_bgrnd:     either 1 or 0; 1 to show background and XPS fits, 0 to only show XPS fits.
+%   -   fitStr: data structure that contains the PES fitting output of the corresponding solver.
 %
 %   OUT:
-%   -   fig:            MATLAB figure object with the ARPES data plotted.
+%   -   fig:    MATLAB figure object that summarises the fit.
 
 %% Default parameters
 % -- Initialising the plot parameters

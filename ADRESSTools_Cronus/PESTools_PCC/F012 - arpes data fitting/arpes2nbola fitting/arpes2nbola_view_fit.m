@@ -13,10 +13,10 @@ function fig = arpes2nbola_view_fit(fitStr)
 
 %% Initialising input variables
 % -- Defining the values of the EDC cut figures
-win     = 0.01;
-val1    = 0; 
-val2    = 0.15*min(fitStr.kx(:));
-val3    = 0.15*max(fitStr.kx(:));
+win     = abs(0.05*range(fitStr.kx(:)));
+val1    = mean(fitStr.kx(:));
+val2    = mean(fitStr.kx(:)) - abs(0.10*range(fitStr.kx(:)));
+val3    = mean(fitStr.kx(:)) + abs(0.10*range(fitStr.kx(:)));
 
 %% - 1 - PLOTTING THE FITTED DATA
 % -- Initialising the plot properties
@@ -30,20 +30,20 @@ axs(1) = subplot(3,7,[1,2,8,9]); hold on;
 ImData(fitStr.kx, fitStr.eb, fitStr.M); 
 for i = 1:fitStr.n; plot(fitStr.sbn_kx, fitStr.sbn_eb{i}, 'r:', 'linewidth', 3); end
 img_props(); 
-xlabel(' $$ k_{//} [A^{-1}] $$', 'interpreter', 'latex');
-ylabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  k_{//} (\AA^{-1}) $$', 'Interpreter', 'latex');
+ylabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 axis([fitStr.kx_lims, fitStr.eb_lims]); axis square;
 caxis([min(fitStr.M(:)), max(fitStr.M(:))]);
-title('Best fit model data');
+title('Model Fit');
 
 %% - 4.2 - Plotting the ARPES data
 axs(2) = subplot(3,7,[3,4,10,11]); hold on;
 ImData(fitStr.kx, fitStr.eb, fitStr.D); img_props(); 
 for i = 1:fitStr.n; plot(fitStr.sbn_kx, fitStr.sbn_eb{i}, 'r:', 'linewidth', 3); end
-xlabel(' $$ k_{//} [A^{-1}] $$', 'interpreter', 'latex');
-ylabel('', 'interpreter', 'latex');
+xlabel('$$ \bf  k_{//} (\AA^{-1}) $$', 'Interpreter', 'latex');
+ylabel('', 'Interpreter', 'latex');
 axis([fitStr.kx_lims, fitStr.eb_lims]); axis square;
-title('ARPES data that is fitted');
+title('ARPES Data');
 caxis([min(fitStr.D(:)), max(fitStr.D(:))]);
 % -- Plotting the EDC cut lines
 line([1 1].*val1, [-1e5, 1e5], 'Color', pp.col.fit{1}, 'LineWidth', pp.llwidth, 'Linestyle', '-');
@@ -65,20 +65,19 @@ plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwi
 plot(ARPES_XCut, ARPES_DCut, 'k-', 'color', pp.col.fit{3}, 'linewidth', 2*pp.llwidth);
 plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwidth);
 gca_props(); grid on;
-xlabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 
 %% - 4.3 - Plotting the 2D residuals
 axs(3) = subplot(3,7,[5,6,12,13]); hold on;
 ImData(fitStr.kx, fitStr.eb, fitStr.CHISQ2D); img_props(); 
-axis([fitStr.kx_lims, fitStr.eb_lims]);
+axis([fitStr.kx_lims, fitStr.eb_lims]); axis square;
 title('Chi-Squared');
 % -- Add annotation for the quality of fit
 text(0.04, 0.94, "$$ \chi^2 = $$ " + string(fitStr.CHISQ),...
     'interpreter', 'latex', 'fontsize', 16, 'color', 'w', 'Units','normalized');
 % -- Make the colormap bipolar (negative values blue, positive is red)
 colormap(axs(3),'jet');
-% -- Make the colormap bipolar (negative values blue, positive is red)
-ylabel('', 'interpreter', 'latex');
+ylabel('');
 xlabel('');
 
 %% - 4.4 - Plotting the 1D residuals along x
@@ -111,8 +110,8 @@ plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwi
 % -- Plotting the sub-band energies
 for i = 1:fitStr.n; line([1 1]*fitStr.YLOC(i), [-1e5, 1e5], 'Color', 'r', 'LineWidth', 2, 'Linestyle', ':'); end
 gca_props(); grid on;
-ylabel('$$ Intensity $$', 'Interpreter', 'latex');
-xlabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
+ylabel('$$ \bf Int. (arb.) $$', 'Interpreter', 'latex');
 axis([min(ARPES_XCut(:)), max(ARPES_XCut(:)), 0, 1.25*max(ARPES_DCut(:))]);
 %% - 4.6.1 - LHS and RHS EDCs
 axs(7) = subplot(3,7,[17,18]); hold on;
@@ -129,7 +128,7 @@ plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwi
 plot(ARPES_XCut, ARPES_DCut, 'k:', 'color', pp.col.fit{3}, 'linewidth', 2*pp.llwidth);
 plot(MODEL_XCut, MODEL_DCut, 'k:', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwidth);
 gca_props(); grid on;
-xlabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 axis([min(ARPES_XCut(:)), max(ARPES_XCut(:)), 0, 1.25*max(ARPES_DCut(:))]);
 
 end

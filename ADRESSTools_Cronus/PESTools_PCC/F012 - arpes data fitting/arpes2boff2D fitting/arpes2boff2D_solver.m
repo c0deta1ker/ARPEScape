@@ -1,14 +1,15 @@
-function fitStr = arpes2boff2D_solver(arpesStr, cTYPE, FUNC, iparams, ibgrnd, solve_type)
-% fitStr = arpes2boff2D_solver(arpesStr, cTYPE, FUNC, iparams, ibgrnd, solve_type)
+function fitStr = arpes2boff2D_solver(arpesStr, modelFunc, cTYPE, iparams, ibgrnd, solve_type)
+% fitStr = arpes2boff2D_solver(arpesStr, modelFunc, cTYPE, iparams, ibgrnd, solve_type)
 %   Function that is used to fit N-parabolic dispersions to ARPES data, by
 %   defining the energy/momentum minimum and gaussian broadening, and
 %   effective mass of each subband state. A Fermi-Dirac Distribution is
 %   also used with a linear background, for states that are close to the
 %   Fermi edge. Constrained so that the subband energies are given by a
-%   functional form FUNC.
+%   functional form modelFunc.
 %
 %   IN:
 %   -   arpesStr:       MATLAB data-structure that contains the initial ARPES data.
+%   -   modelFunc:      1xN cell of functions that gives the band offset vs subband energy
 %   -   cTYPE:          1xN vector of the type of curve to use for fitting. Default: "G2DA" ("G2D", "L2D")
 %   -   iparams:      	3 cells {x0}{lb}{ub} with 1x6 array: the model fit parameters [INT,XLOC,YLOC,XFWHM,YFWHM,MSTAR]
 %   -   ibgrnd:         3 cells {x0}{lb}{ub} with 1x6 vector of the background parameters: [FDEF,FDT,FDW,BGR,BIN,BCO]
@@ -55,7 +56,7 @@ ARPESObj.arpesStr	= arpesStr;
 % -- Appending the input arguments to the global variable
 ARPESObj.fit_args.solve_type    = solve_type;
 ARPESObj.fit_args.cTYPE         = cTYPE;
-ARPESObj.fit_args.FUNC          = FUNC;
+ARPESObj.fit_args.modelFunc          = modelFunc;
 ARPESObj.fit_args.iparams   	= iparams;
 ARPESObj.fit_args.ibgrnd    	= ibgrnd;
 
@@ -135,11 +136,11 @@ end
 fitStr              = struct();
 %% 4.1 - Storing the initial arguments
 fitStr.solve_type	= solve_type;
-fitStr.FUNC         = FUNC;
+fitStr.modelFunc         = modelFunc;
 fitStr.iparams      = iparams;
 fitStr.ibgrnd       = ibgrnd;
 %% 4.2 - Storing the ARPES data, background, model and minimisation variables
-[ARPES, MODEL]      = extract_arpes_and_model(params, ARPESObj.arpesStr, cTYPE, FUNC);
+[ARPES, MODEL]      = extract_arpes_and_model(params, ARPESObj.arpesStr, cTYPE, modelFunc);
 % -- Storing the domain and range
 fitStr.kx           = MODEL.kx;
 fitStr.eb           = MODEL.eb;
@@ -169,7 +170,7 @@ fitStr.cTYPE  	= cTYPE;
 % - Extracting parabolic parameters
 fitStr.BOFF    = params(1);
 fitStr.XLOC    = params(2:2+n-1);
-fitStr.YLOC = []; for i = 1:n; fitStr.YLOC(i) = FUNC{i}(fitStr.BOFF); end
+fitStr.YLOC = []; for i = 1:n; fitStr.YLOC(i) = modelFunc{i}(fitStr.BOFF); end
 fitStr.INT     = params(2+n:2+2*n-1); 
 fitStr.XFWHM   = params(2+2*n:2+3*n-1);
 fitStr.YFWHM   = params(2+3*n:2+4*n-1);
@@ -190,7 +191,7 @@ end
 
 %% DEFINING THE FUNCTION TO BE MINIMISED VIA GLOBAL OPTIMISATION METHODS
 function MINFUN = minimize_function(x, ARPESObj)
-    [ARPES, MODEL] = extract_arpes_and_model(x, ARPESObj.arpesStr, ARPESObj.fit_args.cTYPE, ARPESObj.fit_args.FUNC);
+    [ARPES, MODEL] = extract_arpes_and_model(x, ARPESObj.arpesStr, ARPESObj.fit_args.cTYPE, ARPESObj.fit_args.modelFunc);
     % - 1 - Extracting the DATA
     D   = ARPES.data;
     % - 2 - Extracting the MODEL
@@ -203,7 +204,7 @@ function MINFUN = minimize_function(x, ARPESObj)
 end
 
 %% DEFINING THE FUNCTION THAT EXTRACTS THE ARPES AND MODEL DATA CONSISTENTLY
-function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, FUNC)
+function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, modelFunc)
     % 1 - Initialising variables
     n = length(cTYPE);
     % - Extracting parabolic parameters
@@ -216,7 +217,7 @@ function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, FUNC)
     % - Extracting the binding energy of each subband
     YLOC = [];
     for i = 1:n
-        YLOC(i) = FUNC{i}(BOFF);  	% scalar of the y-location of the min/max of the 2D parabolic ARPES dispersion.
+        YLOC(i) = modelFunc{i}(BOFF);  	% scalar of the y-location of the min/max of the 2D parabolic ARPES dispersion.
     end
     % - Extracting background parameters
     FDEF    = x(end-5);         % scalar of the FDD Fermi-Level position.

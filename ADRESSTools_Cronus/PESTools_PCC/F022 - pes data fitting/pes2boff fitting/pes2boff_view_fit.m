@@ -1,31 +1,21 @@
-function fig = pes2pot_view_fit(fitStr)
-% fig = pes2pot_view_fit(fitStr)
-%   This function is used to plot the initial, model XPS curve PRIOR to
-%   curve fitting with 'xps_solver()'. The plot consists of 3 subplots; (1) The
-%   background that is determined from the fit; (2) A plot showing all of
-%   the fitted curve components, as well as the final model fit and
-%   experimental data; (3) A plot of the residuals, showing the quality of
-%   the experimental and model fit. This is used as an informative plot
-%   that allows you to view and create a better initial guess of the XPS
-%   model prior to running the fitting algorithm.
+function fig = pes2boff_view_fit(fitStr)
+% fig = pes2boff_view_fit(fitStr)
+%   This function is used to plot the final PES curve model AFTER  curve 
+%   fitting with the 'pes2boff_solver()'.
+%
 %   REQ. FUNCTIONS: (none)
 %
 %   IN:
-%   -   pesStr:         MATLAB data-structure that contains the XPS data.
-%   -   cTYPE:          1xN vector of the type of curve to use for the nth state.
-%   -   iPESCurves:   	3 cells {x0}{lb}{ub} with Nx8 arrays: the n'th peak parameters [BE,INT,FWHM,MR,LSE,LSI,LSW,ASY]
-%   -   bTYPE:          string of the type of background to use for fitting. Default: "Poly" ("none", "Shir", "LinShir")
-%   -   iPESBgrnd:      3 cells {x0}{lb}{ub} with 1x5 vectors: the background parameters: [LHS,RHS,ORD,LAM,DEL,BGR]
+%   -   fitStr: data structure that contains the PES fitting output of the corresponding solver.
 %
 %   OUT:
-%   -   fig:  	MATLAB figure object with the ARPES data plotted.
-
+%   -   fig:    MATLAB figure object that summarises the fit.
 
 %% - 1 - Plotting the model to be used for fitting
 % -- Initialising the plot properties
 pp  = plot_props();
 % -- Initialising the figure
-fig = figure(); set(fig, 'Name', 'XPS Curve Fitting');
+fig = figure(); set(fig, 'Name', 'PES Curve Fitting');
 fig.Position(1) = 100;
 fig.Position(2) = 100;
 fig.Position(3) = 2.5*pp.fig5x4(1); 
@@ -96,7 +86,7 @@ ylabel('$$ \bf  Resid. $$', 'Interpreter', 'latex');
 xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 
 %% - 3 - PLOTTING THE POTENTIAL WELL, MODULATED BY THE MFP
-subplot(223); hold on;
+subplot(8,2,[9,11,13,15]); hold on;
 % --- Image of the curve series shifted by potential and scaled by MFP
 ImData(fitStr.ZPOT, fitStr.XX, fitStr.potYY_tot);
 % -- Plotting the curve component energy locations
@@ -110,7 +100,9 @@ end
 % --- Plotting the potential energy curves
 plot(fitStr.ZPOT, fitStr.EPOT+fitStr.DCL(1), 'r-', 'linewidth', 2);
 % --- Formatting the figure
-img_props(); colormap jet; title('Model Potential : V(z)', 'Interpreter','none');
+img_props(); 
+subplot(8,2,[9,11,13,15]); hold on;
+colormap jet; title('Model Potential : V(z)', 'Interpreter','none');
 axis square;
 xlabel('$$ \bf  z (nm) $$', 'Interpreter', 'latex');
 ylabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');

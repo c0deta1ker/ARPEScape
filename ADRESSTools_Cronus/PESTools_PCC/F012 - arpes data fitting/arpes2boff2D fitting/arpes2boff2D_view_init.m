@@ -1,5 +1,5 @@
-function fig = arpes2boff2D_view_init(arpesStr, cTYPE, FUNC, iparams, ibgrnd)
-% fig = arpes2boff2D_view_init(arpesStr, cTYPE, iparams, ibgrnd)
+function fig = arpes2boff2D_view_init(arpesStr, modelFunc, cTYPE, iparams, ibgrnd)
+% fig = arpes2boff2D_view_init(arpesStr, modelFunc, cTYPE,iparams, ibgrnd)
 %   This function is used to plot the initial curve fitting model prior to
 %   using the 'arpes2boff2D_solver()' algorithm. This is used as an informative 
 %   plot that allows you to view and create a better initial guess of the
@@ -9,8 +9,8 @@ function fig = arpes2boff2D_view_init(arpesStr, cTYPE, FUNC, iparams, ibgrnd)
 %
 %   IN:
 %   -   arpesStr:       MATLAB data-structure that contains the initial ARPES data.
+%   -   modelFunc:      1xN cell of functions that gives the band offset vs subband energy
 %   -   cTYPE:          1xN vector of the type of curve to use for fitting. Default: "G2DA" ("G2D", "L2D")
-%   -   BE_FUNC:      	1xN cell of functions that gives the band offset vs subband energy
 %   -   iparams:      	3 cells {x0}{lb}{ub} with 1x6 array: the model fit parameters [INT,XLOC,YLOC,XFWHM,YFWHM,MSTAR]
 %   -   ibgrnd:         3 cells {x0}{lb}{ub} with 1x6 vector of the background parameters: [FDEF,FDT,FDW,BGR,BIN,BCO]
 %
@@ -25,12 +25,12 @@ x0      = [iparams{1}(:); ibgrnd{1}(:)];
 lb      = [iparams{2}(:); ibgrnd{2}(:)];
 ub      = [iparams{3}(:); ibgrnd{3}(:)];
 % - Making the ARPES and MODEL data consistent over a consistent domain
-[ARPES, MODEL] = extract_arpes_and_model(x0, arpesStr, cTYPE, FUNC);
+[ARPES, MODEL] = extract_arpes_and_model(x0, arpesStr, cTYPE, modelFunc);
 % - Extracting the parabolic dispersions for each subband energy
 sbn_kx      = linspace(ARPES.kx_lims(1), ARPES.kx_lims(2), 1e3);
 sbn_eb      = {};
 XLOC    = x0(2:2+n-1);
-for i = 1:n; YLOC(i) = FUNC{i}(x0(1)); end
+for i = 1:n; YLOC(i) = modelFunc{i}(x0(1)); end
 MSTAR   = x0(2+4*n:2+5*n-1);
 for i = 1:length(YLOC)
     sbn_eb{i}      = eb_calc(sbn_kx, XLOC(i), YLOC(i), MSTAR(i));
@@ -54,10 +54,10 @@ CHISQ       = sum(sum(CHISQ2D));
 
 %% - 2 - PLOTTING THE FINAL DATA COMPARED WITH MODEL AT BOFF = 0 eV
 % -- Initialising the plot properties
-win     = 0.01;
-val1    = 0;
-val2    = 0.15*min(ARPES.kx(:));
-val3    = 0.15*max(ARPES.kx(:));
+win     = abs(0.05*range(ARPES.kx(:)));
+val1    = mean(ARPES.kx(:));
+val2    = mean(ARPES.kx(:)) - abs(0.10*range(ARPES.kx(:)));
+val3    = mean(ARPES.kx(:)) + abs(0.10*range(ARPES.kx(:)));
 pp      = plot_props();
 % -- Initialising the figure
 fig = figure(); set(fig, 'Name', 'Initial Model');
@@ -160,7 +160,7 @@ axis([min(ARPES_XCut(:)), max(ARPES_XCut(:)), 0, 1.25*max(ARPES_DCut(:))]);
 end
 
 %% DEFINING THE FUNCTION THAT EXTRACTS THE ARPES AND MODEL DATA CONSISTENTLY
-function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, FUNC)
+function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, modelFunc)
     % 1 - Initialising variables
     n = length(cTYPE);
     % - Extracting parabolic parameters
@@ -173,7 +173,7 @@ function [ARPES, MODEL] = extract_arpes_and_model(x, arpesStr, cTYPE, FUNC)
     % - Extracting the binding energy of each subband
     YLOC = [];
     for i = 1:n
-        YLOC(i) = FUNC{i}(BOFF);  	% scalar of the y-location of the min/max of the 2D parabolic ARPES dispersion.
+        YLOC(i) = modelFunc{i}(BOFF);  	% scalar of the y-location of the min/max of the 2D parabolic ARPES dispersion.
     end
     % - Extracting background parameters
     FDEF    = x(end-5);         % scalar of the FDD Fermi-Level position.

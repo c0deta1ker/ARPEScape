@@ -51,10 +51,10 @@ CHISQ       = sum(sum(CHISQ2D));
 
 %% - 2 - PLOTTING THE FINAL DATA COMPARED WITH MODEL AT BOFF = 0 eV
 % -- Initialising the plot properties
-win     = 0.01;
-val1    = 0;
-val2    = 0.15*min(ARPES.kx(:));
-val3    = 0.15*max(ARPES.kx(:));
+win     = abs(0.05*range(ARPES.kx(:)));
+val1    = mean(ARPES.kx(:));
+val2    = mean(ARPES.kx(:)) - abs(0.10*range(ARPES.kx(:)));
+val3    = mean(ARPES.kx(:)) + abs(0.10*range(ARPES.kx(:)));
 pp      = plot_props();
 % -- Initialising the figure
 fig = figure(); set(fig, 'Name', 'Initial Model');
@@ -68,22 +68,22 @@ axs(1) = subplot(3,7,[1,2,8,9]); hold on;
 ImData(MODEL.kx, MODEL.eb, data); 
 for i = 1:length(sbn_eb); plot(sbn_kx, sbn_eb{i}, 'r:', 'linewidth', 3); end
 img_props(); 
-xlabel(' $$ k_{//} [A^{-1}] $$', 'interpreter', 'latex');
-ylabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  k_{//} (\AA^{-1}) $$', 'Interpreter', 'latex');
+ylabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 axis([MODEL.kx_lims, MODEL.eb_lims]);
 caxis([min(data(:)), max(data(:))]);
 axis square;
-title('Initial model data');
+title('Initial Model');
 
 %% - 2.2 - Plotting the ARPES data
 axs(2) = subplot(3,7,[3,4,10,11]); hold on;
 ImData(ARPES.kx, ARPES.eb, ARPES.data); img_props(); 
 for i = 1:length(sbn_eb); plot(sbn_kx, sbn_eb{i}, 'r:', 'linewidth', 3); end
-xlabel(' $$ k_{//} [A^{-1}] $$', 'interpreter', 'latex');
-ylabel('', 'interpreter', 'latex');
+xlabel('$$ \bf  k_{//} (\AA^{-1}) $$', 'Interpreter', 'latex');
+ylabel('', 'Interpreter', 'latex');
 axis([ARPES.kx_lims, ARPES.eb_lims]); axis square;
 caxis([min(ARPES.data(:)), max(ARPES.data(:))]);
-title('ARPES data to be fitted');
+title('ARPES Data');
 % -- Plotting the EDC cut lines
 line([1 1].*val1, [-1e5, 1e5], 'Color', pp.col.fit{1}, 'LineWidth', pp.llwidth, 'Linestyle', '-');
 line([1 1].*val2, [-1e5, 1e5], 'Color', pp.col.fit{2}, 'LineWidth', pp.llwidth, 'Linestyle', '-');
@@ -92,7 +92,7 @@ line([1 1].*val3, [-1e5, 1e5], 'Color', pp.col.fit{3}, 'LineWidth', pp.llwidth, 
 %% - 2.3 - Plotting the 2D residuals
 axs(3) = subplot(3,7,[5,6,12,13]); hold on;
 ImData(ARPES.kx, ARPES.eb, CHISQ2D); img_props(); 
-axis([ARPES.kx_lims, ARPES.eb_lims]);
+axis([ARPES.kx_lims, ARPES.eb_lims]); axis square;
 title('Chi-Squared');
 % -- Add annotation for the quality of fit
 text(0.04, 0.94, "$$ \chi^2 = $$ " + string(CHISQ),...
@@ -107,7 +107,7 @@ xlabel('');
 axs(4) = subplot(3,7,[19,20]); hold on;
 bar(ARPES.kx, CHISQxx);
 gca_props(); grid on;
-xlabel(' $$ k_{//} [A^{-1}] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  k_{//} (\AA^{-1}) $$', 'Interpreter', 'latex');
 ylabel('$$ \bf  \chi^2(x) $$', 'Interpreter', 'latex');
 xlim(ARPES.kx_lims);
 ax = gca; ax.YAxisLocation = 'right';
@@ -116,7 +116,7 @@ ax = gca; ax.YAxisLocation = 'right';
 axs(5) = subplot(3,7,[7,14]); hold on;
 barh(ARPES.eb, CHISQyy);
 gca_props(); grid on;
-ylabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+ylabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 xlabel('$$ \bf  \chi^2(y) $$', 'Interpreter', 'latex');
 ylim(ARPES.eb_lims);
 ax = gca; ax.YAxisLocation = 'right';
@@ -133,8 +133,8 @@ plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwi
 % -- Plotting the sub-band energies
 for i = 1:length(YLOC); line([1 1]*YLOC(i), [-1e5, 1e5], 'Color', 'r', 'LineWidth', 2, 'Linestyle', ':'); end
 gca_props(); grid on;
-ylabel('$$ Intensity $$', 'Interpreter', 'latex');
-xlabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
+ylabel('$$ \bf Int. (arb.) $$', 'Interpreter', 'latex');
 axis([min(ARPES_XCut(:)), max(ARPES_XCut(:)), 0, 1.25*max(ARPES_DCut(:))]);
 %% - 2.6.1 - LHS and RHS EDCs
 axs(7) = subplot(3,7,[17,18]); hold on;
@@ -151,7 +151,7 @@ plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwi
 plot(ARPES_XCut, ARPES_DCut, 'k-', 'color', pp.col.fit{3}, 'linewidth', 2*pp.llwidth);
 plot(MODEL_XCut, MODEL_DCut, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwidth);
 gca_props(); grid on;
-xlabel(' $$ E - E_F [eV] $$', 'interpreter', 'latex');
+xlabel('$$ \bf  E_B - E_F (eV) $$', 'Interpreter', 'latex');
 axis([min(ARPES_XCut(:)), max(ARPES_XCut(:)), 0, 1.25*max(ARPES_DCut(:))]);
 
 end

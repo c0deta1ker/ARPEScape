@@ -13,10 +13,10 @@ function fig = arpes2boff2D_view_fit(fitStr)
 
 %% Initialising input variables
 % -- Defining the values of the EDC cut figures
-win     = 0.01;
-val1    = 0; 
-val2    = 0.15*min(fitStr.kx(:));
-val3    = 0.15*max(fitStr.kx(:));
+win     = abs(0.05*range(fitStr.kx(:)));
+val1    = mean(fitStr.kx(:));
+val2    = mean(fitStr.kx(:)) - abs(0.10*range(fitStr.kx(:)));
+val3    = mean(fitStr.kx(:)) + abs(0.10*range(fitStr.kx(:)));
 
 %% - 1 - PLOTTING THE FITTED DATA
 % -- Initialising the plot properties

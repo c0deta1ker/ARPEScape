@@ -65,13 +65,13 @@ Position(ii).pol=pol_samp; Position(ii).slit=slitVB_samp; Position(ii).dT=dtVB_s
 Position(ii).Eb='-2.00';
 Position(ii).tilt=tilt_samp; Position(ii).theta=theta_samp; Position(ii).phi=phi_samp;
 Position(ii).x=x_samp; Position(ii).y=y_samp; Position(ii).z=z_samp;
-% 
-% ii=ii+1;
-% Position(ii).name='In4d'; Position(ii).mode=mode_samp; Position(ii).Ep=Ep_samp;
-% Position(ii).pol=pol_samp; Position(ii).slit=slitXPS_samp; Position(ii).dT=dtXPS_samp;
-% Position(ii).Eb='-25:0.02:-10';
-% Position(ii).tilt=tilt_samp; Position(ii).theta=theta_samp; Position(ii).phi=phi_samp;
-% Position(ii).x=x_samp; Position(ii).y=y_samp; Position(ii).z=z_samp;
+
+ii=ii+1;
+Position(ii).name='In4d'; Position(ii).mode=mode_samp; Position(ii).Ep=Ep_samp;
+Position(ii).pol=pol_samp; Position(ii).slit=slitXPS_samp; Position(ii).dT=dtXPS_samp;
+Position(ii).Eb='-25:0.02:-10';
+Position(ii).tilt=tilt_samp; Position(ii).theta=theta_samp; Position(ii).phi=phi_samp;
+Position(ii).x=x_samp; Position(ii).y=y_samp; Position(ii).z=z_samp;
 
 ii=ii+1;
 Position(ii).name='As3d'; Position(ii).mode=mode_samp; Position(ii).Ep=Ep_samp;
