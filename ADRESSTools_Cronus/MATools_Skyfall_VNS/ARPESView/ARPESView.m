@@ -164,7 +164,7 @@ function LoadFile(handles,FullName)
 % LoadFile loads data file with the full name FullName
 global Energy Angle ScanFull Scan SWin DataFull DataXC Data Note RawTable HV thtM tltM ScanType ACorr ECorr ...
           dEWinIni dESmIni EAlign dESm_Lock dEWin_Lock feat_Lock ERange ARange AutoAWin AKx Kx KxRange ...
-          AutoKxWin AKxRange AKxWin IDiv ISubtr CubePos setTo_Lock % RangeIni RangeNorm 
+          AutoKxWin AKxRange AKxWin IDiv ISubtr CubePos setTo_Lock alpha % RangeIni RangeNorm 
 % clear arrays
 Kx=[]; IDiv=[]; ISubtr=[]; ScanType=[];
 disp('- cleared Kx IDiv ISubtr ScanType')
@@ -206,6 +206,7 @@ PosColon=strfind(Note,':');
    if ~isempty(PosColon)
       PosEqual=strfind(Note,'='); PosEqual=PosEqual(PosEqual<PosColon(1)); posEqual=PosEqual(end);
       ScanType=Note(posEqual-8:posEqual-1); ScanType=deblank(ScanType);
+      if isequal(ScanType,'ADef'); ScanType='Tilt'; end % added at the upgrade to PHOIBOS225
    end
 end
 % HV
@@ -223,7 +224,22 @@ end
 % tltM
 tltM=[]; try
    pos1=strfind(Note,'Tilt    = '); pos2=strfind(Note,'Azimuth'); eval(['tltM=' Note(pos1+9:pos2-2) ';']);
-   if length(tltM)>1; tltM=[]; end
+   if length(tltM)>1; tltM=[]; tltMAdd=0; else tltMAdd=tltM; end
+end
+% aDef (added at the upgrade to PHOIBOS225)
+aDef=[]; try
+   pos1=strfind(Note,'ADef    = '); pos2=strfind(Note,'dt'); eval(['aDef=' Note(pos1+9:pos2-2) ';']);
+   if length(aDef)>1; aDef=[]; aDefAdd=0; else aDefAdd=aDef; end
+end
+% adding up tltM and aDef if scalars, otherwise empty 
+tltM=tltM+aDef;
+% adding scalar tltM and aDef to Scan  
+if isequal(ScanType,'Tilt')
+   Scan=Scan+tltMAdd+aDefAdd;
+end
+% alpha
+alpha=20; try
+   pos1=strfind(Note,'alpha'); pos2=strfind(Note,'Grating'); eval(['alpha=' Note(pos1+9:pos2-2) ';']);
 end
 % select compatible modes and show Scan range 
 if isempty(Scan)||length(Scan)<2
@@ -289,7 +305,7 @@ ERange=[min(min(EAlign(:,1,:))) max(max(EAlign(:,end,:)))];
 % ERange=[min(ECorr(1,:)) max(ECorr(end,:))];
 % Kx-transform and auto Kx range if selected
 if get(handles.radiobuttonAKx,'Value')==1
-    surfNx=str2num(get(handles.editSurfNx,'String')); Kx=Kxx(HV,EAlign,thtM,ACorr,surfNx);
+    surfNx=str2num(get(handles.editSurfNx,'String')); Kx=Kxx(HV,EAlign,thtM,ACorr,surfNx,alpha);
 % - Kx range and auto window 
    KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))];
    aMin=max(max(Kx(:,1,:))); aMax=min(min(Kx(:,end,:))); AutoKxWin=[0.95*aMin+0.05*aMax 0.05*aMin+0.95*aMax];
@@ -331,7 +347,7 @@ set(handles.menuExport,'Value',1,'Enable','Off')
 
 % ---  Function to switch fields depending on the view mode
 function SwitchFields(handles)
-global EWin Scan ScanType SWin
+global EWin Scan ScanType SWin Scan
 viewMode=get(handles.menuViewMode,'Value');
 % if isempty(Data); beep; return; end % return if no data
 % control groups
@@ -357,13 +373,14 @@ switch viewMode
    set(ShowImgProc,'Enable','Off');
    set(handles.menuNorm,'Value',1); set(ShowNorm,'Enable','Off');
    case 3   % Image Series
+   if diff(SWin)==0; SWin=Scan([1 end]); end; % full scan replaces single image 
    % - fields
-  %  set(ShowScan,'Enable','On')
-   if ~isempty(Scan); set(ShowScan,'Enable','On'); set(handles.editScan,'String',sprintf('%g:%g',SWin)); end
+   set(ShowScan,'Enable','On'); set(handles.editScan,'String',sprintf('%g:%g',SWin));
    case 4   % Iso-E
+   if diff(SWin)==0; SWin=Scan([1 end]); end; % full scan replaces single image    
    % - fields
-   % set(ShowScan,'Enable','On')
-   if ~isempty(Scan); set(handles.editEnergy,'String',sprintf('%g+-%g',[mean(EWin) diff(EWin)/2])); end
+   set(ShowScan,'Enable','On'); set(handles.editScan,'String',sprintf('%g:%g',SWin));
+   set(handles.editEnergy,'String',sprintf('%g+-%g',[mean(EWin) diff(EWin)/2]));
    set(ShowEnergy,'Enable','On'); set(ShowNormScans,'Enable','On')
    if isequal(ScanType,'Tilt') set(handles.menuReadout,'Enable','On'); end
 %   if ~isempty(Scan); set(handles.editScan,'String',sprintf('%g:%g',Scan([1 end]))); end % Full Scan can be changed to SWin
@@ -377,12 +394,14 @@ switch viewMode
       if get(handles.radiobuttonHvKz,'Value')==1; set([handles.textVo handles.editVo],'Visible','On'); end
    end
    case 5   % Angle-Int Scan
+   if diff(SWin)==0; SWin=Scan([1 end]); end; % full scan replaces single image       
    % - fields
+   set(ShowScan,'Enable','On'); set(handles.editScan,'String',sprintf('%g:%g',SWin));
    % set(handles.menuNorm,'Value',1); set(ShowNorm,'Enable','Off'); % the normalization/subtraction can be useful for E(kz)
    set(ShowAKx,'Enable','On'); set(ShowNormScans,'Enable','On')
 %   set(ShowScan,'Enable','On')
 %   if ~isempty(Scan); set(handles.editScan,'String',sprintf('%g:%g',Scan([1 end]))); end % Full Scan can be changed to SWin
-   if ~isempty(SWin); set(handles.editScan,'String',sprintf('%g:%g',SWin)); end % Full Scan can be changed to SWin   
+%   if ~isempty(SWin); set(handles.editScan,'String',sprintf('%g:%g',SWin)); end % Full Scan can be changed to SWin   
    % K-transform fields
    if get(handles.radiobuttonAKx,'Value')==1&&(isequal(ScanType,'Tilt')||(isequal(ScanType,'hv')&&get(handles.radiobuttonHvKz,'value')==1))
       set([handles.textSurfNy handles.editSurfNy],'Visible','On')
@@ -397,7 +416,7 @@ if isempty(Scan)||length(Scan)<2; set(ShowScan,'Visible','Off'); else set(ShowSc
 
 % ---  Function to draw data cube and slice depending on the view mode 
 function DrawCubeSlice(handles)
-global AKxRange AKxWin EWin Scan SWin ERange
+global AKxRange AKxWin EWin SWin ERange % Scan
 % draw patch in the cube
 axes(handles.axesCube);
 % switch between modes
@@ -451,6 +470,7 @@ disp('- cleared presmdX presmdY structMode sharp postsmdX postsmdY')
 % clear plot ranges and close ViewSetup window
 XRange=[]; YRange=[]; % try close(hViewSetup); end
 disp('- cleared XRange YRange')
+% restore full Scan range if not single-image modes
 % switch fields and draw cube
 SwitchFields(handles); DrawCubeSlice(handles)
 % set Export mode
@@ -564,7 +584,7 @@ try Pos=get(hFig,'Position'); createNewFig=0; ProcessView(handles); set(hFig,'Po
 
 % --- Executes on selection change in radiobuttonAKx.
 function radiobuttonAKx_Callback(hObject,~,handles)
-global HV ECorr ACorr ARange AutoAWin thtM Kx KxRange AutoKxWin AKx AKxRange AKxWin
+global HV ECorr ACorr ARange AutoAWin thtM Kx KxRange AutoKxWin AKx AKxRange AKxWin alpha
 if get(hObject,'Value')==0
    set([handles.textSurfNx handles.editSurfNx handles.pushbuttonFindSurfNx],'Visible','Off');
 else
@@ -580,7 +600,7 @@ else
 % - calculate Kx, its ranges and auto window
    if isempty(Kx)
       % surfNx=str2num(get(handles.editSurfNx,'String')); 
-      surfNx=field2num(handles.editSurfNx); Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx);
+      surfNx=field2num(handles.editSurfNx); Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx,alpha);
       KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))];
       aMin=max(max(Kx(:,1,:))); aMax=min(min(Kx(:,end,:))); AutoKxWin=[0.95*aMin+0.05*aMax 0.05*aMin+0.95*aMax];
    end
@@ -595,11 +615,11 @@ SwitchFields(handles); DrawCubeSlice(handles)
 
 % --- Executes on buttonpress in editSurfNx.
 function editSurfNx_Callback(hObject,~,handles)
-global HV ECorr ACorr thtM Kx KxRange AutoKxWin AKxRange AKxWin
+global HV ECorr ACorr thtM Kx KxRange AutoKxWin AKxRange AKxWin alpha
 % calculate Kx and display Kx-ranges
 %surfNx=str2num(get(hObject,'String'));
 surfNx=field2num(hObject);
-Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx); KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))]; AKxRange=KxRange;
+Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx,alpha); KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))]; AKxRange=KxRange;
 set(handles.textAKx,'String',[sprintf('%0.1f',KxRange(1)) '<Kx<' sprintf('%0.1f',KxRange(2))])
 %set(handles.textAKx,'String',[{'Angle'};{[sprintf('%0.1f',AKxRange(1)) '<Kx<' sprintf('%0.1f',AKxRange(2))]}])
 % calculate and display auto Kx window
@@ -611,7 +631,7 @@ DrawCubeSlice(handles)
 % --- Executes on button press in pushbuttonFindSurfNx.
 function pushbuttonFindSurfNx_Callback(~,~,handles)
 global hFig CurrentXY ScanType SWin hv_N thtA_N eB_N surfNx_Navi HV ECorr EWin ...
-          ACorr thtM Kx KxRange AutoKxWin AKxRange AKxWin createNewFig
+          ACorr thtM Kx KxRange AutoKxWin AKxRange AKxWin createNewFig alpha
 % graphics readout for surfNx input
 viewMode=get(handles.menuViewMode,'Value');
 % if (viewMode==1 && (isempty(ScanType) || isequal(ScanType,'Number')) ) || (viewMode==4 && isequal(ScanType,'Tilt'))
@@ -642,7 +662,7 @@ end
 h=NaviSetup; set(h,'WindowStyle','modal'); uiwait(h);
 if ~isempty(surfNx_Navi) set(handles.editSurfNx,'String',sprintf('%0.3f',surfNx_Navi)); end
 % calculate Kx and display Kx-ranges
-Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx_Navi); KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))]; AKxRange=KxRange; 
+Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx_Navi,alpha); KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))]; AKxRange=KxRange; 
 set(handles.textAKx,'String',[sprintf('%0.1f',AKxRange(1)) '<Kx<' sprintf('%0.1f',AKxRange(2))])
 % calculate and display auto Kx window
 aMin=max(max(Kx(:,1,:))); aMax=min(min(Kx(:,end,:))); AutoKxWin=[0.95*aMin+0.05*aMax 0.05*aMin+0.95*aMax]; AKxWin=AutoKxWin; 
@@ -710,7 +730,7 @@ function menuLock_Callback(hObject,~, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns menuLock contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from menuLock
 global hGUI Data HV thtM ACorr ECorr EAlign ERange Kx KxRange AutoKxWin AKxRange AKxWin ...
-          dEWin_Lock dEWinIni dESm_Lock dESmIni  feat_Lock featIni setTo_Lock setToIni IDiv ISubtr CubePos Scan
+          dEWin_Lock dEWinIni dESm_Lock dESmIni  feat_Lock featIni setTo_Lock setToIni IDiv ISubtr CubePos Scan alpha
 % % return if no change in selection
 % if get(hObject,'Value')==valMenuLockPre; return; else valMenuLockPre=get(hObject,'Value'); end
 % reset
@@ -742,9 +762,9 @@ end
 % update energy range
    ERange=[min(min(EAlign(:,1,:))) max(max(EAlign(:,end,:)))];
    set(handles.textEnergy,'String',[sprintf('%0.1f',ERange(1)) '<Eb/k<' sprintf('%0.1f',ERange(end))]);
-% update Kx range
-if get(handles.radiobuttonAKx,'Value')==1
-   surfNx=field2num(handles.editSurfNx); Kx=Kxx(HV,EAlign,thtM,ACorr,surfNx);
+% update Kx range if Auto
+if get(handles.radiobuttonAKx,'Value')==1 && all(AKxWin==AutoKxWin)
+   surfNx=field2num(handles.editSurfNx); Kx=Kxx(HV,EAlign,thtM,ACorr,surfNx,alpha);
    KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))];
    aMin=max(max(Kx(:,1,:))); aMax=min(min(Kx(:,end,:))); AutoKxWin=[0.95*aMin+0.05*aMax 0.05*aMin+0.95*aMax];
    set(handles.textAKx,'String',[sprintf('%0.1f',KxRange(1)) '<Kx<' sprintf('%0.1f',KxRange(2))])
@@ -769,7 +789,7 @@ function editLockEF_Callback(~,~,handles)
 % hObject    handle to editLockEF (see GCBO)
 %global EAlign Kx IDiv ISubtr; EAlign=[]; Kx=[]; IDiv=[]; ISubtr=[]; disp('- cleared EAlign Kx IDiv ISubtr')
 global Data HV thtM ACorr ECorr EAlign ERange Kx KxRange AutoKxWin AKxRange AKxWin ...
-          dEWin_Lock dESm_Lock feat_Lock setTo_Lock IDiv ISubtr CubePos Scan
+          dEWin_Lock dESm_Lock feat_Lock setTo_Lock IDiv ISubtr CubePos Scan alpha
  % exit if menuLock set to None
  if get(handles.menuLock,'Value')==1; return; end
 % reset
@@ -786,7 +806,7 @@ ERange=[min(min(EAlign(:,1,:))) max(max(EAlign(:,end,:)))];
 set(handles.textEnergy,'String',[sprintf('%0.1f',ERange(1)) '<Eb/k<' sprintf('%0.1f',ERange(end))]);
 % update Kx range
 if get(handles.radiobuttonAKx,'Value')==1
-   surfNx=field2num(handles.editSurfNx); Kx=Kxx(HV,EAlign,thtM,ACorr,surfNx);
+   surfNx=field2num(handles.editSurfNx); Kx=Kxx(HV,EAlign,thtM,ACorr,surfNx,alpha);
    KxRange=[min(min(Kx(:,1,:))) max(max(Kx(:,end,:)))];
    aMin=max(max(Kx(:,1,:))); aMax=min(min(Kx(:,end,:))); AutoKxWin=[0.95*aMin+0.05*aMax 0.05*aMin+0.95*aMax];
    set(handles.textAKx,'String',[sprintf('%0.1f',KxRange(1)) '<Kx<' sprintf('%0.1f',KxRange(2))])
@@ -890,7 +910,7 @@ createNewFig=1; ProcessView(handles);
 % --- Function to process the data for viewing
 function ProcessView(handles)
 global FullName ScanType EWin Scan SWin Data Data3 EAlign ERange ACorr AutoAWin Kx AKx AKxWin RangeNorm IDiv scCoeff ISubtr clipNormNeg ...
-          X Y Z FracView switchAKx HV thtM tltM presmdX presmdY structMode sharp postsmdX postsmdY clipImgProcNeg
+          X Y Z FracView switchAKx HV thtM tltM presmdX presmdY structMode sharp postsmdX postsmdY clipImgProcNeg alpha
 viewMode=get(handles.menuViewMode,'Value');
 % return if no data
 if isempty(Data); return; end
@@ -932,7 +952,7 @@ set(handles.textEnergy,'String',[sprintf('%0.1f',ERange(1)) '<Eb/k<' sprintf('%0
 % no need to calculate Kx-transform because it was already calculated 
 % either in Load or in textAKx/editSurfNx/pushbuttonFind
 % if isempty(Kx)&&get(handles.textAKx,'Value')==2
-%    surfNx=str2num(get(handles.editSurfNx,'String')); Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx);
+%    surfNx=str2num(get(handles.editSurfNx,'String')); Kx=Kxx(HV,ECorr,thtM,ACorr,surfNx,alpha);
 % end
 % normalize by intensity in the defined energy window into global Data3
 Data3=Data;
@@ -940,7 +960,6 @@ if viewMode~=2&&get(handles.menuNorm,'Value')>1
    if isempty(IDiv)
       h=waitbar(0.5,'Forming Normalization Array','Windowstyle','Modal');
       if isempty(RangeNorm); IntEWin=[0.9*ERange(1)+0.1*ERange(2) 0.1*ERange(1)+0.9*ERange(2)];
-%         IntEWin=[0.9*ERange(1)+0.1*ERange(2) 0.1*ERange(1)+0.9*ERange(2)]; 
       else IntEWin=RangeNorm; end
       IDiv=Slice(ACorr,EAlign,Data3,'isoE',IntEWin);
       close(h)
@@ -1019,8 +1038,8 @@ case 4
    if switchAKx==0
       AKxSliceE=ASliceE;
    else   
-      if isequal(ScanType,'Tilt'); AKxSliceE=Kxx(HV,mean(EWin),thtM,ASliceE,surfNx); end 
-      if isequal(ScanType,'hv'); AKxSliceE=Kxx(HV(nS1:nPeriod:nS2),mean(EWin),thtM,ASliceE,surfNx); end
+      if isequal(ScanType,'Tilt'); AKxSliceE=Kxx(HV,mean(EWin),thtM,ASliceE,surfNx,alpha); end 
+      if isequal(ScanType,'hv'); AKxSliceE=Kxx(HV(nS1:nPeriod:nS2),mean(EWin),thtM,ASliceE,surfNx,alpha); end
    end   
 % - image output
    X=AKxSliceE; Y=Scan(nS1:nPeriod:nS2)'; Z=ISliceN;
@@ -1029,13 +1048,13 @@ case 4
       surfNy=field2num(handles.editSurfNy);
 % - Tilt scan       
       if isequal(ScanType,'Tilt')
-         Ky=Kyy(HV,mean(EWin),ASliceE,thtM,Scan(nS1:nPeriod:nS2)-surfNy,surfNx); Y=Ky;
+         Ky=Kyy(HV,mean(EWin),ASliceE,thtM,Scan(nS1:nPeriod:nS2)-surfNy,surfNx,alpha); Y=Ky;
       end
 % - hv scan  
       if isequal(ScanType,'hv')
          if get(handles.radiobuttonHvKz,'Value')==1
             Vo=field2num(handles.editVo,-10);
-            Kz=Kzz(HV(nS1:nPeriod:nS2),mean(EWin),thtM,ASliceE,tltM-surfNy,Vo,surfNx); Y=Kz;
+            Kz=Kzz(HV(nS1:nPeriod:nS2),mean(EWin),thtM,ASliceE,tltM-surfNy,Vo,surfNx,alpha); Y=Kz;
          end
       end
    end   
@@ -1080,7 +1099,7 @@ case 5
 %       surfNy=str2num(get(handles.editSurfNy,'String'));
        surfNy=field2num(handles.editSurfNy);
        kx=mean(AKxWin);
-       ePhi=4.5; alpha=20; 
+       ePhi=4.5;
 % - Tilt scan
       if isequal(ScanType,'Tilt') 
          Eb=X; TltM=repmat(Y,1,size(X,2))-surfNy;
@@ -1131,7 +1150,8 @@ set(handles.menuExport,'Enable','On')
 % end
 %
 % *** plot ***
-Pos=strfind(FullName,'\'); FileName=FullName(Pos(end)+1:end); Opts.FileName=FileName; Opts.Scan=Scan; Opts.ScanType=ScanType;
+try Pos=strfind(FullName,'\'); catch;  Pos=strfind(FullName,'/'); end  % parsing universal between Windows and Mac/Linux
+FileName=FullName(Pos(end)+1:end); Opts.FileName=FileName; Opts.Scan=Scan; Opts.ScanType=ScanType;
 PlotAll(X,Y,Z,Opts,handles)
 
 % --- Plot and set callbacks function

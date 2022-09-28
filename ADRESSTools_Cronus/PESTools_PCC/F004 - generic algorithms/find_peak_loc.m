@@ -29,8 +29,8 @@ pp      = plot_props();
 type    = string(type);
 % -- Making the default window-size if it is undefined
 if isempty(xWin)
-    minWin  = mean(xdat(:)) - abs(0.25*range(xdat(:)));
-    maxWin  = mean(xdat(:)) + abs(0.25*range(xdat(:)));
+    minWin  = mean(xdat(:)) - abs(0.45*range(xdat(:)));
+    maxWin  = mean(xdat(:)) + abs(0.45*range(xdat(:)));
     xWin    = [minWin, maxWin];
 end
 % -- Making sure the window-size is an N×2 array
@@ -70,7 +70,7 @@ for i = 1:size(xWin, 1)
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
     % -- Finding the maximum peak value by fitting a gaussian
-    elseif strcmpi(type,"G")
+    elseif strcmpi(type,"G") || strcmpi(type,"gauss") || strcmpi(type,"Gauss")
         % --- Defining the fit function
         fit_func    = fittype(@(x0, peak, fwhm, x) Gauss(x, x0, peak, fwhm));
         x0_start    = mean(xdat_roi{i}(:));
@@ -84,7 +84,7 @@ for i = 1:size(xWin, 1)
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
     % -- Finding the maximum peak value by fitting a lorentzian
-    elseif strcmpi(type,"L")
+    elseif strcmpi(type,"L")|| strcmpi(type,"lorz") || strcmpi(type,"lorentzian")
         % --- Defining the fit function
         fit_func    = fittype(@(x0, peak, fwhm, x) Lorentzian(x, x0, peak, fwhm));
         x0_start    = mean(xdat_roi{i}(:));
@@ -185,7 +185,9 @@ if plot_result == 1
     gca_props(0); grid on; title('find_peak_loc()', 'interpreter', 'none'); 
     xlabel('$$ \bf  X $$', 'Interpreter', 'latex');
     ylabel('$$ \bf  Y $$', 'Interpreter', 'latex');
-    axis([mean(xWin(:))-0.75*range(xWin(:)), mean(xWin(:))+0.75*range(xWin(:)), min(ydat(:)), 1.10.*max(yVal(:))]);
+    if min(ydat(:)) ~= max(yVal(:))
+        axis([mean(xWin(:))-0.75*(range(xWin(:))), mean(xWin(:))+0.75*(range(xWin(:))), min(ydat(:)), 1.10.*max(yVal(:))]);
+    end
 end
 
 end

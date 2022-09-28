@@ -1,5 +1,5 @@
-function Kz = Kzz(HV,Eb,thtM,ThtA,TltM,v000,surfNormX)
-% Kz = Kzz(HV,Eb,thtM,ThtA,TltM,v000,surfNormX) calculates kz along the surface normal 
+function Kz = Kzz(HV,Eb,thtM,ThtA,TltM,v000,surfNormX,incAlpha)
+% Kz = Kzz(HV,Eb,thtM,ThtA,TltM,v000,surfNormX,incAlpha) calculates kz along the surface normal 
 % Inputs:
 % HV (scalar or vector) - photon energies
 % Eb (Eb<0; scalar/column vector/2D/3D array) - binding energies
@@ -9,13 +9,12 @@ function Kz = Kzz(HV,Eb,thtM,ThtA,TltM,v000,surfNormX)
 % v000 >0 - inner potential relative to EF
 % thtM - the manipulator primary rotation
 % surfNormX - surface normal primary angle returned by SurfNormX.m
-% IMPORTANT: The function implies the SX-ARPES@ADRESS standard geometry and 
-% axes notation with the analyser slit oriented in the MP.
-% Ver. 02-05-2019
+% incAlpha - nominal X-ray incidence angle. If omitted, 20deg is implied
+% Ver. 11.08.2022
 
 % parameters
 global alpha ePhi thtMPhys v0001 nA nE
-alpha=20; % nominal incidence angle
+if nargin<8; alpha=20; else alpha=incAlpha; end % nominal incidence angle
 ePhi=4.5; % workfunction
 thtMPhys=thtM+surfNormX;
 v0001=abs(v000);
@@ -54,7 +53,7 @@ if size(Eb,2)==1&&size(Eb,1)~=1; Eb=repmat(Eb,1,nA); end
 if size(ThtA,1)==1&&size(ThtA,2)~=1; ThtA=repmat(ThtA,nE,1); end
 % final-state Kz
 Kx1_2=(hv-ePhi+Eb).*sind(ThtA+thtMPhys).^2;
-Ky1_2=(hv-ePhi+Eb).*(sind(tltM).*cosd(ThtA+thtMPhys)).^2; 
+Ky1_2=(hv-ePhi+Eb).*(sind(tltM).*cosd(ThtA+thtMPhys)).^2;
 Kz1=0.5124*sqrt(hv+Eb+v0001-(Kx1_2+Ky1_2));
 % photon momentum corrected initial-state Kz
 Kz1=Kz1+2*pi*hv*sind(alpha+thtMPhys)/12400;

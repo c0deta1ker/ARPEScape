@@ -1,4 +1,10 @@
 ## Log of updates to ADRESSTools
+**Cronus - 28.09.2022:** 
+-> Multiple bug fixes and improvement of PES / XPS analysis and curve fitting tools.
+-> Updated Theory Data from Microsoft - all up-to-date now.
+-> Added Physics Constants to Materials Database.
+-> Uploaded MATools to 'Skyfall' version, with new ARPES geometry considered.
+
 **Basil - 21.02.2022:** 
 -> Multiple bug fixes and improvement of PES / XPS analysis and curve fitting tools.
 

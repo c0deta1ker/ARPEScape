@@ -1,4 +1,4 @@
-function Kx = Kxx(HV,Eb,thtM,ThtA,surfNormX)
+function Kx = Kxx(HV,Eb,thtM,ThtA,surfNormX,incAlpha)
 % Kx = Kxx(HV,Eb,thtM,ThtA,surfNormX) calculates k// along the analyzer slit 
 % Inputs:
 % HV (scalar or 1D vector) - photon energies
@@ -6,12 +6,12 @@ function Kx = Kxx(HV,Eb,thtM,ThtA,surfNormX)
 % thtM (scalar) - manipulator primary rotation
 % ThtA (scalar/row vector/2D/3D array) - analyzer scale angles
 % surfNormX - surface normal primary angle returned by SurfNormX.m
-% IMPORTANT: The function implies the SX-ARPES@ADRESS standard geometry
-% with the analyzer installed at 70deg to the incident X-rays
+% incAlpha - nominal X-ray incidence angle, for the present geometry equal to 9deg. If omitted, old geometry with 20deg implied.
+% Ver. 11.08.2022
 
 % parameters
 global alpha ePhi thtMPhys nA nE
-alpha=20; % nominal incidence angle
+if nargin<6; alpha=20; else alpha=incAlpha; end % nominal incidence angle
 ePhi=4.5; % workfunction
 thtMPhys=thtM+surfNormX;
 nA=size(ThtA,2); nE=size(Eb,1); 

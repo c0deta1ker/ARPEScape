@@ -1,15 +1,15 @@
-function surfNormX = SurfNormX(hv,eB,kx,thtM,thtA)
-% surfNormX = SurfNormX(hv,eB,kx,thtM,thtA) calculates the surface normal
+function surfNormX = SurfNormX(hv,eB,kx,thtM,thtA,incAlpha)
+% surfNormX = SurfNormX(hv,eB,kx,thtM,thtA,incAlpha) calculates the surface normal
 % angle in the measurement plane. Inputs: 
 % hv - photon energy;
 % eB and kx - binding energy (eB<0) and known k// of some reference feature;
 % thtN and thtA - corresponding angle of the sample rotation and angle on 
 % the analyser scale.
-% IMPORTANT: The function implies the SX-ARPES@ADRESS standard geometry and 
-% axes notation with the analyser slit oriented in the measurement plane.  
+% incAlpha - nominal X-ray incidence angle, for the present geometry equal to 9deg. If omitted, old geometry with 20deg implied.
+% Ver. 08.11.2022
 
 % parameters
-alpha=20; % nominal incidence angle 
+if nargin<6; alpha=20; else alpha=incAlpha; end % nominal incidence angle
 ePhi=4.5; % workfunction
 % inputs check
 if isempty(hv*eB*kx*thtM*thtA); surfNormX=[]; return; end

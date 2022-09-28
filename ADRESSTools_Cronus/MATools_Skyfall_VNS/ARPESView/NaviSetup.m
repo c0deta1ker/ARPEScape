@@ -1,4 +1,5 @@
 function varargout = NaviSetup(varargin)
+% Ver. 21Aug2022
 % NAVISETUP MATLAB code for NaviSetup.fig
 %      NAVISETUP, by itself, creates a new NAVISETUP or raises the existing
 %      singleton*.
@@ -44,14 +45,14 @@ guidata(hObject, handles);
 % figure properties
 % set(gcf,'WindowStyle','modal')
 % global parameters
-global surfNx_Navi hv_N eB_N kx_N thtM thtM_N thtA_N
+global surfNx_Navi hv_N eB_N kx_N thtM thtM_N thtA_N alpha
 set(handles.editHv,'String',sprintf('%0.3f',hv_N));
 thtM_N=thtM; set(handles.editThtM,'String',sprintf('%0.3f',thtM_N));
 set(handles.editEB,'String',sprintf('%0.3f',eB_N));
 kx_N=0; % kx_N=[]; 
 set(handles.editKx,'String',sprintf('%0.3f',kx_N));
 set(handles.editThtA,'String',sprintf('%0.3f',thtA_N));
-surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N);
+surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N,alpha);
 set(handles.textSurfNormX,'String',['surfNx = ' sprintf('%0.3f',surfNx_Navi)]);
 % % - figure position
 % global xPos_Navi yPos_Navi
@@ -67,46 +68,46 @@ function varargout = NaviSetup_OutputFcn(~,~,handles)
 varargout{1} = handles.output;
 
 function editHv_Callback(hObject,~,handles)
-global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi
+global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi alpha
 hv_N=field2num(hObject);
 if length(hv_N)==1
-   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N);
+   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N,alpha);
    set(handles.textSurfNormX,'String',['surfNx = ' sprintf('%0.3f',surfNx_Navi)]);
 end
 %set(hObject,'String',num2str(hv_N))
 
 function editThtM_Callback(hObject,~,handles)
-global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi
+global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi alpha
 thtM_N=field2num(hObject);
 if length(thtM_N)==1
-   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N);
+   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N,alpha);
    set(handles.textSurfNormX,'String',['surfNx = ' sprintf('%0.3f',surfNx_Navi)]);
 end
 %set(hObject,'String',num2str(thtM_N))
 
 function editKx_Callback(hObject,~,handles)
-global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi;
+global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi alpha
 kx_N=field2num(hObject);
 if length(kx_N)==1
-   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N);
+   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N,alpha);
    set(handles.textSurfNormX,'String',['surfNx = ' sprintf('%0.3f',surfNx_Navi)]);
 end
 %set(hObject,'String',num2str(kx_N))
 
 function editThtA_Callback(hObject,~,handles)
-global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi
+global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi alpha
 thtA_N=field2num(hObject);
 if length(thtA_N)==1 
-   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N);
+   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N,alpha);
    set(handles.textSurfNormX,'String',['surfNx = ' sprintf('%0.3f',surfNx_Navi)]);
 end
 %set(hObject,'String',num2str(thtA_N))
 
 function editEB_Callback(hObject,~,handles)
-global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi
+global hv_N eB_N kx_N thtM_N thtA_N surfNx_Navi alpha
 eB_N=field2num(hObject);
 if length(eB_N)==1
-   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N);
+   surfNx_Navi=SurfNormX(hv_N,eB_N,kx_N,thtM_N,thtA_N,alpha);
    set(handles.textSurfNormX,'String',['surfNx= ' sprintf('%0.3f',surfNx_Navi)]);
 end   
 %set(hObject,'String',num2str(eB_N))

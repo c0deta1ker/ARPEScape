@@ -34,8 +34,9 @@ else
     for i = 1:length(pesStr)
         plot(pesStr{i}.xdat, pesStr{i}.ydat, 'k-', 'color', cols(i,:), 'linewidth', pp.llwidth);
         lgnd{end+1} = string(pesStr{i}.hv) + " eV";
+        max_ydat(i) = max(pesStr{i}.ydat(:));
     end
-    axis([min(pesStr{1}.xdat(:)), max(pesStr{1}.xdat(:)),0, 1.15*max(pesStr{1}.ydat(:))]);
+    axis([min(pesStr{1}.xdat(:)), max(pesStr{1}.xdat(:)), 0, 1.15*max(max_ydat)]);
     if isfield(pesStr, 'FileName'); title(sprintf(string(pesStr{1}.FileName)), 'interpreter', 'none', 'fontsize', 9); end
 end
 % - Formatting the figure

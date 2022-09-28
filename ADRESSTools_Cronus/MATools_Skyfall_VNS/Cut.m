@@ -10,7 +10,7 @@ function [XCut,DCut]=Cut(ACorr,ECorr,Data,xMode,Win)
 
 % Revisions to Ver. 29.12.2017: Grossly reworked to correct the dimensions and linear/subscript indexing of the arrays meeting in the interpolation
 
-% disp('- Data cut formation')
+disp('- Data cut formation')
 
 % check inputs
 % - supported modes

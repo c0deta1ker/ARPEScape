@@ -36,9 +36,7 @@ if ~isempty(pos)
    ep=str2double(Note(pos+20:pos+hash(1)-2));
 else
 % - hdf5 file   
-   pos=strfind(Note,'Epass   =');
-   ep=str2double(Note(pos+9:pos+12));
+   pos1=strfind(Note,'Epass   =');
+   pos2=strfind(Note,'Ek/Eb   =');
+   ep=str2double(Note(pos1+9:pos2-1));
 end
-
-
-

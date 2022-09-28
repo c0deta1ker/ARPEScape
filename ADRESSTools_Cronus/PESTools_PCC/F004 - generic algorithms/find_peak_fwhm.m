@@ -43,7 +43,8 @@ if size(ydat, 2) > 1; ydat = ydat'; end
 xVal = []; yVal = [];
 fwhm = []; fwhmLocs = {};
 xdat_roi = {}; ydat_roi = {};
-xx = {}; yy = {};
+xx = {}; yy = {}; 
+if length(xdat(:)) < 5e4; Nx = 5e4; else; Nx = length(xdat(:));end
 for i = 1:size(xWin, 1)
     % -- Finding the indices and ROI
     [~, lbIndx]             = min(abs(xdat - xWin(i,1)));
@@ -59,14 +60,14 @@ for i = 1:size(xWin, 1)
         xVal(i)           	= xx{i}(maxInd);
     % -- Finding the maximum peak value from the gaussian smoothed data
     elseif strcmpi(type,"gaco1")
-        xx{i}             	= linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}             	= linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}             	= Gaco1(ydat_roi{i}, 2);
         yy{i}             	= interp1(xdat_roi{i}, yy{i}, xx{i});
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
     % -- Finding the maximum peak value by fitting a spline
     elseif strcmpi(type,"spline")
-        xx{i}             	= linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}             	= linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}             	= spline(xdat_roi{i}, ydat_roi{i}, xx{i});
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
@@ -94,7 +95,7 @@ for i = 1:size(xWin, 1)
         % --- Executing the fitting operation
         [fit1,~,~]	= fit(xdat_roi{i},ydat_roi{i},fit_func,'start',[x0_start, peak_start, fwhm_start]);
         params    	= coeffvalues(fit1);
-        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}	= Lorentzian(xx{i}, params(1), params(2), params(3));
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
@@ -109,7 +110,7 @@ for i = 1:size(xWin, 1)
         % --- Executing the fitting operation
         [fit1,~,~]	= fit(xdat_roi{i},ydat_roi{i},fit_func,'start',[x0_start, peak_start, fwhm_start, mr_start]);
         params    	= coeffvalues(fit1);
-        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}	= sGL(xx{i}, params(1), params(2), params(3), params(4));
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
@@ -124,7 +125,7 @@ for i = 1:size(xWin, 1)
         % --- Executing the fitting operation
         [fit1,~,~]	= fit(xdat_roi{i},ydat_roi{i},fit_func,'start',[x0_start, peak_start, fwhm_start, mr_start]);
         params    	= coeffvalues(fit1);
-        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}	= pGL(xx{i}, params(1), params(2), params(3), params(4));
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
@@ -140,7 +141,7 @@ for i = 1:size(xWin, 1)
         % --- Executing the fitting operation
         [fit1,~,~]	= fit(xdat_roi{i},ydat_roi{i},fit_func,'start',[x0_start, peak_start, fwhm_start, mr_start, asym_start]);
         params    	= coeffvalues(fit1);
-        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}	= sGLA(xx{i}, params(1), params(2), params(3), params(4), params(5));
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);
@@ -156,7 +157,7 @@ for i = 1:size(xWin, 1)
         % --- Executing the fitting operation
         [fit1,~,~]	= fit(xdat_roi{i},ydat_roi{i},fit_func,'start',[x0_start, peak_start, fwhm_start, mr_start, asym_start]);
         params    	= coeffvalues(fit1);
-        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), 1e3);
+        xx{i}   = linspace(min(xdat_roi{i}(:)), max(xdat_roi{i}(:)), Nx);
         yy{i}	= pGLA(xx{i}, params(1), params(2), params(3), params(4), params(5));
         [yVal(i), maxInd]	= max(yy{i}(:));
         xVal(i)           	= xx{i}(maxInd);

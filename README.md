@@ -6,8 +6,41 @@ A compilation of MATLAB scripts used for the analysis of soft X-ray angle-resolv
 1. Download the *ADRESSTools* repository.
 2. Open MATLAB and use *Set Path* in the *Home* tab to add the *ADRESSTools* repository and all its sub-folders into its saved search paths.
 3. Make sure you also use *Set Path* to add the repository / folder that contains all of your data to be loaded in.
+4. In the *PESTools* folder, there is an *Examples* folder, which contains many ARPES / XPS data processing and curve fitting templates / examples that can be used. You should use this as a starting point.
 
-In the *PESTools* folder, there is an *Examples* folder, which contains many ARPES / XPS data processing and curve fitting templates that can be used.
+## Materials Database Tools
+**(1) Electron Inelastic Mean Free Path Database (eIMFPD)**: This is a local MATLAB database that compiles the optical data from the NIST Electron Inelastic-Mean-Free-Path Database (http://dx.doi.org/10.18434/T48C78) so that the results can be easily called and accessed within MATLAB. This is accessible in MATLAB via 'get_eimfpd_props()'. Furthermore, predictive eIMFP formulas's are also available using the (1) Universal, (2) TPP-2M and (3) S1 & S2 formalisms. A comparison of all the formalisms is shown below:
+![030_eIMFP_calculators](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/030_eIMFP_calculators.png)
+
+**(2) Material Properties Database (MPD)**: This is a local MATLAB database that compiles the most useful physical, electronic, optical and magnetic material properties of elements / compounds. The data is taken from a range of sources, where the 'average' values are used for parameters that had more than 1 unique value. Accessible in MATLAB via 'get_mpd_props()'.
+
+**(3) Photoionisation Cross-Section and Asymmetry Database (PIXSAD)**:
+This is a local MATLAB database that compiles the photoionisation cross-section and asymmetry parameter data of the elements. This is useful when modelling the total photoelectron intensity that originates from a given layer of a sample when performing ARPES / XPS experiments. Accessible in MATLAB via 'get_pixsad_props()'.
+
+**(4) Photoionisation Energy and Fluorescence Database (PIEFD)**:
+This is a local MATLAB database that compiles the photoionisation energy and fluorescence yield data of the elements. Accessible in MATLAB via 'get_piefd_props()'.
+
+**(5) Physics Constants Database**:
+This is a MATLAB function that loads in many physics constants that can be used for data processing, or modelling of physical systems. Accessible in MATLAB via 'physics_constants()'.
+
+
+## XPS Analysis tools
+**PES Model Curves**:
+A whole suite of PES model curves are defined and available for the user to use within MATLAB. From Gaussian, Lorentzian, or Voigt to Doniach-Sunjic curve shapes. Furthermore, the Fermi-Dirac Distribution (FDD) is also defined, as well as its Gaussian broadened and linear background form. Combining all of these together, the fundamental curve-shapes for PES curve fitting to XPS / ARPES data is possible.
+![005_PES_Model_Curves](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/005_PES_Model_Curves.png)
+
+**PES Curve Fitting**:
+The PESTools functions offer a host of different line-shapes and background that you can use for fitting XPS spectra. Here is a line of all available functions; (i) For PES curves: Gaussian, Lorentzian, Voigt, asymmetrical Voigt and Doniach-Sunjic functions are available; (ii) For Backgrounds: Linear, Shirley and Offset Shirley functions are available. The general objective of fitting XPS data is to define an initial photoelectron spectrum that provides a reasonable first guess and then run an optimisation procedure to hone in to the best fit solution. Here, the general procedures are listed below;  
+(1) Define the shape and properties of the N primary (+ spin-orbit if required) components to be fitted  
+(2) Define the type of background to be used  
+(3) Preview the initial conditions of the XPS curve fit model vs data  
+(4) If you are happy with the initial guess, use 'xps_solver()' to run the optimisation algorithm  
+(5) Extract the best fit variables of the converged fit and plot the residuals  
+![020_XPS_fitter](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/020_XPS_fitter.png)
+
+**PES Multilayer Modelling**:
+We define function that allows the user simulate the photoelectron intensity contributions of an N-layered sample as a function of photon energy. This can be used to model experimental data obtained at ADRESS. The function allows the user to define the material type of each layer, the thickness, the core-level being probed and then determines the emitted photoelectron intensity of each layer using the Beer-Lambert law. All the material, photoionisation and core-level parameters are stored within Materials Database Tools.
+![021_Multilayer_PES_Modelling](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/021_Multilayer_PES_Modelling.png)
 
 
 ## ARPES Analysis tools
@@ -39,55 +72,21 @@ Allows the user to walk through all of the fitting steps to parabolic features w
 A whole suite of ARPES model curves are defined and available for the user to use within MATLAB. These are 2D parabolic dispersions that have Gaussian spot profiles, whose FWHM along the x- and y-axes can be defined. Furthermore, the Fermi-Dirac Distribution (FDD) is also defined, as well as its Gaussian broadened and linear background form. Combining these, parabolic ARPES curves can be simulated and used for: (i) accurately fitting N quantum well states near the Fermi-edge or (ii) estimating the VBM position by fitting etc.
 ![005_PES_Model_Curves](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/004_ARPES_Model_Curves.png)
 
-## XPS Analysis tools
-**PES Model Curves**:
-A whole suite of PES model curves are defined and available for the user to use within MATLAB. From Gaussian, Lorentzian, or Voigt to Doniach-Sunjic curve shapes. Furthermore, the Fermi-Dirac Distribution (FDD) is also defined, as well as its Gaussian broadened and linear background form. Combining all of these together, the fundamental curve-shapes for PES curve fitting to XPS / ARPES data is possible.
-![005_PES_Model_Curves](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/005_PES_Model_Curves.png)
-
-**PES Curve Fitting**:
-The PESTools functions offer a host of different line-shapes and background that you can use for fitting XPS spectra. Here is a line of all available functions; (i) For PES curves: Gaussian, Lorentzian, Voigt, asymmetrical Voigt and Doniach-Sunjic functions are available; (ii) For Backgrounds: Linear, Shirley and Offset Shirley functions are available. The general objective of fitting XPS data is to define an initial photoelectron spectrum that provides a reasonable first guess and then run an optimisation procedure to hone in to the best fit solution. Here, the general procedures are listed below;  
-(1) Define the shape and properties of the N primary (+ spin-orbit if required) components to be fitted  
-(2) Define the type of background to be used  
-(3) Preview the initial conditions of the XPS curve fit model vs data  
-(4) If you are happy with the initial guess, use 'xps_solver()' to run the optimisation algorithm  
-(5) Extract the best fit variables of the converged fit and plot the residuals  
-![020_XPS_fitter](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/020_XPS_fitter.png)
-
-
-**PES Multilayer Modelling**:
-We define function that allows the user simulate the photoelectron intensity contributions of an N-layered sample as a function of photon energy. This can be used to model experimental data obtained at ADRESS. The function allows the user to define the material type of each layer, the thickness, the core-level being probed and then determines the emitted photoelectron intensity of each layer using the Beer-Lambert law. All the material, photoionisation and core-level parameters are stored within Materials Database Tools.
-![021_Multilayer_PES_Modelling](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/021_Multilayer_PES_Modelling.png)
-
-
-## Materials Database Tools
-**(1) Electron Inelastic Mean Free Path Database (eIMFPD)**: This is a local MATLAB database that compiles the optical data from the NIST Electron Inelastic-Mean-Free-Path Database (http://dx.doi.org/10.18434/T48C78) so that the results can be easily called and accessed within MATLAB. This is accessible in MATLAB via 'get_eimfpd_props()'. Furthermore, predictive eIMFP formulas's are also available using the (1) Universal, (2) TPP-2M and (3) S1 & S2 formalisms. A comparison of all the formalisms is shown below:
-![030_eIMFP_calculators](ADRESSTools_Cronus/PESTools_PCC/0_ReadMeImages/030_eIMFP_calculators.png)
-
-
-**(2) Material Properties Database (MPD)**: This is a local MATLAB database that compiles the most useful physical, electronic, optical and magnetic material properties of elements / compounds. The data is taken from a range of sources, where the 'average' values are used for parameters that had more than 1 unique value. Accessible in MATLAB via 'get_mpd_props()'.
-
-
-**(3) Photoionisation Cross-Section and Asymmetry Database (PIXSAD)**:
-This is a local MATLAB database that compiles the photoionisation cross-section and asymmetry parameter data of the elements. This is useful when modelling the total photoelectron intensity that originates from a given layer of a sample when performing ARPES / XPS experiments. Accessible in MATLAB via 'get_pixsad_props()'.
-
-
-**(4) Photoionisation Energy and Fluorescence Database (PIEFD)**:
-This is a local MATLAB database that compiles the photoionisation energy and fluorescence yield data of the elements. Accessible in MATLAB via 'get_piefd_props()'.
-
 
 ## MATLAB Version control  
 MATLAB version:   2020a  
 MATLAB add-ons (recommended):   Image Processing Toolbox, Global Optimization Toolbox, Optimization Toolbox, Curve Fitting Toolbox, Parallel Processing Toolbox, Statistics and Machine Learning Toolbox, Signal Processing Toolbox.
 
+
 ## Authors
 MaterialsDatabase & PESTools Scripts:  
-**Procopios Constantinou**,  
+**Dr. Procopios Constantinou**,  
 Swiss Light Source (SLS),  
 Paul Scherrer Institute (PSI),  
 email: procopios.constantinou@psi.ch
 
 MATools Scripts:  
-**Vladimir Strocov**,  
+**Dr. Vladimir Strocov**,  
 Swiss Light Source (SLS),  
 Paul Scherrer Institute (PSI),  
 email: vladimir.strocov@psi.ch
@@ -95,4 +94,4 @@ email: vladimir.strocov@psi.ch
 ## License  
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details.
 
---PCC November 2021
+--PCC, September 2022

@@ -1,4 +1,4 @@
-function Ky = Kyy(HV,Eb,ThtA,thtM,TltM,surfNormX)
+function Ky = Kyy(HV,Eb,ThtA,thtM,TltM,surfNormX,incAlpha)
 % Ky = Kyy(HV,Eb,ThtA,thtM,TltM,surfNormX) calculates k// perpendicular to the analyzer slit
 % Inputs:
 % HV (scalar or vector) - photon energies
@@ -7,13 +7,12 @@ function Ky = Kyy(HV,Eb,ThtA,thtM,TltM,surfNormX)
 % thtM - manipulator primary rotation
 % TltM (scalar/row vector) - manipulator tilt relative to its normal emission value
 % surfNormX - surface normal primary angle returned by SurfNormX.m
-% IMPORTANT: The function implies the SX-ARPES@ADRESS standard geometry
-% with the analyzer installed at 70deg to the incident X-rays
-% Ver. 02-05-2019
+% incAlpha - nominal X-ray incidence angle, for the present geometry equal to 9deg. If omitted, old geometry with 20deg implied.
+% Ver. 11.08.2022
 
 % parameters
 global alpha ePhi thtMPhys nA nE
-alpha=20; % nominal incidence angle
+if nargin<7; alpha=20; else alpha=incAlpha; end % nominal incidence angle
 ePhi=4.5; % workfunction
 nA=size(ThtA,2); nE=size(Eb,1); nH=length(HV); nT=length(TltM);
 if size(ThtA,1)==1&&size(ThtA,2)~=1; ThtA=repmat(ThtA,nE,1); end % form 2D array of ThtA unless scalar or 3D

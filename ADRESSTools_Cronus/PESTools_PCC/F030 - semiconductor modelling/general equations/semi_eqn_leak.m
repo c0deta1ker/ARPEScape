@@ -1,5 +1,5 @@
-function current = moscap_eqn_leak(voltage, area, distance, resistivity)
-% current = moscap_eqn_leak(voltage, area, distance, resistivity)
+function current = semi_eqn_leak(voltage, area, distance, resistivity)
+% current = semi_eqn_leak(voltage, area, distance, resistivity)
 %
 %   REQ. FUNCTIONS:
 %
