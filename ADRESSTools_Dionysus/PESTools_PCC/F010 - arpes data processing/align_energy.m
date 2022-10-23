@@ -64,6 +64,8 @@ if isempty(plot_result); plot_result = 0; end
 % - Extracting the fields to be used with most recent processing
 [xField, yField, ~, dField]                  = find_data_fields(dataStr);
 [xField_ref, yField_ref, ~, dField_ref] = find_data_fields(dataStr_ref);
+% - Constants
+eb_ref_file     = dataStr_ref.FileName;
 %% Validity checks on the input parameters
 if length(align_args) ~= 6
     error('error: align_args is not a {1x6} cell - make sure you defined the align arguments correctly.');
@@ -121,7 +123,6 @@ if strcmpi(alignType,"global")...
         || strcmpi(alignType,"fit2ef") || strcmpi(alignType,"fit2ef-5%") || strcmpi(alignType,"fit2ef-10%") || strcmpi(alignType,"fit2ef-25%") || strcmpi(alignType,"fit2ef-50%") || strcmpi(alignType,"fit2ef-75%") || strcmpi(alignType,"fit2ef-95%")...
         || strcmpi(alignType,"fit2peak") || strcmpi(alignType,"fit2peak-5%") || strcmpi(alignType,"fit2peak-10%") || strcmpi(alignType,"fit2peak-25%") || strcmpi(alignType,"fit2peak-50%") || strcmpi(alignType,"fit2peak-75%") || strcmpi(alignType,"fit2peak-95%")
     % - Initialising variables
-    eb_ref_file     = dataStr_ref.FileName;
     eb_shift_mat       = [];
     aligned_energy	= [];
     eWin_i          = [];
@@ -201,11 +202,13 @@ if strcmpi(alignType,"global")...
         if isfield(dataStr, 'eb');  aligned_energy(:,:,i) = dataStr.eb(:,:,i) - eb_shift;
         else;                       aligned_energy(:,1,i) = dataStr.raw_eb - eb_shift;
         end
+        aligned_energy_ref(:,1,i) = dataStr_ref.raw_eb - eb_shift;
         % - Appending all the energy shifts into a matrix
         eb_shift_mat(i,:) = [i, eb_shift];
     end
     % Assigning final variables to the data structure
-    EB = aligned_energy;
+    EB      = aligned_energy;
+    EB_REF  = aligned_energy_ref;
 end
 
 %% - 3.2 - EXECUTING SCAN SELECTED ENERGY ALIGNMENTS (filing through selected scan indices)
@@ -219,6 +222,7 @@ if strcmpi(alignType,"global shift via scan") || strcmpi(alignType,"scans")
         [~, eb_shift, ~]    = AlignEF(dataStr.(dField)(:,:,ebindx), dataStr.eb(:,1,ebindx), eWin(1), dEWin, dESmooth, feat);
         % -- Applying the energy shift to the data globally
         EB                  = dataStr.eb - eb_shift;
+        EB_REF              = dataStr_ref.raw_eb - eb_shift;
         % -- Appending all the energy shifts into a cell
         eb_shift_mat        = [ebindx, eb_shift];
     % (B) IF ALIGNING ONLY CERTAIN SCAN INDICES
@@ -233,12 +237,13 @@ if strcmpi(alignType,"global shift via scan") || strcmpi(alignType,"scans")
             else; eWin_i = eWin(ebindx);
             end
             % - Eb alignment over defined scans
-            [~, eb_shift, ~] = AlignEF(dataStr.(dField)(:,:,i), dataStr.eb(:,1,i), eWin_i, dEWin, dESmooth, feat);
+            [~, eb_shift, ~]    = AlignEF(dataStr.(dField)(:,:,i), dataStr.eb(:,1,i), eWin_i, dEWin, dESmooth, feat);
             % -- Applying the energy shift to the data
-            EB(:,:,i) = dataStr.eb(:,:,i) - eb_shift;
+            EB(:,:,i)           = dataStr.eb(:,:,i) - eb_shift;
             % -- Appending all the energy shifts into a matrix
             eb_shift_mat(i,:) = [i, eb_shift];
         end
+        EB_REF = dataStr_ref.raw_eb;
     end
 end 
 
@@ -282,9 +287,9 @@ dataStr.tht = THT;
 % - Reference ARPES data
 if ~isfield(dataStr_ref.meta, 'align_args'); dataStr_ref.meta.align_args = {}; end
 dataStr_ref.meta.align_args{end+1} = align_args;
-dataStr_ref.raw_eb = dataStr_ref.raw_eb - dataStr.eb_shifts{end}(:,2);
 if ~isfield(dataStr_ref, 'eb_shifts'); dataStr_ref.eb_shifts = {}; end
 dataStr_ref.eb_shifts{end+1}    = eb_shift_mat;
+dataStr_ref.raw_eb = EB_REF;
 
 %% -- For Debugging
 if plot_result == 1 && ~contains(alignType,"fit2ef")
@@ -292,14 +297,14 @@ if plot_result == 1 && ~contains(alignType,"fit2ef")
     fig.Position(3) = 2*450; 
     fig.Position(4) = 350;
     subplot(121); hold on;
-    ImData(dataStr_ref.raw_tht, dataStr_ref.raw_eb, dataStr_ref.raw_data);
+    ImData(dataStr_ref.raw_tht, dataStr_ref.raw_eb, dataStr_ref.raw_data(:,:,scan_indxs(1)));
     line([-1e3, 1e3], [0, 0], 'color', 'c', 'linewidth', 1.5, 'linestyle', '-'); 
     line([-1e3, 1e3], [0, 0] + eb_shift_mat(2), 'color', 'c', 'linewidth', 0.5, 'linestyle', '--'); 
     img_props([], "tht");
     axis([min(dataStr_ref.raw_tht(:)), max(dataStr_ref.raw_tht(:)), min(dataStr_ref.raw_eb(:)), max(dataStr_ref.raw_eb(:))]);
     colorbar; title('align_energy(): Reference', 'Interpreter', 'none');
     subplot(122); hold on;
-    ImData(dataStr.tht, dataStr.eb, dataStr.(dField));
+    ImData(dataStr.tht(:,:,scan_indxs(1)), dataStr.eb(:,:,scan_indxs(1)), dataStr.(dField)(:,:,scan_indxs(1)));
     line([-1e3, 1e3], [0, 0], 'color', 'c', 'linewidth', 1.5, 'linestyle', '-'); 
     line([-1e3, 1e3], [0, 0] + eb_shift_mat(2), 'color', 'c', 'linewidth', 0.5, 'linestyle', '--'); 
     img_props([], "tht");

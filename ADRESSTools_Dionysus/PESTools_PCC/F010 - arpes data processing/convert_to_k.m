@@ -93,14 +93,14 @@ if plot_result == 1
     fig.Position(3) = 2*450; 
     fig.Position(4) = 350;
     subplot(121); hold on;
-    ImData(dataStr.tht, dataStr.eb, dataStr.data);
-    line([0, 0] + thtA_ref, [-1e3, 1e3], 'color', 'c', 'linewidth', 0.5, 'linestyle', '-'); 
+    ImData(dataStr.tht(:,:,1), dataStr.eb(:,:,1), dataStr.data(:,:,1));
+    line([0, 0] + mean(thtA_ref(:)), [-1e3, 1e3], 'color', 'c', 'linewidth', 0.5, 'linestyle', '-'); 
     line([-1e3, 1e3], [0, 0] + eB_ref, 'color', 'c', 'linewidth', 0.5, 'linestyle', '-'); 
     img_props([], "tht");
     axis([min(dataStr.tht(:)), max(dataStr.tht(:)), min(dataStr.eb(:)), max(dataStr.eb(:))]);
     colorbar; title('convert_to_k(): Before', 'Interpreter', 'none');
     subplot(122); hold on;
-    ImData(dataStr.kx, dataStr.eb, dataStr.data);
+    ImData(dataStr.kx(:,:,1), dataStr.eb(:,:,1), dataStr.data(:,:,1));
     img_props([], "kx");
     axis([min(dataStr.kx(:)), max(dataStr.kx(:)), min(dataStr.eb(:)), max(dataStr.eb(:))]);
     colorbar; title('convert_to_k(): After', 'Interpreter', 'none');

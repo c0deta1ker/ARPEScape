@@ -59,6 +59,12 @@ elseif length(hv) == 2
     surfNormX(2,:)      = SurfNormX(hv(2), navi_args.eBref, navi_args.kxref, navi_args.thtM, navi_args.thtAref, navi_args.alpha);
     kx(2,:)             = Kxx(hv(2), navi_args.eBref, navi_args.thtM, tht, surfNormX(2,:), navi_args.alpha);
     kz(2,:)             = Kzz(hv(2), navi_args.eBref, navi_args.thtM, tht, navi_args.tltM, navi_args.V000, surfNormX(2,:), navi_args.alpha);
+elseif length(hv) > 2
+    for i = 1:length(hv)
+        surfNormX(i,:)  = SurfNormX(hv(i), navi_args.eBref, navi_args.kxref, navi_args.thtM, navi_args.thtAref, navi_args.alpha);
+        kx(i,:)         = Kxx(hv(i), navi_args.eBref, navi_args.thtM, tht, surfNormX(i,:), navi_args.alpha);
+        kz(i,:)         = Kzz(hv(i), navi_args.eBref, navi_args.thtM, tht, navi_args.tltM, navi_args.V000, surfNormX(i,:), navi_args.alpha);
+    end
 end
 %% 1.2 - Extracting the kz-broadening
 eKE     = hv - navi_args.ePhi + navi_args.eBref;
@@ -67,26 +73,31 @@ dkz     = 1 ./ imfp;
 
 %% 2 - Updating the figure with the photon energy path
 if plot_results == 1
-    figX = figure(360579); 
-    figX.Name = 'BZ Navigation'; 
-    hold on;
-    % - Formatting the figure
-    ax = gca; ax.TickLabelInterpreter = 'latex'; ax.TickDir = 'both';
-    title('extract_hv_overlay()', 'Interpreter', 'none');
-    xlabel('$$ \bf  k_x\ (\AA^{-1}) $$', 'Interpreter', 'latex');
-    ylabel('$$ \bf  k_{\perp}\ (\AA^{-1}) $$', 'Interpreter', 'latex');
-    line([0, 0], [-1e5, 1e5], 'color', 'k', 'linestyle', '-');
     %% 2.1 - Plotting the BZ planar slice
-    if ~isempty(bzOverlay)
-        for i = 1:size(bzOverlay.X, 2)
-            plot(bzOverlay.X{i}, bzOverlay.Y{i}, 'k-','linewidth', 2);
+    if ~ishandle(360579)
+        figX = figure(360579); 
+        figX.Name = 'BZ Navigation'; 
+        hold on;
+        % --- Formatting the figure
+        ax = gca; ax.TickLabelInterpreter = 'latex'; ax.TickDir = 'both';
+        title('extract_hv_overlay()', 'Interpreter', 'none');
+        xlabel('$$ \bf  k_x\ (\AA^{-1}) $$', 'Interpreter', 'latex');
+        ylabel('$$ \bf  k_{\perp}\ (\AA^{-1}) $$', 'Interpreter', 'latex');
+        line([0, 0], [-1e5, 1e5], 'color', 'c', 'linestyle', '-');
+        % --- Plotting the BZ overlay
+        if ~isempty(bzOverlay)
+            for i = 1:size(bzOverlay.X, 2)
+                plot(bzOverlay.X{i}, bzOverlay.Y{i}, 'k-','linewidth', 2);
+            end
+            xticks(round(-1e3*norm(bzOverlay.gX):0.5*norm(bzOverlay.gX):1e3*norm(bzOverlay.gX),2));
+            yticks(round(-1e3*norm(bzOverlay.gY):0.5*norm(bzOverlay.gY):1e3*norm(bzOverlay.gY),2));
+            title_txt = sprintf("%s - %s", bzOverlay.crystal, bzOverlay.crystal_plane);
+            title(title_txt);
         end
-        % -- Defining the axes properties
-        xticks(round(-1e3*norm(bzOverlay.gX):0.5*norm(bzOverlay.gX):1e3*norm(bzOverlay.gX),2));
-        yticks(round(-1e3*norm(bzOverlay.gY):0.5*norm(bzOverlay.gY):1e3*norm(bzOverlay.gY),2));
-        title_txt = sprintf("%s - %s", bzOverlay.crystal, bzOverlay.crystal_plane);
-        title(title_txt);
+    else
+        figure(360579); 
     end
+
     %% 2.2 - Plotting the k-space patches probed with ARPES
     col = rand(1,3);
     % - For a single photon energy
@@ -99,8 +110,8 @@ if plot_results == 1
         % -- Plotting the ARPES scan line
         plot(kx, kz, '-', 'linewidth', 2, 'color', col);
         % -- Adding text
-        text(max(kx(:)), min(kz_lower(:)), sprintf("%.1f eV", hv),...
-            'color', col, 'Fontsize', 12, 'horizontalalignment', 'left');
+        text(max(kx(:)), min(kz_lower(:)), sprintf("%.0f eV", hv),...
+            'color', col, 'Fontsize', 12, 'horizontalalignment', 'left', 'FontWeight','bold');
     % - For a range of photon energies
     elseif length(hv) == 2
         % -- Extract the planar limits of the ARPES scan
@@ -112,10 +123,27 @@ if plot_results == 1
         plot(kx(1,:), kz(1,:), '-', 'linewidth', 2, 'color', col);
         plot(kx(2,:), kz(2,:), '-', 'linewidth', 2, 'color', col);
         % -- Adding text
-        text(max(kx(1,:)), min(kz_lower(:)), sprintf("%.1f eV", hv(1)),...
-            'color', col, 'Fontsize', 12, 'horizontalalignment', 'left');
-        text(max(kx(2,:)), max(kz_upper(:)), sprintf("%.1f eV", hv(2)),...
-            'color', col, 'Fontsize', 12, 'horizontalalignment', 'left');
+        text(max(kx(1,:)), min(kz_lower(:)), sprintf("%.0f eV", hv(1)),...
+            'color', col, 'Fontsize', 12, 'horizontalalignment', 'left', 'FontWeight','bold');
+        text(max(kx(2,:)), max(kz_upper(:)), sprintf("%.0f eV", hv(2)),...
+            'color', col, 'Fontsize', 12, 'horizontalalignment', 'left', 'FontWeight','bold');
+    % - For an array of photon energies
+    elseif length(hv) > 3
+        kx_lower = {}; kx_upper = {};
+        kz_lower = {}; kz_upper = {};
+        for i = 1:length(hv)
+            col = rand(1,3);
+            % -- Extract the planar limits of the ARPES scan
+            kx_lower{i} = (kx(i,:))'; kz_lower{i} = (kz(i,:) - dkz(i))';
+            kx_upper{i} = (kx(i,:))'; kz_upper{i} = (kz(i,:) + dkz(i))';
+            % -- Plotting the ARPES scan line
+            plot(kx(i,:), kz(i,:), '-', 'linewidth', 2, 'color', col);
+            % -- Adding text
+            text(max(kx(i,:)), min(kz_lower{i}(:)), sprintf("%.0f eV", hv(i)),...
+                'color', col, 'Fontsize', 12, 'horizontalalignment', 'left', 'FontWeight','bold');
+        end
+        kx_lower = cell2mat(kx_lower); kx_upper = cell2mat(kx_upper);
+        kz_lower = cell2mat(kz_lower); kz_upper = cell2mat(kz_upper);
     end
     % - Adding the axes limits
     axis equal; grid on;

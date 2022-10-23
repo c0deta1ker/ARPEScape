@@ -165,12 +165,12 @@ if plot_result == 1
     fig.Position(3) = 2*450; 
     fig.Position(4) = 350;
     subplot(121); hold on;
-    ImData(dataStr.tht, dataStr.eb, dataStr.raw_data);
+    ImData(dataStr.tht(:,:,1), dataStr.eb(:,:,1), dataStr.raw_data(:,:,1));
     img_props([], "tht");
     axis([min(dataStr.raw_tht(:)), max(dataStr.raw_tht(:)), min(dataStr.raw_eb(:)), max(dataStr.raw_eb(:))]);
     colorbar; title('bgrd_subtr_data(): Raw', 'Interpreter', 'none');
     subplot(122); hold on;
-    ImData(dataStr.(xField), dataStr.(yField), dataStr.data);
+    ImData(dataStr.(xField)(:,:,1), dataStr.(yField)(:,:,1), dataStr.data(:,:,1));
     img_props([], "tht");
     axis([min(dataStr.(xField)(:)), max(dataStr.(xField)(:)), min(dataStr.(yField)(:)), max(dataStr.(yField)(:))]);
     colorbar; title('bgrd_subtr_data(): After', 'Interpreter', 'none');
