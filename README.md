@@ -79,6 +79,9 @@ Allows the user to generate custom job-files in the form of a text-file that is 
 
 **Data Loaders**:
 A MATLAB data loader for the ARPES / PES data acquired at the ADRESS, SIS and PEARL beamlines in the Swiss Light Source (SLS) are all available. 
+- 'load_adress_data()'  
+- 'load_sis_data()'  
+- 'load_pearl_data()'  
 
 
 ## MATLAB Version control  
