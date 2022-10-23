@@ -44,7 +44,6 @@ if string(FileName(end-2:end)) == ".h5"
     dataStr.H5path      = char(PathName);
     dataStr.H5file      = char(FileName);
     H5full              = char(string(PathName) + string(FileName));
-    
     %% -- Extracting all of the data variables
     datav_new           = struct();
     datav_new.value     = h5read(H5full,'/Electron Analyzer/Image Data');
