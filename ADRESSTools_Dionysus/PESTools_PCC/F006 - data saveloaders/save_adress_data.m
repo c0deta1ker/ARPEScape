@@ -34,11 +34,11 @@ else
 end
 
 %% 2 - Executing the saving of the data
-wbar = waitbar(0.5,'Saving...'); 
+% wbar = waitbar(0.5,'Saving...'); 
 save(char(save_fullfile), 'dataStr', '-v7.3');
 disp('-> saved data : '); display(dataStr);
-close(wbar);
+% close(wbar);
 
 %% Close wait-bar
-waitbar(1,'Save complete!'); 
+% waitbar(1,'Save complete!'); 
 end

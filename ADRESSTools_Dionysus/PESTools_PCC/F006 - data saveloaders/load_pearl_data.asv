@@ -185,59 +185,88 @@ elseif string(FileName(end-2:end)) == ".h5"
         field_names     = fieldnames(spectra,'-full');
         region_index    = contains(field_names, 'region');
         region_names    = field_names(region_index);
-        % --- Filing through each region and extracting spectrum
-        dataStr = {};
-        for i = 1:length(region_names)
-            dataField = getfield(spectra, region_names{i});
+        % --- If there is no region, it is a ManipulatorScan
+        if isempty(region_names)
+            manip_index    = contains(field_names, 'Manipulator');
+            manip_names    = field_names(manip_index);
+            scan_name       = manip_names{1}; 
+            spectra
             % - Extracting experimental parameters & meta data
-            X       = dataField.PositionX;
-            Y       = dataField.PositionY;
-            Z       = dataField.PositionZ;
-            Tilt    = dataField.PositionTilt;
-            Theta   = dataField.PositionTheta;
-            Phi     = dataField.PositionPhi;
+            if strcmp(scan_name, "ManipulatorZ"); 
+            X       = spectra.attrs.ManipulatorX;
+            Y       = spectra.attrs.ManipulatorY;
+            Z       = spectra.attrs.ManipulatorZ;
+            Tilt    = spectra.attrs.ManipulatorTilt;
+            Theta   = spectra.attrs.ManipulatorTheta;
+            Phi     = spectra.attrs.ManipulatorPhi;
             % - Assinging the main experimental variables
-            Epass   = dataField.ScientaPassEnergy;
+            Epass   = str2double(spectra.attrs.PassEnergy);
             % -- Kinetic Energy
-            ek_start = dataField.ScientaChannelBegin(1);
-            ek_end   = dataField.ScientaChannelEnd(1);
-            ek_step  = dataField.ScientaStepEnergy(1);
+            ek_start = spectra.attrs.ScientaChannelBegin(1);
+            ek_end   = spectra.attrs.ScientaChannelEnd(1);
+            ek_step  = spectra.attrs.StepSize(1);
             kEnergy  = ek_start : ek_step : ek_end; kEnergy = kEnergy';
             % -- Binding Energy
             Energy = kEnergy - hv - 4.5;
             % -- Data
-            Data = dataField.ScientaImage;
-            Data = permute(Data, [2,3,1]);
-            % - Index
+            Data = spectra.ScientaImage;
+            % -- Index
             index = 1:size(Data,3);
-            if index == 1; Type = "Eb(k)"; end
-            % -- Assigning the data to the MATLAB structure
-            % - Assigning file information
-            dataStr{i}.FileName    = FileName(1:end-3);
-            dataStr{i}.H5file      = char(FileName);
-            dataStr{i}.TimeStamp   = TimeStamp;
-            dataStr{i}.Type        = Type;
-            dataStr{i}.index       = index;
-            % - Assigning the meta data
-            dataStr{i}.meta.general = general;
-            dataStr{i}.meta.logs   = logs;
-            dataStr{i}.meta.Epass  = Epass;
-            dataStr{i}.meta.Pol    = Pol;
-            dataStr{i}.meta.Slit   = Slit;
-            dataStr{i}.meta.Mode   = Mode;
-            dataStr{i}.meta.X      = X;
-            dataStr{i}.meta.Y      = Y;
-            dataStr{i}.meta.Z      = Z;
-            % - Assinging experimental parameters
-            dataStr{i}.hv          = hv;
-            dataStr{i}.phiM        = Phi;
-            dataStr{i}.thtM        = Theta;
-            dataStr{i}.tltM        = Tilt;
-            dataStr{i}.Temp        = Temp;
-            % - Assinging the main experimental variables
-            dataStr{i}.raw_data    = Data;
-            dataStr{i}.raw_tht     = Angle;
-            dataStr{i}.raw_eb      = Energy;
+
+        else
+        % --- Filing through each region and extracting spectrum
+            dataStr = {};
+            for i = 1:length(region_names)
+                dataField = getfield(spectra, region_names{i});
+                % - Extracting experimental parameters & meta data
+                X       = dataField.PositionX;
+                Y       = dataField.PositionY;
+                Z       = dataField.PositionZ;
+                Tilt    = dataField.PositionTilt;
+                Theta   = dataField.PositionTheta;
+                Phi     = dataField.PositionPhi;
+                % - Assinging the main experimental variables
+                Epass   = dataField.ScientaPassEnergy;
+                % -- Kinetic Energy
+                ek_start = dataField.ScientaChannelBegin(1);
+                ek_end   = dataField.ScientaChannelEnd(1);
+                ek_step  = dataField.ScientaStepEnergy(1);
+                kEnergy  = ek_start : ek_step : ek_end; kEnergy = kEnergy';
+                % -- Binding Energy
+                Energy = kEnergy - hv - 4.5;
+                % -- Data
+                Data = dataField.ScientaImage;
+                Data = permute(Data, [2,3,1]);
+                % - Index
+                index = 1:size(Data,3);
+                % -- Assigning the data to the MATLAB structure
+                % - Assigning file information
+                dataStr{i}.FileName    = FileName(1:end-3);
+                dataStr{i}.H5file      = char(FileName);
+                dataStr{i}.TimeStamp   = TimeStamp;
+                dataStr{i}.Type        = Type;
+                dataStr{i}.index       = index;
+                % - Assigning the meta data
+                dataStr{i}.meta.general = general;
+                dataStr{i}.meta.logs   = logs;
+                dataStr{i}.meta.Epass  = Epass;
+                dataStr{i}.meta.Pol    = Pol;
+                dataStr{i}.meta.Slit   = Slit;
+                dataStr{i}.meta.Mode   = Mode;
+                dataStr{i}.meta.X      = X;
+                dataStr{i}.meta.Y      = Y;
+                dataStr{i}.meta.Z      = Z;
+                % - Assinging experimental parameters
+                dataStr{i}.hv          = hv;
+                dataStr{i}.phiM        = Phi;
+                dataStr{i}.thtM        = Theta;
+                dataStr{i}.tltM        = Tilt;
+                dataStr{i}.Temp        = Temp;
+                % - Assinging the main experimental variables
+                dataStr{i}.raw_data    = Data;
+                dataStr{i}.raw_tht     = Angle;
+                dataStr{i}.raw_eb      = Energy;
+            end
         end
        
     end

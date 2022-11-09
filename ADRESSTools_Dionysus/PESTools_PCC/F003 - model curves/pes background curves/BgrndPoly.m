@@ -27,14 +27,14 @@ function [roi_xdat, roi_ydat, roi_bgrnd] = BgrndPoly(xdat, ydat, polyOrder, lhsV
 if nargin < 3;          polyOrder = 1; end
 if nargin < 4;          lhsVal = mean(xdat(:)) - abs(0.25*range(xdat(:))); end
 if nargin < 5;          rhsVal = mean(xdat(:)) + abs(0.25*range(xdat(:))); end
-if nargin < 6;          lhsWin = abs(0.05*range(xdat(:))); end
-if nargin < 7;          rhsWin = abs(0.05*range(xdat(:))); end
+if nargin < 6;          lhsWin = abs(0.02*range(xdat(:))); end
+if nargin < 7;          rhsWin = abs(0.02*range(xdat(:))); end
 if nargin < 8;          plot_result = 0; end
 if isempty(polyOrder);  polyOrder = 1; end
 if isempty(lhsVal);     lhsVal = mean(xdat(:)) - abs(0.25*range(xdat(:))); end
 if isempty(rhsVal);     rhsVal = mean(xdat(:)) + abs(0.25*range(xdat(:))); end
-if isempty(lhsWin);     lhsWin = abs(0.05*range(xdat(:))); end
-if isempty(rhsWin);     rhsWin = abs(0.05*range(xdat(:))); end
+if isempty(lhsWin);     lhsWin = abs(0.02*range(xdat(:))); end
+if isempty(rhsWin);     rhsWin = abs(0.02*range(xdat(:))); end
 if isempty(plot_result); plot_result = 0; end
 %% Validity checks on the input parameters
 % -- Making sure that the polynomial order is an integer value

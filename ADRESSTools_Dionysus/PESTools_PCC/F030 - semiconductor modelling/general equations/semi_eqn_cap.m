@@ -5,7 +5,8 @@ function capacitance = semi_eqn_cap(area, epsR, distance)
 %   permittivity of the dieelctric can be defined by the user, as well as
 %   the cross sectional area of the capacitor plates.
 %
-%   REQ. FUNCTIONS:
+%   REQ. FUNCTIONS: 
+%   - physics_constants();
 %
 %   IN:
 %   -   capacitance:    capacitance [Farads]

@@ -25,23 +25,23 @@ ADef_samp   = '0.0';
 slit_samp   = '1';
 dt_samp     = '0.1';
 pol_samp 	= 'LV';
-mode_samp 	= 'LAD';
+mode_samp 	= 'MAM';
 Ep_samp   	= '100'; 
 %% (C) Set the Fermi-level REFERENCE position
 use_ref     = 1;	% Set whether you want to use a reference; 1 = True, 0 = False
 % - REFERENCE POSITION
-x_ref       = '1.00';
+x_ref       = x_samp;
 y_ref       = y_samp;
-z_ref       = '1.00';
+z_ref       = z_samp;
 tilt_ref    = tilt_samp;
 theta_ref   = theta_samp;
 phi_ref     = phi_samp;
 ADef_ref    = ADef_samp;
 % - REFERENCE ACQUISITION SETTINGS
-name_ref    = 'AuEF';   % name_ref    = 'Au4d';
+name_ref    = 'EF';   % name_ref    = 'AuEF';   % name_ref    = 'Au4d';
 Eb_ref      = '-2';     % Eb_ref      = '-88:0.02:-80';
 slit_ref    = '20';     % slit_ref    = '1';
-dt_ref      = '30';     % dt_ref      = '0.1';
+dt_ref      = '20';     % dt_ref      = '0.1';
 pol_ref 	= pol_samp;
 mode_ref	= mode_samp;
 Ep_ref      = Ep_samp;

@@ -1,7 +1,8 @@
 function kf = moscap_eqn_kf(ne, ni)
-% capacitance = moscap_eqn_cap(voltage, eps_R, distance)
+% kf = moscap_eqn_kf(ne, ni)
 %
-%   REQ. FUNCTIONS:
+%   REQ. FUNCTIONS: 
+%   - physics_constants();
 %
 %   IN:
 %   -   kf:             Fermi wave-vector of the conduction electrons [Ang^-1]

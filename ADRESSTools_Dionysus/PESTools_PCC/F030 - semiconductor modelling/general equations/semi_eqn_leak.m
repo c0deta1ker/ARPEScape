@@ -1,7 +1,10 @@
 function current = semi_eqn_leak(voltage, area, distance, resistivity)
 % current = semi_eqn_leak(voltage, area, distance, resistivity)
+%   Function that determines the leakage current between two parallel
+%   plates of a capacitor, through the intermediate dieelctric layer.
 %
-%   REQ. FUNCTIONS:
+%   REQ. FUNCTIONS: 
+%   - physics_constants();
 %
 %   IN:
 %   -   current:      	leakage current flowing through capacitor [A]

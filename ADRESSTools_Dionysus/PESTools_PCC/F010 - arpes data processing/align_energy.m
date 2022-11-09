@@ -193,7 +193,7 @@ if strcmpi(alignType,"global")...
             % --- Extracting the peak position
             [pesStr, ~] = pes_extract_data(dataStr_ref, {angleWin,1}, 0);
             if isempty(eWin);       [xVal, ~]   = find_peak_loc(pesStr.xdat, pesStr.ydat, [], "spline", plot_result);
-            elseif isempty(dEWin);  [xVal, ~]   = find_peak_loc(pesStr.xdat, pesStr.ydat, eWin + 0.50.*[-1, 1], "spline", plot_result);
+            elseif isempty(dEWin);  [xVal, ~]   = find_peak_loc(pesStr.xdat, pesStr.ydat, [], "spline", plot_result);
             else;                   [xVal, ~]   = find_peak_loc(pesStr.xdat, pesStr.ydat, eWin + dEWin.*[-1, 1], "spline", plot_result);
             end
             eb_shift    = xVal - eWin;

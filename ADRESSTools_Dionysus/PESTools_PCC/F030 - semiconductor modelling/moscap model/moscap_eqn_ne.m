@@ -1,7 +1,8 @@
 function ne = moscap_eqn_ne(voltage, epsR, distance)
-% capacitance = moscap_eqn_cap(voltage, eps_R, distance)
+% ne = moscap_eqn_ne(voltage, epsR, distance)
 %
-%   REQ. FUNCTIONS:
+%   REQ. FUNCTIONS: 
+%   - physics_constants();
 %
 %   IN:
 %   -   ne:             charge accumulated on the capacitor plates [m^-2]

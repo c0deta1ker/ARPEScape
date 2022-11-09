@@ -294,6 +294,7 @@ function MINFUN = minimize_function(x, XPSObj)
     R   = D - (M + B);
     % - 5 - Extracting the CHI-SQUARED value to be minimised
     MINFUN = sum(R.^2 ./ abs(M + B));
+%     MINFUN = std(R.^2 ./ abs(M + B));
 end
 
 %% DEFINING THE FUNCTION THAT EXTRACTS THE XPS DATA TO BE FITTED

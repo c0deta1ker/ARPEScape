@@ -231,6 +231,7 @@ aDef=[]; try
    pos1=strfind(Note,'ADef    = '); pos2=strfind(Note,'dt'); eval(['aDef=' Note(pos1+9:pos2-2) ';']);
    if length(aDef)>1; aDef=[]; aDefAdd=0; else aDefAdd=aDef; end
 end
+if isempty(aDef); aDefAdd=0; end
 % adding up tltM and aDef if scalars, otherwise empty 
 tltM=tltM+aDef;
 % adding scalar tltM and aDef to Scan  

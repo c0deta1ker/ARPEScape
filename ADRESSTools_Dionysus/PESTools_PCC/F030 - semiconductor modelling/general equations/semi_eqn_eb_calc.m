@@ -4,7 +4,8 @@ function eb = semi_eqn_eb_calc(k, k0, eb0, mstar)
 %   k0, eb0 are the initial values at the base of the parabola and mstar
 %   defines the curvature of the parabolic disperison.
 %
-%   REQ. FUNCTIONS: none
+%   REQ. FUNCTIONS: 
+%   - physics_constants();
 %
 %   IN:
 %   -   k:         Nx1 vector that yields the wave-vector values [Ang^-1].
@@ -23,6 +24,8 @@ if isempty(mstar); mstar = 1; end
 if isempty(eb0); eb0 = 0; end
 if isempty(k0); k0 = 0; end
 
+%% Defining physical constants
+pc = physics_constants();
 %% - 1 - Determination of the output wave-vectors
 % Ensuring eb is a column vector
 if size(k, 2) > 1 && size(k, 1) == 1; k = k'; end

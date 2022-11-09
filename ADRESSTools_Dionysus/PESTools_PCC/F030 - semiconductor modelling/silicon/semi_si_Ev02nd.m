@@ -1,7 +1,8 @@
 function nd = semi_si_Ev02nd(Ev0)
 % nd = semi_si_Ev02nd(Ev0)
 %   Function that determines the dopant concentration based on the VBM
-%   position relative to the Fermi-level.
+%   position relative to the Fermi-level.The data is taken from [1] using 
+%   Phosphorous as the dopant.
 %
 %   REFERENCE:
 %   [1] PV Lighthouse Solar Cell Simulator: https://www.pvlighthouse.com.au/bandgap

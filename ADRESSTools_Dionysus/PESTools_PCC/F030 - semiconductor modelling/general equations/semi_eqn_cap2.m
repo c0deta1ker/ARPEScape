@@ -5,7 +5,8 @@ function capacitance = semi_eqn_cap2(area, epsR_1, distance_1, epsR_2, distance_
 %   define the relative perimittivity and thickness of each layer. The
 %   cross sectional area of the capacitor is constant for the two layers.
 %
-%   REQ. FUNCTIONS:
+%   REQ. FUNCTIONS: 
+%   - physics_constants();
 %
 %   IN:
 %   -   capacitance:    capacitance [Farads]

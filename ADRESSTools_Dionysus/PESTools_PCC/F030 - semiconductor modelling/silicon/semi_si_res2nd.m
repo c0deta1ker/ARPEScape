@@ -1,7 +1,8 @@
 function nd = semi_si_res2nd(resistivity)
 % nd = semi_si_res2nd(resistivity)
 %   Function that determines the dopant concentration of a silicon sample,
-%   determined by the resistivity only.
+%   determined by the resistivity only. The data is taken from [1] using 
+%   Phosphorous as the dopant.
 %
 %   REFERENCE:
 %   [1] PV Lighthouse Solar Cell Simulator: https://www.pvlighthouse.com.au/resistivity

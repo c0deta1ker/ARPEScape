@@ -1,16 +1,17 @@
 function resistivity = semi_si_nd2res(nd)
 % resistivity = semi_si_nd2res(nd)
 %   Function that determines the resistivity of a silicon sample,
-%   determined by the dopant concentration only.
+%   given dopant concentration only. The data is taken from [1] using 
+%   Phosphorous as the dopant.
 %
 %   REFERENCE:
 %   [1] PV Lighthouse Solar Cell Simulator: https://www.pvlighthouse.com.au/resistivity
 %
 %   IN:
-%   -   Ec0:        N×1 column vector of CBM relative to EF [eV] 
+%   -   nd:             N×1 column vector of the dopant concentration [cm-3].
 %
 %   OUT:
-%   -   nd:         N×1 column vector of the dopant concentration [cm-3]
+%   -   resistivity:    N×1 column vector of the resistivity [Ohm cm].
 
 %% Default parameters
 if nargin < 1; nd = 1e10; end
