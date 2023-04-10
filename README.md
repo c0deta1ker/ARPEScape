@@ -29,10 +29,10 @@ This is a MATLAB function that loads in many physics constants that can be used 
 
 ## MATLAB Apps
 **(1) IMFP Calculator App**: A simple app that allows the user to calculate the electron inelastic mean free path (IMFP) by selecting a predefined element or compound, or by manually entering the known material parameters. The IMFP is calculated using the (i) Universal, (ii) TPP-2M and (iii) S1 and (iv) S2 formalisms. Accessible in MATLAB via 'IMFP_UI'.
-![000_MPD](ADRESSTools_vEos\MaterialsDatabase_PCC\0_ReadMeImages/IMFP_UI_Snapshot.png)
+![IMFP_UI_Snapshot](ADRESSTools_vEos/MaterialsDatabase_PCC/0_ReadMeImages/IMFP_UI_Snapshot.png)
 
 **(2) Photoionisation Binding Energy, Cross-Section and Asymmetry App**: A simple app that allows the user to plot the (i) binding energy spectrum, (ii) photoionisation cross-sections and (iii) photoionisation asymmetry parameters of a selected element. This is useful for on-the-fly experiments. Accessible in MATLAB via 'PES_UI()'.
-![000_MPD](ADRESSTools_vEos\MaterialsDatabase_PCC\0_ReadMeImages/PES_UI_Snapshot.png)
+![PES_UI_Snapshot](ADRESSTools_vEos/MaterialsDatabase_PCC/0_ReadMeImages/PES_UI_Snapshot.png)
 
 
 ## Photoelectron Spectroscopy (PES) Analysis Tools
