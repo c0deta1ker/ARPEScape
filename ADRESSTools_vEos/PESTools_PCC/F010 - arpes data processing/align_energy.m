@@ -16,7 +16,7 @@ function [dataStr, dataStr_ref] = align_energy(dataStr, align_args, dataStr_ref,
 %   IN:
 %   -   dataStr:            data structure of the ARPES data.
 %   -   align_args:         {1×6} cell of {Type,Scans,eWin, dEWin, dESmooth, feat}.
-%                               Type:       "global"
+%                               Type:       "global" / "AlignEF" (same as "AlignEF")
 %                                         	"align2ref"
 %                                       	"align2ref-perchannel"
 %                                       	"fit2ef" || "fit2ef-95%" (default 95% window size)
@@ -106,7 +106,7 @@ end
 
 %% - 2 - Executing binding energy alignment over all scans
 % - Checking the align type is valid
-if strcmpi(alignType,"global") || strcmpi(alignType,"global shift via scan") || strcmpi(alignType,"scans")...
+if strcmpi(alignType,"global") || strcmpi(alignType,"AlignEF") ||strcmpi(alignType,"global shift via scan") || strcmpi(alignType,"scans")...
         || strcmpi(alignType,"align2ref") || strcmpi(alignType,"align2ref-perchannel")...
         || strcmpi(alignType,"fit2ef") || strcmpi(alignType,"fit2ef-5%") || strcmpi(alignType,"fit2ef-10%") || strcmpi(alignType,"fit2ef-25%")...
         || strcmpi(alignType,"fit2ef-50%") || strcmpi(alignType,"fit2ef-75%") || strcmpi(alignType,"fit2ef-95%")...
@@ -118,7 +118,7 @@ else
 end
 
 %% - 3.1 - EXECUTING GLOBAL ENERGY ALIGNMENTS (filing through all scan indices)
-if strcmpi(alignType,"global")...
+if strcmpi(alignType,"global") || strcmpi(alignType,"AlignEF")...
         || strcmpi(alignType,"align2ref") || strcmpi(alignType,"align2ref-perchannel")...
         || strcmpi(alignType,"fit2ef") || strcmpi(alignType,"fit2ef-5%") || strcmpi(alignType,"fit2ef-10%") || strcmpi(alignType,"fit2ef-25%") || strcmpi(alignType,"fit2ef-50%") || strcmpi(alignType,"fit2ef-75%") || strcmpi(alignType,"fit2ef-95%")...
         || strcmpi(alignType,"fit2peak") || strcmpi(alignType,"fit2peak-5%") || strcmpi(alignType,"fit2peak-10%") || strcmpi(alignType,"fit2peak-25%") || strcmpi(alignType,"fit2peak-50%") || strcmpi(alignType,"fit2peak-75%") || strcmpi(alignType,"fit2peak-95%")
@@ -135,7 +135,7 @@ if strcmpi(alignType,"global")...
         end
 
         % -- (A) IF ALIGNING GLOBALLY TO THE ARPES DATA DIRECTLY
-        if strcmpi(alignType,"global")
+        if strcmpi(alignType,"global") || strcmpi(alignType,"AlignEF")
             % --- If the alignment was previously performed, apply again
             if string(yField) == "eb";          [~, eb_shift, ~] = AlignEF(dataStr.(dField)(:,:,i), dataStr.eb(:,1,i), eWin_i, dEWin, dESmooth, feat);
             % --- If no alignment has been performed, do it for the first time
