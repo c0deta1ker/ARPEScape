@@ -1,0 +1,67 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="2979166298" file="D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Apps\IMFP_UI.prj" location="D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Apps" name="IMFP_UI" target="target.mlapps" target-name="Package App">
+    <param.appname>IMFP_UI</param.appname>
+    <param.authnamewatermark>Procopios Constantinou</param.authnamewatermark>
+    <param.email>procopios.constantinou@psi.ch</param.email>
+    <param.company>PSI</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary>An app to determine the electron inelastic mean free path using the (i) Universal, (ii) TPP-2M and (iii) S1 and (iv) S2 formalisms.</param.summary>
+    <param.description>A simple app that allows the user to calculate the electron inelastic mean free path (IMFP) by selecting a predefined element or compound, or by manually entering the known material parameters.</param.description>
+    <param.screenshot>C:\Users\pccon\AppData\Local\Temp\tpa6846125_4198_4eb3_a3c6_5e9d4821dd7e.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>a133a61a-037c-439d-b98e-1aef587b4674</param.guid>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\IMFP_UI.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Electron Inelastic Mean Free Path Database (eIMFPD)\eimfp_calculators\eimfp_S1.m</file>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Electron Inelastic Mean Free Path Database (eIMFPD)\eimfp_calculators\eimfp_S2_avg.m</file>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Electron Inelastic Mean Free Path Database (eIMFPD)\eimfp_calculators\eimfp_tpp2m.m</file>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Electron Inelastic Mean Free Path Database (eIMFPD)\eimfp_calculators\eimfp_tpp2m_avg.m</file>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Electron Inelastic Mean Free Path Database (eIMFPD)\eimfp_calculators\eimfp_universal.m</file>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Material Properties Database (MPD)\data\MPD_PCC.mat</file>
+      <file>D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Material Properties Database (MPD)\get_mpd_props.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC" name="Apps" optional="false">D:\OneDrive\PCC_MS_Project\00_SLS_Software\ADRESSTools\ADRESSTools_vEos\MaterialsDatabase_PCC\Apps</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2022b</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
