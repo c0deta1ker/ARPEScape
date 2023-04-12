@@ -1,12 +1,11 @@
-function imfp = eimfp_S1_mpd(ke_dat, material)
-% imfp = eimfp_S1_mpd(ke_dat, material)
+function imfp = eimfp_S2_avg_mpd(ke_dat, material)
+% imfp = eimfp_S2_avg_mpd(ke_dat, material)
 %   Function that determines the electron inelastic mean free path (IMFP) 
-%   based on the S1 equation described by M. P. Seah [1]. The IMFP here
-%   additionally depends on the value of Z and this formalism is compatible
-%   for elemental or binary materials. In this function, you can define the 
+%   based on the S2 equation described by M. P. Seah [1]. The IMFP here
+%   only depends on the value of Z. In this function, you can define the 
 %   material as a string and it will look it up the relevant parameters in 
 %   the Material Properties Database (MPD) ('MPD_PCC.mat') and determine 
-%   the imfp using the S1 equation.
+%   the imfp using the S2 equation.
 %
 %   REFERENCE:
 %   [1] M. P. Seah, “An accurate and simple universal curve for the 
@@ -27,14 +26,17 @@ if isempty(material); material = "Si"; end
 %% - 1 - Extracting the material parameters from the materials database
 % - Extracting the material properties
 material_props = get_mpd_props(material);
-% - Extracting the material properties required for the S1 formalism
-rho     = material_props.DENSITY;
-Nv      = material_props.ELECT_VALENCY;
-M       = material_props.ATOM_MASS;
-Egap    = material_props.ELE_BGAP;
+% - Extracting the material properties required for the S2 formalism
 Z       = material_props.ATOM_ZNUM;
-%% - 2 - Determination of the IMFP via S1 formalism
-imfp = eimfp_S1(ke_dat, rho, M, Egap, Z);   % extract imfp in Angstroms
+%% - 2 - Determination of the IMFP TPP-2M
+% If the kinetic energy is negative, assume it is zero
+ke_dat(ke_dat<0) = 0;
+% Evaluating the imfp
+a           = 2.5;  % Average atomic spacing in Angstroms
+% Relativistic corrected equation
+imfp = a .* ((1.52 + 0.167 .* Z.^(0.5) + 0.0394 .* ke_dat.^(0.872)) ./ Z.^(0.3)); % IMFP in Angstroms
+% If isnan, return zero
+imfp(isnan(imfp)) = 0;
 %% Ensuring the imfp is a column vector
 if size(imfp, 2) >1; imfp = imfp'; end
 end
