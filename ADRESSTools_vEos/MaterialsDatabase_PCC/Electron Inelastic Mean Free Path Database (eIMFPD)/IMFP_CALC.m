@@ -1,5 +1,5 @@
-function imfp = imfp(formalism, ke_dat, args)
-% imfp = imfp(formalism, ke_dat, args)
+function imfp = IMFP_CALC(formalism, ke_dat, args)
+% imfp = IMFP_CALC(formalism, ke_dat, args)
 %   Function that calculates the electron inelastic mean free path (IMFP).
 %   The TPP2M, S1, S2 and Universal formalisms are available. The user can
 %   define a scalar or vector of kinetic energies for the input.
