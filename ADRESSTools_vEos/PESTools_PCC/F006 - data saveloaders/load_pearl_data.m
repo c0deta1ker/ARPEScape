@@ -109,7 +109,7 @@ elseif string(FileName(end-2:end)) == ".h5"
                 initStr.scan_1.(group_name).(element_names(j)) = h5read(full_h5_file_name, char(group_names(i)+"/"+element_names(j)));
             end
         end
-        initStr.scan_1
+        % initStr.scan_1 % FOR DEBUGGING
     end
     %% 1.2.3 -- Collecting all spectral data
     spectra = struct();
@@ -125,7 +125,7 @@ elseif string(FileName(end-2:end)) == ".h5"
     Pol     = "LH (s-pol)";
     Slit    = mean(spectra.attrs.ExitSlit);
     Mode    = spectra.attrs.LensMode(1);
-    if Type == "Eb(k)"; hv = mean(spectra.attrs.MonoEnergy); else; hv = spectra.attrs.MonoEnergy; end
+    if Type == "Eb(k)" || Type == "Eb(k,i)"; hv = mean(spectra.attrs.MonoEnergy); else; hv = spectra.attrs.MonoEnergy; end
     Temp    = mean(spectra.attrs.ManipulatorTempB);
     % ----- Assinging the main experimental variables
     % ------ Angle

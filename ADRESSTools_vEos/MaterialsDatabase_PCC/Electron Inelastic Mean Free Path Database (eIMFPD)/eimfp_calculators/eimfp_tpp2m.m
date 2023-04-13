@@ -16,6 +16,11 @@ function imfp = eimfp_tpp2m(ke_dat, rho, Nv, M, Egap)
 %       compounds over the 50 eV to 200 keV range with the full Penn 
 %       algorithm. Surf Interface Anal. 2018;51(4):427-457. 
 %       doi:10.1002/sia.6598
+%   [1] M. P. Seah, “An accurate and simple universal curve for the 
+%       energy-dependent electron inelastic mean free path,” 
+%       Surf. Interface Anal., vol. 44, no. 4, pp. 497–503, 2012, 
+%       doi: 10.1002/sia.4816.
+
 %
 %   IN:
 %   -   ke_dat:     N×1 vector of the input electron kinetic energy (for PES; KE = BE - PHI) [eV]

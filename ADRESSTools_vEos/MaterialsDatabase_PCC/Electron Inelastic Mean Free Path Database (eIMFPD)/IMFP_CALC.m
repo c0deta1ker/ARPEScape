@@ -5,8 +5,8 @@ function imfp = IMFP_CALC(formalism, ke_dat, args)
 %   define a scalar or vector of kinetic energies for the input.
 %   If the args is a string of an element / material, it will look it up 
 %   the relevant materials parameters in the Material Properties Database 
-%   (MPD) ('MPD_PCC.mat'). Otherwise, the args a be manually inserted as
-%   discussed below.
+%   (MPD) ('MPD_PCC.mat'). Otherwise, the args can be manually inserted as
+%   defined below.
 %
 %   IN:
 %   -   formalism:  string for imfp calculator formalism. Default:"TPP2M" ["TPP2M","S1","S2","Universal"]
@@ -21,6 +21,21 @@ function imfp = IMFP_CALC(formalism, ke_dat, args)
 %
 %   OUT:
 %   -   imfp:       N×1 column vector of the electron IMFP values [Angstroms]
+%
+%   SEE REFERENCES:
+%   [1] Tanuma, S., Powell, C. J., & Penn, D. R. (1987). 
+%           Proposed formula for electron inelastic mean free paths based on 
+%           calculations for 31 materials. Surface Science Letters, 192(1), 
+%           L849–L857. https://doi.org/10.1016/0167-2584(87)90829-2
+%   [2] Shinotsuka H, Tanuma S, Powell CJ, Penn DR. Calculations of 
+%           electron inelastic mean free paths. XII. Data for 42 inorganic 
+%           compounds over the 50 eV to 200 keV range with the full Penn 
+%           algorithm. Surf Interface Anal. 2018;51(4):427-457. 
+%           doi:10.1002/sia.6598
+%   [3] M. P. Seah, "An accurate and simple universal curve for the 
+%           energy-dependent electron inelastic mean free path,” 
+%           Surf. Interface Anal., vol. 44, no. 4, pp. 497–503, 2012, 
+%           doi: 10.1002/sia.4816.
 
 %% Default parameters
 % - Default formalism
