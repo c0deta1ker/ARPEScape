@@ -112,7 +112,11 @@ email: vladimir.strocov@psi.ch
 
 
 ## Acknowledgments
-**- Dr. Mengyu Yao ('load_cassiopee' functions)**
+'load_cassiopee' functions:
+Dr. Mengyu Yao,
+Max Planck Institute for Chemical Physics of Solids,
+email: Mengyu.Yao@cpfs.mpg.de
+
 
 ## License  
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details.
