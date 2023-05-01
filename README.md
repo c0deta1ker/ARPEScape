@@ -112,10 +112,10 @@ email: vladimir.strocov@psi.ch
 
 
 ## Acknowledgments
-'load_cassiopee' functions:
-Dr. Mengyu Yao,
-Max Planck Institute for Chemical Physics of Solids,
-email: Mengyu.Yao@cpfs.mpg.de
+'load_cassiopee' functions:  
+Dr. Mengyu Yao,  
+Max Planck Institute for Chemical Physics of Solids,  
+email: Mengyu.Yao@cpfs.mpg.de  
 
 
 ## License  
