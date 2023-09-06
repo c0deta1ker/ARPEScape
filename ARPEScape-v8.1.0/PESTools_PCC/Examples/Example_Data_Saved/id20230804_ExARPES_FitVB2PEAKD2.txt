@@ -1,0 +1,10 @@
+Filename: 		 id20230804_ExARPES_FitVB2PEAKD2 
+Fit Method: 	 FitVB2PEAKD2 
+Beamtime ID: 	 20230804 
+Dataset ID: 	 Example ARPES data 
+Sample ID: 		 ('London') 
+Sample stack: 	  
+Repeats: 		 1 
+Outliers: 		 0 
+VBM: 			 -0.762 (0.000) eV 
+Notes: 		 Sample measured @ADRESS, 77 K.

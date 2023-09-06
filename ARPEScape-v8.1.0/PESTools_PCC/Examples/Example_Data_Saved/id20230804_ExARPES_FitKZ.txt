@@ -1,0 +1,12 @@
+Filename: 		 id20230804_ExARPES_FitKZ 
+Fit Method: 	 FitKZ 
+Beamtime ID: 	 20230804 
+Dataset ID: 	 Example ARPES data 
+Sample ID: 		 ('London') 
+Sample stack: 	  
+NE: 			 4.163e+13 (6.369e+12) cm^-2 
+X0: 		 -0.008 Ang^-1 
+Y0: 		 14.816 Ang^-1 
+XMag: 		 0.211 (0.012) Ang^-1 
+YMag: 		 0.474 (0.044) Ang^-1 
+Notes: 		 Sample measured @ADRESS, 77 K.

@@ -1,0 +1,10 @@
+Filename: 		 id20230805_ExXPS_FitCL2PEAK 
+Fit Method: 	 FitCL2PEAK 
+Beamtime ID: 	 20230805 
+Dataset ID: 		 Example ARPES data 
+Sample ID: 		 ('London') 
+Sample stack: 	  
+Repeats: 		 4 
+Outliers: 		 0 
+ECL: 			 -17.475 (0.050) eV 
+Notes: 		 Sample measured @ADRESS, 77 K.

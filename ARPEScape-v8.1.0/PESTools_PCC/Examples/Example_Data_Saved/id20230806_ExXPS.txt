@@ -1,0 +1,11 @@
+Filename: 		 id20230806_ExXPS 
+Fit Method: 	 DepthProfileXPS 
+Beamtime ID: 	 20230806 
+Dataset ID: 		 Example ARPES data 
+Sample ID: 		 ('London') 
+Sample stack: 	  
+Repeats: 		 4 
+BE(InAs): 			 -17.465 (0.045) eV 
+BE(InAs(SCLS)): 			 -17.790 (0.143) eV 
+CHISQ: 			 0.012 (0.034) 
+Notes: 		 Sample measured @ADRESS, 77 K.

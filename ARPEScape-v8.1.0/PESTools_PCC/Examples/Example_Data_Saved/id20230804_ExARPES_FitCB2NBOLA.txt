@@ -1,0 +1,15 @@
+Filename: 		 id20230804_ExARPES_FitCB2NBOLA 
+Fit Method: 	 FitCB2NBOLA 
+Beamtime ID: 	 20230804 
+Dataset ID: 	 Example ARPES data 
+Sample ID: 		 ('London') 
+Sample stack: 	  
+Repeats: 		 1 
+Outliers: 		 0 
+NQW: 			 2 
+EQW(1): 		 -0.106 (0.000) eV 
+MSTAR(1): 		 0.040 (0.000) 
+EQW(2): 		 0.020 (0.000) eV 
+MSTAR(2): 		 0.040 (0.000) 
+CHISQ: 		 10.694 (0.000) 
+Notes: 		 Sample measured @ADRESS, 77 K.
