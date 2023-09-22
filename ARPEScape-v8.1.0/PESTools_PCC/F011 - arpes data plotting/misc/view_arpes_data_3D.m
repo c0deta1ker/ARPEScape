@@ -51,7 +51,7 @@ DIM = size(D1);
 % -- Extracting the bisecting planes for 3D data
 % --- First determine the zField index
 if string(zField) == "hv" || string(zField) == "tltM" || string(zField) == "index"; [~, indxZ] = min(abs(ZZ(1,:) - isoScan_val));
-else;                                                                               [~, indxZ] = min(abs(ZZ(round(DIM(2)/2),round(DIM(1)/2),:) - isoScan_val));
+else;                                                                               [~, indxZ] = min(abs(ZZ(round(DIM(1)/2),round(DIM(2)/2),:) - isoScan_val));
 end
 % --- Determine the xField index
 if string(xField) == "raw_tht";     [~, indxX] = min(abs(XX(1,:) - isoK_val));

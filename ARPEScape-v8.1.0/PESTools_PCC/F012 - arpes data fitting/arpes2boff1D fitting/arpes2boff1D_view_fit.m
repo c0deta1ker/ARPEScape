@@ -75,7 +75,7 @@ plot(fitStr.XX, fitStr.YY, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwidt
 text(0.04, 0.90, "$$ \chi^2 = $$ " + string(fitStr.CHISQ),...
     'interpreter', 'latex', 'fontsize', 14, 'color', 'k', 'Units','normalized');
 % - Formatting the figure
-gca_props(); grid on;
+gca_props(); % grid on;
 ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
 if min(fitStr.DB(:)) < fitStr.YY; min_y_val = min(fitStr.DB(:));
 else; min_y_val = min(fitStr.YY(:)); 

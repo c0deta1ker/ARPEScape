@@ -18,7 +18,7 @@ pp  = plot_props();
 %% - 1 - FIGURE WITH BACKGROUND AND XPS FITS
 %% - 1.1 - INITIALISING THE FIGURE
 fig = figure(); set(fig, 'Name', 'PES Curve Fitting');
-fig.Position(3) = 2.5*pp.fig5x4(1); 
+fig.Position(3) = 1.5*pp.fig5x4(1); 
 fig.Position(4) = pp.fig5x4(2);
 %% - 1.2 - PLOTTING THE RAW DATA AND BEST FIT BACKGROUND
 subplot(121); hold on;
@@ -74,9 +74,9 @@ plot(fitStr.X, fitStr.DB, 'k-', 'color', pp.col.dat{1}, 'linewidth', 2*pp.llwidt
 plot(fitStr.XX, fitStr.YY, 'k-', 'Color', pp.col.dat{2}, 'linewidth', 2*pp.lwidth);
 % -- Add annotation for the quality of fit
 text(0.04, 0.90, "$$ \chi^2 = $$ " + string(fitStr.CHISQ),...
-    'interpreter', 'latex', 'fontsize', 14, 'color', 'k', 'Units','normalized');
+    'interpreter', 'latex', 'fontsize', 12, 'color', 'k', 'Units','normalized');
 % - Formatting the figure
-gca_props();
+gca_props(0);
 % grid on;
 ylabel('$$ \bf  Intensity$$', 'Interpreter', 'latex');
 if min(fitStr.DB(:)) < fitStr.YY; min_y_val = min(fitStr.DB(:));
