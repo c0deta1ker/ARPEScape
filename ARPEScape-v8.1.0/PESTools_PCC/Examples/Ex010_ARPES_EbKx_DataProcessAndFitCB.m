@@ -9,15 +9,15 @@ sample_id           = "('London')";
 sample_stack_info   = "";
 measurement_notes   = "Sample measured @ADRESS, 77 K.";
 % Defining the paths of the model, data and save directories
-path_data   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.0.0\PESTools_PCC\Examples\Example_Data\';
-path_save   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.0.0\PESTools_PCC\Examples\Example_Data_Saved\';
+path_data   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.1.0\PESTools_PCC\Examples\Example_Data\ADRESS_data\';
+path_save   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.1.0\PESTools_PCC\Examples\Example_Data_Saved\';
 
 %% *(1) ARPES - Data Processing*
 %% (1.1) - Load in data
 close all; 
 % Load in ARPES data
 file_names      = {...
-    '010_ARPES_HSCUT.h5',...
+    '001_ARPES_HSCUT.h5',...
     };
 arpes_dat = cell(1,length(file_names));
 for i = 1:length(file_names); arpes_dat{i} = load_adress_data(file_names{i}, path_data); end
@@ -25,7 +25,7 @@ for i = 1:length(arpes_dat); arpes_dat{i} = xcorr_scans(arpes_dat{i}); end
 view_arpes_data(arpes_dat{1});
 % Load in reference data
 file_names_ref      = {...
-    '010_ARPES_HSCUT_EF.h5',...
+    '002_ARPES_HSCUT_EF.h5',...
     };
 arpes_ref = cell(1,length(file_names_ref));
 for i = 1:length(file_names_ref); arpes_ref{i} = load_adress_data(file_names_ref{i}, path_data); end

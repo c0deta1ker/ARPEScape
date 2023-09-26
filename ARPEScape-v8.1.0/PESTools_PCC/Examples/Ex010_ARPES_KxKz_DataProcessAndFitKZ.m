@@ -9,13 +9,12 @@ sample_id           = "('London')";
 sample_stack_info   = "";
 measurement_notes   = "Sample measured @ADRESS, 77 K.";
 % Defining the paths of the model, data and save directories
-path_data   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.0.0\PESTools_PCC\Examples\Example_Data\';
-path_save   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.0.0\PESTools_PCC\Examples\Example_Data_Saved\';
-
+path_data   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.1.0\PESTools_PCC\Examples\Example_Data\ADRESS_data\';
+path_save   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.1.0\PESTools_PCC\Examples\Example_Data_Saved\';
 %% *(1) ARPES - Data Processing*
 %% (1.1) - Load in data
 close all; 
-arpes_raw = load_adress_data('010_ARPES_kxkz.h5', path_data);
+arpes_raw = load_adress_data('003_ARPES_kxkz.h5', path_data);
 arpes_dat = delete_scans(arpes_raw, {[2:2:2e3]});   % deleting every even numbered scan, so only the odd-numbered ARPES scans remain
 arpes_ref = delete_scans(arpes_raw, {[1:2:2e3]});   % deleting every odd numbered scan, so only the even-numbered XPS scans remain
 % -- Viewing the ARPES data

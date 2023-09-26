@@ -265,6 +265,7 @@ elseif size(dataStr.tht, 1) == 1
     if size(THT, 3) == 1; THT = repmat(THT,[1, 1, size(dataStr.(dField),3)]); end
 else; THT = dataStr.tht;
 end
+
 %% Reference Data
 % - 3.1 Remapping to 2D
 % - Remapping the EB_REF domain to be 2D

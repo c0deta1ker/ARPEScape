@@ -36,7 +36,7 @@ if nargin < 4;    	LHS     = mean(xdat(:)) - abs(0.25*range(xdat(:))); end
 if nargin < 5;   	RHS     = mean(xdat(:)) + abs(0.25*range(xdat(:))); end
 if nargin < 6;   	BGR     = 0.0; end
 if nargin < 7;   	ARGS    = {1}; end
-if nargin < 8;    	WIN = abs(0.01*range(xdat(:))); end
+if nargin < 8;    	WIN = abs(0.05*range(xdat(:))); end
 if nargin < 9;    	plot_result = 0; end
 if isempty(bTYPE);  bTYPE 	= "Poly"; end
 if isempty(LHS);   	LHS    	= mean(xdat(:)) - abs(0.25*range(xdat(:))); end
@@ -44,7 +44,7 @@ if isempty(RHS);    RHS    	= mean(xdat(:)) + abs(0.25*range(xdat(:))); end
 if isempty(BGR);	BGR     = 0; end
 if isempty(ARGS);	ARGS    = {1}; end
 if isempty(plot_result); plot_result = 0; end
-if isempty(WIN);	WIN    = abs(0.01*range(xdat(:))); end
+if isempty(WIN);	WIN    = abs(0.05*range(xdat(:))); end
 
 %% Ensuring the data is in the form of 1D column vectors
 if size(xdat, 2) > 1; xdat = xdat'; end

@@ -4,7 +4,7 @@ Beamtime ID: 	 20230805
 Dataset ID: 		 Example ARPES data 
 Sample ID: 		 ('London') 
 Sample stack: 	  
-Repeats: 		 4 
-Outliers: 		 0 
-ECL: 			 -17.475 (0.050) eV 
+Repeats: 		 8 
+Outliers: 		 1 
+ECL: 			 -17.416 (0.019) eV 
 Notes: 		 Sample measured @ADRESS, 77 K.

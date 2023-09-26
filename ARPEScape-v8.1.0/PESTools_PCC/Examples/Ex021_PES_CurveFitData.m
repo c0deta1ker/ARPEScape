@@ -8,28 +8,38 @@ sample_id           = "('London')";
 sample_stack_info   = "";
 measurement_notes   = "Sample measured @ADRESS, 77 K.";
 % Defining the paths of the model, data and save directories
-path_data   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.0.0\PESTools_PCC\Examples\Example_Data\';
-path_save   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.0.0\PESTools_PCC\Examples\Example_Data_Saved\';
+path_data   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.1.0\PESTools_PCC\Examples\Example_Data\ADRESS_data\';
+path_save   = 'D:\OneDrive\PCC_MS_Project\00_SLS_Software\ARPEScape\ARPEScape-v8.1.0\PESTools_PCC\Examples\Example_Data_Saved\';
 
 %% *(1) XPS - Data Processing*
 %% (1.1) - Load in data
 close all; 
 % Load in XPS data
 file_names      = {...
-    '020_XPS_In4d_hv=550eV.h5',...
-    '020_XPS_In4d_hv=750eV.h5',...
-    '020_XPS_In4d_hv=950eV.h5',...
-    '020_XPS_In4d_hv=1150eV.h5',...
+    '011_XPS_sAl_350.h5',...
+    '012_XPS_sAl_450.h5',...
+    '013_XPS_sAl_550.h5',...
+    '014_XPS_sAl_650.h5',...
+    '015_XPS_sAl_750.h5',...
+    '016_XPS_sAl_850.h5',...
+    '017_XPS_sAl_950.h5',...
+    '018_XPS_sAl_1050.h5',...
+    '019_XPS_sAl_1150.h5',...
     };
 xps_dat = cell(1,length(file_names));
 for i = 1:length(file_names); xps_dat{i} = load_adress_data(file_names{i}, path_data); end
 view_arpes_data(xps_dat{1});
 % Load in Reference data
 file_names_ef      = {...
-    '020_XPS_In4d_hv=550eV_EF.h5',...
-    '020_XPS_In4d_hv=750eV_EF.h5',...
-    '020_XPS_In4d_hv=950eV_EF.h5',...
-    '020_XPS_In4d_hv=1150eV_EF.h5',...
+    '011_XPS_350_EF.h5',...
+    '012_XPS_450_EF.h5',...
+    '013_XPS_550_EF.h5',...
+    '014_XPS_650_EF.h5',...
+    '015_XPS_750_EF.h5',...
+    '016_XPS_850_EF.h5',...
+    '017_XPS_950_EF.h5',...
+    '018_XPS_1050_EF.h5',...
+    '019_XPS_1150_EF.h5',...
     };
 xps_ref = cell(1,length(file_names_ef));
 for i = 1:length(file_names_ef); xps_ref{i} = load_adress_data(file_names_ef{i}, path_data); end
@@ -40,7 +50,7 @@ close all;
 % -- Coarse alignment of the energy
 alignType   = "align2ref";
 scan_indxs	= [];
-eWin        = 0.00;
+eWin        = 1.00;
 dEWin       = 4.00;
 dESmooth    = [];
 feat        = 'edge';
@@ -119,16 +129,16 @@ xps_fit.repeats       = length(xps_dat);
 xps_fit.data          = xps_dat;
 for i = 1:length(xps_fit.data); xps_fit.hv(i) = round(xps_fit.data{i}.hv,0); end
 % DEFINING THE TYPES OF CURVES TO BE USED
-cTYPE   = ["sGLA";  "sGLA";  "sGLA";  "sGLA"];  % type of curve to use for fitting. Default: "sGLA" ("pGLA", "DS")
+cTYPE   = ["sGLA"];  % type of curve to use for fitting. Default: "sGLA" ("pGLA", "DS")
 % 1.1 - DEFINING THE INITIAL CONDITIONS OF THE XPS COMPONENTS
-BE      = [-17.47;  -17.95;  -16.77; -19.32]; % scalar of the binding energy of PE curve. Each new row gives a new BE component. Make sure sizes are all consistent.
-INT     = [0.70;     0.08;   0.18;  0.34];    % scalar of the peak intensity of PE curve.
-FWHM    = [0.38;    0.45;   0.49;   0.31];    % scalar of the FWHM of the PE curve.
-MR      = [0.50;    0.50;   0.50;   0.50];    % scalar of the Mixing Ratio: 0 for pure Gaussian, 1 is for pure Lorentzian.
-LSE     = [-0.85;  -0.85;   -0.85;  -0.42];   % scalar of the binding energy of spin-orbit split PE curve.
-LSI     = [0.66;    0.66;   0.66;   0.55];    % scalar of the branching ratio of spin-orbit split PE curve.
-LSW     = [0.0;     0.0;    0.0;    0.0];     % scalar of the additional lorentzian width of spin-orbit split PE curve.
-ASY     = [0.0;     0.0;    0.0;    0.0];     % scalar of the PE curve asymmetry parameter (usually for metallic systems).
+BE      = [-17.47]; % scalar of the binding energy of PE curve. Each new row gives a new BE component. Make sure sizes are all consistent.
+INT     = [0.70];    % scalar of the peak intensity of PE curve.
+FWHM    = [0.38];    % scalar of the FWHM of the PE curve.
+MR      = [0.50];    % scalar of the Mixing Ratio: 0 for pure Gaussian, 1 is for pure Lorentzian.
+LSE     = [-0.85];   % scalar of the binding energy of spin-orbit split PE curve.
+LSI     = [0.66];    % scalar of the branching ratio of spin-orbit split PE curve.
+LSW     = [0.0];     % scalar of the additional lorentzian width of spin-orbit split PE curve.
+ASY     = [0.0];     % scalar of the PE curve asymmetry parameter (usually for metallic systems).
 iparams{1} = [BE, INT, FWHM, MR, LSE, LSI, LSW, ASY]; 
 iparams{1}
 % 1.2 - DEFINING THE UNCERTAINTIES IN THE FIT PARAMETERS
@@ -155,7 +165,6 @@ iparams{3}(:,7) = iparams{1}(:,7) + 0.00;
 iparams{3}(:,8) = iparams{1}(:,8) + 0.00;
 iparams{3}
 % -- Forced constraints
-iparams{2}(3,6) = iparams{1}(3,6) - 0.0; iparams{3}(3,6) = iparams{1}(3,6) - 0.0;
 
 % 2.1 - DEFINING THE BACKGROUND PARAMETERS
 help PESBackground;
@@ -187,7 +196,7 @@ pes2ncurve_view_init(xps_fit.data{end}, cTYPE, iparams, bTYPE, ibgrnd);
 
 %% (2.3) - XPS Curve Fitting (Execution)
 close all;
-solve_type  = "fmincon";
+solve_type  = "lsqcurvefit";
 for i = 1:length(xps_fit.data)
     fprintf("Run %i / %i", i, length(xps_fit.data));
     % -- Solve the fit
@@ -253,8 +262,7 @@ info = info + sprintf("Dataset ID: \t\t %s \n",  dataStr.(field_name).dataset_id
 info = info + sprintf("Sample ID: \t\t %s \n",  dataStr.(field_name).sample_id);
 info = info + sprintf("Sample stack: \t %s \n", dataStr.(field_name).sample_stack_info);
 info = info + sprintf("Repeats: \t\t %i \n",    dataStr.(field_name).num_of_repeats);
-info = info + sprintf("BE(InAs): \t\t\t %.3f (%.3f) eV \n", dataStr.(field_name).BE_mu(1), dataStr.(field_name).BE_3sig(1));
-info = info + sprintf("BE(InAs(SCLS)): \t\t\t %.3f (%.3f) eV \n", dataStr.(field_name).BE_mu(2), dataStr.(field_name).BE_3sig(2));
+info = info + sprintf("BE(InSb): \t\t\t %.3f (%.3f) eV \n", dataStr.(field_name).BE_mu(1), dataStr.(field_name).BE_3sig(1));
 info = info + sprintf("CHISQ: \t\t\t %.3f (%.3f) \n", dataStr.(field_name).CHISQ_mu, dataStr.(field_name).CHISQ_3sig);
 info = info + sprintf("Notes: \t\t %s", measurement_notes);
 fprintf(info);
