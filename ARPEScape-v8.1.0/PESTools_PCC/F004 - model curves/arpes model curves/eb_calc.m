@@ -27,7 +27,7 @@ if isempty(k0); k0 = 0; end
 % Ensuring eb is a column vector
 if size(k, 2) > 1 && size(k, 1) == 1; k = k'; end
 % Defining the physical constants
-hbar    = 4.135e-15;    % Units of [eV s^−1]
+hbar    = 4.135e-15;    % Units of [eV s]
 % Calculating the binding energy values
 eb = (3.8 / mstar) * (k - k0).^2 + eb0;
 % If isnan, return zero
